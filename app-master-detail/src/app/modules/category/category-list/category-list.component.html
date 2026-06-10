@@ -1,0 +1,36 @@
+<div class="p-6 mt-10 bg-white text-amber-950 rounded-2xl shadow-md border border-amber-100/70 border-t-4 border-t-[#5C3E21]">
+  <!-- Encabezado y Botón -->
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-3xl font-extrabold text-[#3E261A]">
+      Lista de Categorías
+    </h2>
+    <button
+    (click)="agregarCategoria()"
+    class="flex items-center gap-2 px-5 py-2.5 bg-[#8E4E2A] hover:bg-[#7D411F] text-white font-semibold rounded-lg shadow-md transition-all hover:scale-105"
+    >
+    <span>Agregar</span>
+      <span class="text-lg">➕</span>
+    </button>
+  </div>
+
+  <!-- Tabla -->
+  <div class="overflow-x-auto">
+    <table class="w-full table-auto text-sm text-center bg-white rounded-xl border-collapse border border-amber-100/60">
+      <thead>
+        <tr class="bg-[#5C3E21] text-white border-b border-[#3E261A]">
+          <th class="px-6 py-3 text-left text-sm font-semibold">ID</th>
+          <th class="px-6 py-3 text-left text-sm font-semibold">Categoría</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let category of categories"
+          class="hover:bg-[#FAF6EE] transition-colors duration-200 border-b border-amber-100/50 last:border-none"
+        >
+          <td class="px-6 py-4 text-sm font-medium text-[#3E261A]">{{ category.id }}</td>
+          <td class="px-6 py-4 text-sm font-semibold text-[#8E4E2A]">{{ category.nombre }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

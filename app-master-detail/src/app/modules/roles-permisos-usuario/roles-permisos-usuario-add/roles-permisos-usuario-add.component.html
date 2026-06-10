@@ -1,0 +1,72 @@
+<div class="min-w-full mx-auto p-8 bg-white text-[#3E261A] rounded-xl shadow-3xl">
+  <div class="space-y-8">
+
+    <!-- Título del Formulario -->
+    <div class="text-center">
+      <h2 class="text-4xl font-extrabold mb-6 text-[#3E261A] ">Asignación de Roles a Usuario</h2>
+    </div>
+
+    <!-- Contenedor con dos columnas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+      <!-- Selección de Usuario -->
+      <div class="space-y-4">
+        <label for="userSelect" class="block text-sm font-semibold text-[#3E261A] mb-1">Seleccionar Usuario:</label>
+        <select
+          id="userSelect"
+          [(ngModel)]="selectedUser"
+          class="w-full p-3 bg-white border border-amber-200 rounded-lg text-white focus:ring-2 focus:ring-red-600 focus:outline-none transition duration-300 transform hover:scale-105"
+        >
+          <option [value]="user?.userId">{{ user?.fullname }}</option>
+        </select>
+      </div>
+
+      <!-- Selección de Roles (Múltiple) -->
+      <div class="space-y-4">
+        <label for="roleSelect" class="block text-sm font-semibold text-[#3E261A] mb-1">Seleccionar Roles:</label>
+        <select
+          id="roleSelect"
+          [(ngModel)]="selectedRoles"
+          multiple
+          class="w-full p-3 bg-white border border-amber-200 rounded-lg text-white focus:ring-2 focus:ring-green-400 focus:outline-none transition duration-300 transform hover:scale-105"
+        >
+          <option *ngFor="let rol of roles" [ngValue]="rol">{{ rol.nombre_Rol }}</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Botón para asignar roles al usuario -->
+    <div class="flex justify-center">
+      <button
+        (click)="asignarRoles()"
+        class="w-full sm:w-72 py-2 px-4 bg-[#5C3E21] text-white hover:from-blue-700 hover:to-cyan-600 text-white font-semibold rounded-lg shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 disabled:bg-gray-700 disabled:cursor-not-allowed"
+      >
+        Asignar Roles
+      </button>
+    </div>
+
+    <!-- Mostrar resultados -->
+    <div *ngIf="asignaciones.length > 0" class="mt-6">
+      <h3 class="text-xl font-semibold mb-4 text-center">Informacion de los Roles que seran  Asignados al usuario {{ user?.fullname}}</h3>
+      <ul class="space-y-4">
+        <li *ngFor="let asignacion of asignaciones" class="bg-[#FAF6EE] border border-amber-100/60 p-4 rounded-lg shadow-sm hover:shadow-md transition">
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-[#8E4E2A] font-semibold">Usuario:</span> {{ user?.fullname }}
+            <span class="font-semibold text-[#8E4E2A] font-semibold">Rol:</span> {{ asignacion.rol.nombre_Rol }}
+          </div>
+        </li>
+      </ul>
+      <!-- Botón para guardar -->
+      <div class="flex justify-center">
+        <button
+          (click)="save()"
+          class="w-full sm:w-72 mt-2 bg-[#5C3E21] text-white hover:from-blue-700 hover:to-cyan-600 text-white font-semibold py-2 px-6 rounded-lg shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 disabled:bg-gray-700 disabled:cursor-not-allowed"
+        >
+          Guardar Cambios
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

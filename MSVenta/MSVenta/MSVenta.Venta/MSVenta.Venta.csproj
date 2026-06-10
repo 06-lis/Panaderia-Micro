@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <!-- Librería personalizada para facilitar la comunicación HTTP entre microservicios -->
+	  <PackageReference Include="Aforo255.Cross.Http" Version="1.0.0" />
+	  
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.3" />
+	  <!-- Librería personalizada para la gestión de descubrimiento de servicios en una arquitectura de microservicios -->
+	  <PackageReference Include="Aforo255.Cross.Discovery" Version="1.0.0" />
+	  <!-- Librería personalizada para la gestión de autenticación y generación de tokens JWT en la aplicación -->
+	  <PackageReference Include="Aforo255.Cross.Token" Version="2.0.0" />
+	  <PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.3.1" />
+
+  </ItemGroup>
+
+</Project>

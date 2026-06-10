@@ -1,0 +1,29 @@
+<div class="p-8 bg-gradient-to-r from-slate-700 via-slate-800 to-slate-400 min-h-screen text-[#3E261A] rounded-lg shadow-2xl mt-6">
+  <h1 class="text-4xl font-extrabold text-left mb-10 text-[#3E261A] bg-gradient-to-r from-indigo-200 via-purple-300 to-pink-400">
+    Gestión de Categoría
+  </h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+    <!-- Sección para Listar Categorías (Izquierda) -->
+    <div class="flex flex-col items-center p-6 bg-white rounded-3xl shadow-lg transform transition duration-300 hover:scale-105">
+      <h2 class="text-2xl font-semibold mb-6 text-left text-[#3E261A] bg-gradient-to-r from-indigo-500 to-pink-500">
+        Lista de Categorías
+      </h2>
+      <div class="w-full max-w-full">
+        <app-category-list [categories]="categories"></app-category-list>
+      </div>
+    </div>
+
+    <!-- Sección para Crear Categoría (Derecha) -->
+    <div class="flex flex-col items-center p-3 bg-white rounded-3xl shadow-lg transform transition duration-300 hover:scale-105">
+      <h2 class="text-2xl font-semibold mb-6 text-left text-[#3E261A] bg-gradient-to-r from-indigo-500 to-pink-500">
+        Crear Nueva Categoría
+      </h2>
+      <div class="w-full max-w-full flex justify-center">
+        <app-category-add></app-category-add>
+      </div>
+    </div>
+
+  </div>
+</div>

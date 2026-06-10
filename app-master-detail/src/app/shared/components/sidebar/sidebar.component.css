@@ -1,0 +1,40 @@
+.sidebar {
+  padding: 5px;
+}
+.section-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #A68D7B; /* light wheat/beige */
+  text-transform: uppercase;
+  padding: 15px 10px 5px;
+  letter-spacing: 0.05em;
+}
+a {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  margin: 2px 0;
+  text-decoration: none;
+  color: #E6DCD3; /* cream white */
+  border-radius: 8px;
+  transition: all 0.15s ease-in-out;
+  font-size: 0.9rem;
+}
+a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+a.active {
+  background: #8E4E2A; /* teja active background */
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+a i {
+  margin-right: 10px;
+  font-size: 1.15rem;
+  color: #C2A378; /* wheat yellow icons */
+}
+a.active i {
+  color: #ffffff;
+}

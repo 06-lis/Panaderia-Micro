@@ -1,0 +1,48 @@
+<div class="p-6 mt-10 bg-white text-amber-950 rounded-2xl shadow-md border border-amber-100/70 border-t-4 border-t-[#5C3E21]">
+  <!-- Título de la Tabla -->
+  <h2 class="text-3xl font-extrabold mb-8 text-left text-[#3E261A]">Lista de Clientes</h2>
+
+  <!-- Botón Registrar Cliente -->
+  <div class="text-right mb-4">
+    <button routerLink="/dashboard/customer/add"
+            class="px-5 py-2.5 bg-[#8E4E2A] hover:bg-[#7D411F] text-white font-semibold rounded-lg shadow-md transition-all">
+      <span class="font-bold text-xs">Agregar Cliente</span>
+    </button>
+  </div>
+  <div *ngIf="errorMessage" class="mt-3 mb-2 p-4 bg-[#FAF6EE] border-l-4 border-[#8E4E2A] text-[#5C3E21] rounded-lg flex items-center justify-between">
+    <span>{{ errorMessage }}</span>
+    <button (click)="errorMessage = ''" class="text-[#8E4E2A] hover:text-[#5C3E21] font-bold">
+      &times;
+    </button>
+  </div>
+
+  <table class="w-full table-auto text-sm text-center bg-white rounded-xl border-collapse border border-amber-100/60">
+    <thead>
+      <tr class="bg-[#5C3E21] text-white border-b border-[#3E261A]">
+        <th class="px-4 py-2 text-left font-bold text-sm text-amber-950 ">ID</th>
+        <th class="px-4 py-2 text-left font-bold text-sm text-amber-950">Nombre</th>
+        <th class="px-4 py-2 text-left font-bold text-sm text-amber-950">Apellidos</th>
+        <th class="px-4 py-2 text-left font-bold text-sm text-amber-950">Teléfono</th>
+        <th class="px-4 py-2 text-left font-bold text-sm text-amber-950 ">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let customer of customers; let i = index"
+          class="hover:bg-[#FAF6EE] transition-colors duration-200 border-b border-amber-100/50">
+        <td class="px-4 py-2 text-sm text-amber-950 ">{{ i + 1 }}</td>
+        <td class="px-6 py-4 text-amber-950">{{ customer.nombre }} {{ customer.pSurname }} {{ customer.mSurname }}</td>
+        <td class="px-6 py-4 text-amber-950">{{ customer.apellidos }}</td>
+        <td class="px-6 py-4 text-amber-950">{{ customer.celular }}</td>
+        <td class="px-4 py-2 flex space-x-4 justify-start items-center ">
+
+
+          <!-- Botón de Eliminar -->
+          <button (click)="deleteCustomer(customer.id!)"
+                  class="px-4 py-2 bg-red-700 hover:bg-red-800 text-white font-semibold rounded-lg shadow-md transition-all">
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

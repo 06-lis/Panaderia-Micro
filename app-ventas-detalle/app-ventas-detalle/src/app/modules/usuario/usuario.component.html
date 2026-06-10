@@ -1,0 +1,15 @@
+<div class="p-4 min-h-screen text-[#3E261A] rounded-lg shadow-lg mt-4">
+  <!-- <h1 class="text-3xl font-bold text-left mb-6">Gestión de Usuarios</h1> -->
+
+  <div class="p-6 bg-[#5C3E21] text-white text-[#3E261A] rounded-lg shadow-xl grid grid-cols-1 gap-6 justify-items-center">
+
+    <!-- Sección para Listar Usuarios -->
+    <div class="col-span-1 w-full max-w-4xl">
+      <!-- Usa el componente usuario-list -->
+      <app-usuario-list
+        [users]="users">
+      </app-usuario-list>
+    </div>
+
+  </div>
+</div>

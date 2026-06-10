@@ -1,0 +1,218 @@
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.csproj.AssemblyReference.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.AssemblyInfoInputs.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.AssemblyInfo.cs
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.csproj.CoreCompileInputs.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\appsettings.Development.json
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\appsettings.json
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\ocelot.json
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.exe
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.deps.json
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.runtimeconfig.json
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.runtimeconfig.dev.json
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.pdb
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Aforo255.Cross.Token.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\FluentValidation.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.MiddlewareAnalysis.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.Extensions.DiagnosticAdapter.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Ocelot.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.RazorTargetAssemblyInfo.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\scopedcss\bundle\MSVenta.Gateway.styles.css
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\MSVenta.Gateway.StaticWebAssets.Manifest.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\MSVenta.Gateway.StaticWebAssets.Pack.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\msbuild.MSVenta.Gateway.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\msbuild.build.MSVenta.Gateway.props
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\msbuild.buildMultiTargeting.MSVenta.Gateway.props
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\msbuild.buildTransitive.MSVenta.Gateway.props
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta..58D19980.Up2Date
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\refint\MSVenta.Gateway.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.pdb
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.genruntimeconfig.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\ref\MSVenta.Gateway.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\appsettings.Development.json
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\appsettings.json
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\ocelot.json
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.exe
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.deps.json
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.runtimeconfig.json
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.runtimeconfig.dev.json
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.pdb
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Aforo255.Cross.Token.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\FluentValidation.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.MiddlewareAnalysis.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.Extensions.DiagnosticAdapter.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Ocelot.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.csproj.AssemblyReference.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.AssemblyInfoInputs.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.AssemblyInfo.cs
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.csproj.CoreCompileInputs.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.RazorTargetAssemblyInfo.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\scopedcss\bundle\MSVenta.Gateway.styles.css
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\MSVenta.Gateway.StaticWebAssets.Manifest.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\MSVenta.Gateway.StaticWebAssets.Pack.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\msbuild.MSVenta.Gateway.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\msbuild.build.MSVenta.Gateway.props
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\msbuild.buildMultiTargeting.MSVenta.Gateway.props
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\msbuild.buildTransitive.MSVenta.Gateway.props
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta..58D19980.Up2Date
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\refint\MSVenta.Gateway.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.pdb
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.genruntimeconfig.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\ref\MSVenta.Gateway.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\appsettings.Development.json
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\appsettings.json
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\ocelot.json
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.exe
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.deps.json
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.runtimeconfig.json
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.runtimeconfig.dev.json
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\ref\MSVenta.Gateway.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.pdb
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Aforo255.Cross.Token.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\FluentValidation.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.MiddlewareAnalysis.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.Extensions.DiagnosticAdapter.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Ocelot.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.csproj.AssemblyReference.cache
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.AssemblyInfoInputs.cache
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.AssemblyInfo.cs
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.csproj.CoreCompileInputs.cache
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\MSVenta.Gateway.StaticWebAssets.Manifest.cache
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\MSVenta.Gateway.StaticWebAssets.xml
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\scopedcss\bundle\MSVenta.Gateway.styles.css
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.RazorTargetAssemblyInfo.cache
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.csproj.CopyComplete
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\ref\MSVenta.Gateway.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.pdb
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.genruntimeconfig.cache
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\appsettings.Development.json
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\appsettings.json
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\ocelot.json
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.exe
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.deps.json
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.runtimeconfig.json
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.runtimeconfig.dev.json
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\ref\MSVenta.Gateway.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.pdb
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Aforo255.Cross.Token.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\FluentValidation.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.MiddlewareAnalysis.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.Extensions.DiagnosticAdapter.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Newtonsoft.Json.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Ocelot.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.csproj.AssemblyReference.cache
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.GeneratedMSBuildEditorConfig.editorconfig
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.AssemblyInfoInputs.cache
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.AssemblyInfo.cs
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.csproj.CoreCompileInputs.cache
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.MvcApplicationPartsAssemblyInfo.cs
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.MvcApplicationPartsAssemblyInfo.cache
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\MSVenta.Gateway.StaticWebAssets.Manifest.cache
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\MSVenta.Gateway.StaticWebAssets.xml
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\scopedcss\bundle\MSVenta.Gateway.styles.css
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.RazorTargetAssemblyInfo.cache
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.csproj.CopyComplete
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\ref\MSVenta.Gateway.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.pdb
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.genruntimeconfig.cache
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\appsettings.Development.json
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\appsettings.json
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\ocelot.json
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.exe
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.deps.json
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.runtimeconfig.json
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.runtimeconfig.dev.json
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\ref\MSVenta.Gateway.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\MSVenta.Gateway.pdb
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Aforo255.Cross.Token.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\FluentValidation.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.MiddlewareAnalysis.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.Extensions.DiagnosticAdapter.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Newtonsoft.Json.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\Ocelot.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.csproj.AssemblyReference.cache
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.GeneratedMSBuildEditorConfig.editorconfig
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.AssemblyInfoInputs.cache
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.AssemblyInfo.cs
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.csproj.CoreCompileInputs.cache
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.MvcApplicationPartsAssemblyInfo.cs
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.MvcApplicationPartsAssemblyInfo.cache
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\MSVenta.Gateway.StaticWebAssets.Manifest.cache
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\staticwebassets\MSVenta.Gateway.StaticWebAssets.xml
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\scopedcss\bundle\MSVenta.Gateway.styles.css
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.RazorTargetAssemblyInfo.cache
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.csproj.CopyComplete
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\ref\MSVenta.Gateway.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.pdb
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Gateway\obj\Debug\net5.0\MSVenta.Gateway.genruntimeconfig.cache

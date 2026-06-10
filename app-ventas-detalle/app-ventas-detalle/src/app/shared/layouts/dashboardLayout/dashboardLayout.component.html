@@ -1,0 +1,78 @@
+<main class="flex flex-col sm:flex-row text-amber-950 bg-[#FAF6EE] min-h-screen">
+  <!-- Sidebar -->
+  <nav class="hidden sm:flex flex-col w-72 min-h-screen bg-[#3E261A] text-white p-5 shadow-2xl z-10">
+    <!-- Brand Header -->
+    <div class="flex items-center justify-center py-4 space-x-2">
+      <!-- SVG Slice of Bread / Toast -->
+      <svg class="w-8 h-8 text-[#C2A378] fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18.5 6C17.1 3.2 13.9 2 12 2C10.1 2 6.9 3.2 5.5 6C4 9.1 4 13.9 4 16C4 18.2 5.8 20 8 20H16C18.2 20 20 18.2 20 16C20 13.9 20 9.1 18.5 6ZM16 18H8C6.9 18 6 17.1 6 16C6 14.2 6.1 10.1 7.3 7.7C8.1 6.1 9.9 5 12 5C14.1 5 15.9 6.1 16.7 7.7C17.9 10.1 18 14.2 18 16C18 17.1 17.1 18 16 18Z"/>
+      </svg>
+      <h1 class="font-bold text-xl lg:text-2xl text-[#FAF6EE] tracking-wide">
+        Panadería Otto
+      </h1>
+    </div>
+
+    <!-- User Profile Section -->
+    <div class="flex flex-col items-center my-6 p-4 bg-[#4E3426] bg-opacity-40 rounded-2xl border border-white/5">
+      <div class="w-14 h-14 rounded-full bg-[#8E4E2A] flex items-center justify-center mb-3 border border-white/10 shadow-md">
+        <i class="pi pi-user text-2xl text-[#FAF6EE]"></i>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="font-bold text-[#FAF6EE] tracking-wide text-center">{{ user?.username }}</span>
+        <span class="w-2.5 h-2.5 bg-green-500 rounded-full border border-[#3E261A]" title="Conectado"></span>
+      </div>
+      <span class="text-xs text-[#C2A378] mt-1 font-semibold uppercase tracking-wider">
+        @for (item of user?.roles; track $index) {
+          {{ item.nombre_Rol }}
+        }
+      </span>
+    </div>
+
+    <div class="border-amber-900/30 border-t my-2"></div>
+
+    <!-- Nav Links -->
+    <div class="flex flex-col space-y-2 overflow-y-auto max-h-[calc(100vh-280px)]">
+      @for (route of routes; track $index) {
+        <app-sidebar
+        *ngIf="hasPermission(route.data!['permission'])"
+          [description]="route.data!['description']"
+          [icon]="route.data!['icon']"
+          [title]="route.data!['title']"
+          [path]="route.path!"
+        />
+      }
+    </div>
+    <!-- End Nav Links -->
+  </nav>
+
+  <!-- Content Section -->
+  <section class="flex flex-col w-full max-h-screen bg-[#FAF6EE] overflow-hidden">
+    <!-- Header -->
+    <div class="flex justify-between items-center bg-white border-b border-amber-100/60 p-4 shadow-sm">
+      <div class="flex items-center space-x-4 text-amber-950">
+        <button class="text-amber-950 p-2 hover:bg-amber-100/50 rounded-lg">
+          <i class="pi pi-bars text-lg"></i>
+        </button>
+        <a href="#" class="flex items-center space-x-2 text-[#3E261A] hover:text-[#8E4E2A] font-semibold transition-colors">
+          <i class="pi pi-home text-lg"></i>
+          <span>Inicio</span>
+        </a>
+      </div>
+      
+      <div (click)="logout()" class="flex items-center space-x-3 text-amber-950 cursor-pointer p-2 hover:bg-amber-100/50 rounded-lg transition-colors" title="Cerrar sesión">
+        <i class="pi pi-user text-lg text-[#8E4E2A]"></i>
+        <span class="font-semibold">{{ user?.username }}</span>
+        <i class="pi pi-sign-out text-sm text-gray-500 ml-1"></i>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex flex-auto flex-col p-6 overflow-y-auto">
+      <router-outlet />
+    </div>
+  </section>
+</main>
+
+
+
+

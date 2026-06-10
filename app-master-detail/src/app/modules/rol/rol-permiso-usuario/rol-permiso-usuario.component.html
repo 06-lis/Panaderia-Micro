@@ -1,0 +1,56 @@
+<div class="max-w-lg mx-auto p-6 bg-white text-[#3E261A] rounded-lg shadow-lg">
+  <!-- Selección de Usuario -->
+  <div class="mb-4">
+    <label for="userSelect" class="block text-lg font-semibold mb-2">Seleccionar Usuario:</label>
+    <select
+      id="userSelect"
+      [(ngModel)]="selectedUser"
+      class="w-full p-2 bg-white border border-amber-100/50 rounded-lg focus:ring-2 focus:ring-blue-500"
+    >
+      <option [value]="user?.userId">{{ user?.fullname }}</option>
+    </select>
+  </div>
+
+  <!-- Selección de Roles (Múltiple) -->
+  <div class="mb-4">
+    <label for="roleSelect" class="block text-lg font-semibold mb-2">Seleccionar Roles:</label>
+    <select
+      id="roleSelect"
+      [(ngModel)]="selectedRoles"
+      multiple
+      class="w-full p-2 bg-white border border-amber-100/50 rounded-lg focus:ring-2 focus:ring-green-500"
+    >
+      <option *ngFor="let rol of roles" [ngValue]="rol">{{ rol.nombre_Rol }}</option>
+    </select>
+  </div>
+
+  <!-- Botón para asignar roles al usuario -->
+  <button
+    (click)="asignarRoles()"
+    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition duration-300"
+  >
+    Asignar Roles
+  </button>
+
+  <!-- Mostrar resultados -->
+  <div *ngIf="asignaciones.length > 0" class="mt-6">
+    <h3 class="text-xl font-bold mb-3">Roles Asignados</h3>
+    <ul class="space-y-2">
+      <li *ngFor="let asignacion of asignaciones" class="bg-gray-700 p-2 rounded-lg">
+        <span class="font-semibold">Usuario:</span> {{ asignacion.userId }} -
+        <span class="font-semibold">Rol:</span> {{ asignacion.rol.nombre_Rol }}
+        <!-- <span class="font-semibold">Permisos:</span> -->
+        <!-- <button *ngFor="let  rolPermisos of asignacion.rol.rolPermisos " class="rounded-full bg-blue-500 text-white p-1" >
+          {{ rolPermisos.iD_Rol_Permiso }}
+        </button> -->
+      </li>
+    </ul>
+  </div>
+  <!-- Botón para asignar roles al usuario -->
+  <button
+    (click)="save()"
+    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 mt-2 rounded-lg transition duration-300"
+  >
+    Save
+  </button>
+</div>

@@ -1,0 +1,23 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:28884",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "MSVenta.Seguridad": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "launchBrowser": false, //false
+      "launchUrl": "",
+      "applicationUrl": "http://localhost:5001",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+<div class="max-w-lg mx-auto mt-10 p-8 bg-white text-amber-950 rounded-2xl shadow-md border border-amber-100/70 border-t-4 border-t-[#5C3E21]">
+  <h2 class="text-3xl font-extrabold text-left mb-6 text-[#3E261A]">
+    🚀 Crear Almacén
+  </h2>
+
+  <form [formGroup]="almacenForm" (ngSubmit)="createAlmacen()" class="space-y-6">
+    <!-- Nombre del almacén -->
+    <div>
+      <label for="nombre" class="text-amber-950 font-semibold mb-2 block text-sm">📌 Nombre del almacén</label>
+      <input
+        type="text"
+        id="nombre"
+        formControlName="nombre"
+        placeholder="Ejemplo: Central de Suministros"
+        class="w-full p-3 bg-[#FAF6EE] text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none placeholder-amber-800/40 rounded-lg shadow-sm transition-all"
+      />
+      <div *ngIf="almacenForm.get('nombre')?.invalid && almacenForm.get('nombre')?.touched"
+        class="mt-1 text-red-400 text-sm flex items-center">
+        ⚠️ El nombre es requerido (máx. 30 caracteres).
+      </div>
+    </div>
+
+    <!-- Localización del almacén -->
+    <div>
+      <label for="locacion" class="text-amber-950 font-semibold mb-2 block text-sm">📍 Ubicación</label>
+      <input
+        type="text"
+        id="locacion"
+        formControlName="locacion"
+        placeholder="Ejemplo: Av. Principal #123"
+        class="w-full p-3 bg-[#FAF6EE] text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none placeholder-amber-800/40 rounded-lg shadow-sm transition-all"
+      />
+      <div *ngIf="almacenForm.get('locacion')?.invalid && almacenForm.get('locacion')?.touched"
+        class="mt-1 text-red-400 text-sm flex items-center">
+        ⚠️ La ubicación es requerida (máx. 30 caracteres).
+      </div>
+    </div>
+
+    <!-- Botón -->
+    <button
+      type="submit"
+      class="w-full py-3 bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 text-white font-bold rounded-lg hover:scale-105 hover:shadow-lg transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+      [disabled]="almacenForm.invalid">
+      ➕ Agregar Almacén
+    </button>
+  </form>
+</div>

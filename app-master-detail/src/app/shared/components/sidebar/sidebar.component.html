@@ -1,0 +1,14 @@
+<div class="sidebar">
+  @for (section of sections; track section.name) {
+    <div class="section-title">{{ section.name }}</div>
+    @for (route of section.routes; track route.path) {
+      @if (hasPermission(route.data?.permission)) {
+        <a [routerLink]="route.path"
+           routerLinkActive="active">
+          <i class="{{ route.data?.icon }}"></i>
+          <span>{{ route.data?.title }}</span>
+        </a>
+      }
+    }
+  }
+</div>

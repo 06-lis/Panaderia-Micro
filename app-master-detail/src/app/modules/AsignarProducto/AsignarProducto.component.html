@@ -1,0 +1,66 @@
+<div class="p-6 mt-10 bg-white text-amber-950 rounded-2xl shadow-md border border-amber-100/70 border-t-4 border-t-[#5C3E21]">
+  <h2 class="text-3xl font-extrabold text-left text-[#3E261A] mb-8">Asignar Producto a Almacén</h2>
+
+  <div *ngIf="mensaje" class="mt-3 mb-4 p-4 bg-[#FAF6EE] border-l-4 border-[#8E4E2A] text-[#5C3E21] rounded-lg flex items-center justify-between">
+    <span>{{ mensaje }}</span>
+    <button (click)="mensaje = ''" class="text-[#8E4E2A] hover:text-[#5C3E21] font-bold">
+      &times;
+    </button>
+  </div>
+
+  <form [formGroup]="asignarForm" (ngSubmit)="onSubmit()" class="space-y-5">
+    <!-- Producto -->
+    <div>
+      <label for="ProductoId" class="block text-sm font-semibold text-[#3E261A] mb-1">Seleccionar Producto</label>
+      <select id="ProductoId" formControlName="ProductoId"
+        class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm">
+        <option value="" disabled selected>Seleccione un producto</option>
+        <option *ngFor="let producto of productos" [value]="producto.id">{{ producto.nombre }}</option>
+      </select>
+      <div *ngIf="asignarForm.controls['ProductoId'].invalid && asignarForm.controls['ProductoId'].touched"
+        class="text-red-500 text-sm mt-1">Este campo es obligatorio.</div>
+    </div>
+
+    <!-- Almacén -->
+    <div>
+      <label for="AlmacenId" class="block text-sm font-semibold text-[#3E261A] mb-1">Seleccionar Almacén</label>
+      <select id="AlmacenId" formControlName="AlmacenId"
+        class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm">
+        <option value="" disabled selected>Seleccione un almacén</option>
+        <option *ngFor="let almacen of almacenes" [value]="almacen.id">{{ almacen.nombre }} - {{ almacen.locacion }}</option>
+      </select>
+      <div *ngIf="asignarForm.controls['AlmacenId'].invalid && asignarForm.controls['AlmacenId'].touched"
+        class="text-red-500 text-sm mt-1">Este campo es obligatorio.</div>
+    </div>
+
+    <!-- Stock -->
+    <div>
+      <label for="Stock" class="block text-sm font-semibold text-[#3E261A] mb-1">Cantidad de Stock</label>
+      <input id="Stock" formControlName="Stock" type="number" min="1"
+        class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm placeholder-amber-800/40" />
+      <div *ngIf="asignarForm.controls['Stock'].invalid && asignarForm.controls['Stock'].touched"
+        class="text-red-500 text-sm mt-1">Por favor ingrese una cantidad válida de Stock.</div>
+    </div>
+
+    <!-- Precio -->
+    <div *ngIf="asignarForm.contains('Precio')">
+      <label for="Precio" class="block text-sm font-semibold text-[#3E261A] mb-1">Precio (Bs)</label>
+      <input id="Precio" formControlName="Precio" type="number" min="0" step="0.01"
+        class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm placeholder-amber-800/40" />
+      <div *ngIf="asignarForm.controls['Precio']?.invalid && asignarForm.controls['Precio']?.touched"
+        class="text-red-500 text-sm mt-1">Por favor ingrese un precio válido.</div>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex gap-4 pt-2">
+      <button type="submit" [disabled]="asignarForm.invalid"
+        class="flex-1 px-5 py-2.5 bg-[#8E4E2A] hover:bg-[#7D411F] text-white font-semibold rounded-lg shadow-md transition-all hover:scale-105 disabled:opacity-60 disabled:cursor-not-allowed">
+        ✅ Asignar Producto
+      </button>
+      <button type="button" (click)="goBack ? goBack() : null"
+        class="flex-1 px-5 py-2.5 bg-[#E6DCD3] hover:bg-[#D8C9B9] text-[#3E261A] font-semibold rounded-lg shadow-md transition-all">
+        ⬅ Volver
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,278 @@
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.csproj.AssemblyReference.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.AssemblyInfoInputs.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.AssemblyInfo.cs
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.csproj.CoreCompileInputs.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\appsettings.Development.json
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\appsettings.json
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.exe
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.deps.json
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.runtimeconfig.json
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.runtimeconfig.dev.json
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.pdb
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Discovery.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Token.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\BouncyCastle.Crypto.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Consul.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Google.Protobuf.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Compression.LZ4.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Compression.LZ4.Streams.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Hash.xxHash.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MySql.Data.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Ubiety.Dns.Core.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Zstandard.Net.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MySql.EntityFrameworkCore.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Polly.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Configuration.ConfigurationManager.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.RazorTargetAssemblyInfo.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\scopedcss\bundle\MSVenta.Venta.styles.css
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\MSVenta.Venta.StaticWebAssets.Manifest.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\MSVenta.Venta.StaticWebAssets.Pack.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\msbuild.MSVenta.Venta.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\msbuild.build.MSVenta.Venta.props
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\msbuild.buildMultiTargeting.MSVenta.Venta.props
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\msbuild.buildTransitive.MSVenta.Venta.props
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta..F56A5275.Up2Date
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\refint\MSVenta.Venta.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.pdb
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.genruntimeconfig.cache
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\ref\MSVenta.Venta.dll
+C:\Users\Elvis\Desktop\Microservicios\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Http.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\appsettings.Development.json
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\appsettings.json
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.exe
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.deps.json
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.runtimeconfig.json
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.runtimeconfig.dev.json
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.pdb
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Discovery.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Http.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Token.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\BouncyCastle.Crypto.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Consul.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Google.Protobuf.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Compression.LZ4.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Compression.LZ4.Streams.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Hash.xxHash.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MySql.Data.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Ubiety.Dns.Core.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Zstandard.Net.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MySql.EntityFrameworkCore.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Polly.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Configuration.ConfigurationManager.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.csproj.AssemblyReference.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.AssemblyInfoInputs.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.AssemblyInfo.cs
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.csproj.CoreCompileInputs.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.RazorTargetAssemblyInfo.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\scopedcss\bundle\MSVenta.Venta.styles.css
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\MSVenta.Venta.StaticWebAssets.Manifest.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\MSVenta.Venta.StaticWebAssets.Pack.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\msbuild.MSVenta.Venta.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\msbuild.build.MSVenta.Venta.props
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\msbuild.buildMultiTargeting.MSVenta.Venta.props
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\msbuild.buildTransitive.MSVenta.Venta.props
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta..F56A5275.Up2Date
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\refint\MSVenta.Venta.dll
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.pdb
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.genruntimeconfig.cache
+C:\Users\Elvis\Desktop\Microservicios\3\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\ref\MSVenta.Venta.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\appsettings.Development.json
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\appsettings.json
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.exe
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.deps.json
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.runtimeconfig.json
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.runtimeconfig.dev.json
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\ref\MSVenta.Venta.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.pdb
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Discovery.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Http.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Token.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\BouncyCastle.Crypto.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Consul.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Google.Protobuf.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Compression.LZ4.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Compression.LZ4.Streams.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Hash.xxHash.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MySql.Data.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Ubiety.Dns.Core.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Zstandard.Net.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MySql.EntityFrameworkCore.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Polly.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Configuration.ConfigurationManager.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.csproj.AssemblyReference.cache
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.AssemblyInfoInputs.cache
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.AssemblyInfo.cs
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.csproj.CoreCompileInputs.cache
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\MSVenta.Venta.StaticWebAssets.Manifest.cache
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\MSVenta.Venta.StaticWebAssets.xml
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\scopedcss\bundle\MSVenta.Venta.styles.css
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.RazorTargetAssemblyInfo.cache
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.csproj.CopyComplete
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\ref\MSVenta.Venta.dll
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.pdb
+C:\Users\aldearius\Documents\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.genruntimeconfig.cache
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\appsettings.Development.json
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\appsettings.json
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.exe
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.deps.json
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.runtimeconfig.json
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.runtimeconfig.dev.json
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\ref\MSVenta.Venta.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.pdb
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Discovery.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Http.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Token.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\BouncyCastle.Crypto.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Consul.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Google.Protobuf.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Compression.LZ4.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Compression.LZ4.Streams.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Hash.xxHash.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MySql.Data.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Ubiety.Dns.Core.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Zstandard.Net.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MySql.EntityFrameworkCore.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Newtonsoft.Json.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Polly.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Configuration.ConfigurationManager.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Security.Cryptography.ProtectedData.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.csproj.AssemblyReference.cache
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.GeneratedMSBuildEditorConfig.editorconfig
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.AssemblyInfoInputs.cache
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.AssemblyInfo.cs
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.csproj.CoreCompileInputs.cache
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.MvcApplicationPartsAssemblyInfo.cache
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\MSVenta.Venta.StaticWebAssets.Manifest.cache
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\MSVenta.Venta.StaticWebAssets.xml
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\scopedcss\bundle\MSVenta.Venta.styles.css
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.RazorTargetAssemblyInfo.cache
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.csproj.CopyComplete
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\ref\MSVenta.Venta.dll
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.pdb
+E:\Proyecto-Tec\MS-SisVentas Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.genruntimeconfig.cache
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\appsettings.Development.json
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\appsettings.json
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.exe
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.deps.json
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.runtimeconfig.json
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.runtimeconfig.dev.json
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\ref\MSVenta.Venta.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MSVenta.Venta.pdb
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Discovery.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Http.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Aforo255.Cross.Token.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\BouncyCastle.Crypto.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Consul.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Google.Protobuf.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Compression.LZ4.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Compression.LZ4.Streams.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\K4os.Hash.xxHash.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MySql.Data.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Ubiety.Dns.Core.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Zstandard.Net.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\MySql.EntityFrameworkCore.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Newtonsoft.Json.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\Polly.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Configuration.ConfigurationManager.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\System.Security.Cryptography.ProtectedData.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.csproj.AssemblyReference.cache
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.GeneratedMSBuildEditorConfig.editorconfig
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.AssemblyInfoInputs.cache
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.AssemblyInfo.cs
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.csproj.CoreCompileInputs.cache
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.MvcApplicationPartsAssemblyInfo.cache
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\MSVenta.Venta.StaticWebAssets.Manifest.cache
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\staticwebassets\MSVenta.Venta.StaticWebAssets.xml
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\scopedcss\bundle\MSVenta.Venta.styles.css
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.RazorTargetAssemblyInfo.cache
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.csproj.CopyComplete
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\ref\MSVenta.Venta.dll
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.pdb
+E:\Proyecto-Tec\MS-SisVentas-Back-Front\MSVenta\MSVenta\MSVenta.Venta\obj\Debug\net5.0\MSVenta.Venta.genruntimeconfig.cache

@@ -1,0 +1,56 @@
+<div class="container mt-8 max-w-4xl mx-auto px-6">
+  <h2 class="text-4xl font-extrabold mb-8 text-left text-[#3E261A]">
+    Crear rol
+  </h2>
+
+  <form [formGroup]="rolForm" (ngSubmit)="createProduct()" class="space-y-8">
+    <div class="mb-6">
+      <label for="nombre_Rol" class="block text-sm font-semibold text-[#3E261A] mb-1">Nombre del Rol</label>
+      <input
+        type="text"
+        id="nombre_Rol"
+        class="w-full mt-2 px-5 py-3 bg-white text-white rounded-lg border border-amber-100/50 shadow-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none focus:ring-opacity-50 placeholder-gray-400 transition duration-300 ease-in-out transform hover:scale-105"
+        formControlName="nombre_Rol"
+        placeholder="Nombre del rol"
+      />
+      <div *ngIf="rolForm.get('nombre_Rol')?.invalid && rolForm.get('nombre_Rol')?.touched" class="text-red-500 text-sm mt-2">
+        El nombre es requerido (máximo 30 caracteres).
+      </div>
+    </div>
+
+    <div class="mb-6">
+      <label for="descripcion" class="block text-sm font-semibold text-[#3E261A] mb-1">Descripción del Rol</label>
+      <input
+        type="text"
+        id="descripcion"
+        class="w-full mt-2 px-5 py-3 bg-white text-white rounded-lg border border-amber-100/50 shadow-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none focus:ring-opacity-50 placeholder-gray-400 transition duration-300 ease-in-out transform hover:scale-105"
+        formControlName="descripcion"
+        placeholder="Descripción del rol"
+      />
+      <div *ngIf="rolForm.get('descripcion')?.invalid && rolForm.get('descripcion')?.touched" class="text-red-500 text-sm mt-2">
+        La descripción es requerida (máximo 30 caracteres).
+      </div>
+    </div>
+
+    <div class="text-center">
+
+      <button
+        type="submit"
+        class=" py-3 px-6 bg-[#5C3E21] text-white font-semibold rounded-lg shadow-xl hover:from-blue-700 hover:to-cyan-600 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 transition-all duration-300"
+        [disabled]="rolForm.invalid"
+      >
+        Agregar Rol
+      </button>
+    </div>
+    <!-- Botón de Volver -->
+    <div class="mt-8 text-center">
+      <button
+        (click)="goBack()"
+        class="px-5 py-2.5 bg-[#8E4E2A] hover:bg-[#7D411F] text-white font-semibold rounded-lg shadow-md transition-all hover:scale-105"
+      >
+        Volver
+      </button>
+    </div>
+  </form>
+
+</div>

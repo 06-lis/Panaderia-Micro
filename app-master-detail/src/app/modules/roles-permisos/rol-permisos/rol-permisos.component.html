@@ -1,0 +1,39 @@
+<div *ngIf="rol as r; else loading" class="p-6 bg-white text-[#3E261A] rounded-lg shadow-lg">
+  <h2 class="text-2xl font-bold mb-2">{{ r.nombre_Rol }}</h2>
+  <p class="text-amber-950">{{ r.descripcion }}</p>
+</div>
+
+<ng-template #loading>
+  <p class="text-gray-500 text-center">Cargando información del rol...</p>
+</ng-template>
+
+<div *ngIf="permisos!.length > 0; else noPermisos" class="mt-6">
+  <h3 class="text-lg font-semibold text-white mb-4">Permisos disponibles</h3>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+    <ng-container *ngFor="let permiso of permisos">
+      <label class="flex items-center space-x-2 bg-gray-700 p-3 rounded-lg shadow-md hover:bg-gray-600 transition">
+        <input
+          type="checkbox"
+          class="form-checkbox h-5 w-5 text-[#8E4E2A] focus:ring focus:ring-blue-300"
+          [checked]="isSelected(permiso.iD_Permiso)"
+          (change)="addPermission(permiso, $event)">
+        <span class="text-white">{{ permiso.nombre_Permiso }}</span>
+      </label>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #noPermisos>
+  <p class="text-gray-500 text-center">No hay permisos disponibles.</p>
+</ng-template>
+
+<div class="flex justify-center mt-6">
+  <button
+    type="button"
+    (click)="save()"
+    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition disabled:bg-gray-600 disabled:cursor-not-allowed"
+    [disabled]="!selectedPermisos || selectedPermisos.length === 0">
+    Guardar
+  </button>
+</div>
