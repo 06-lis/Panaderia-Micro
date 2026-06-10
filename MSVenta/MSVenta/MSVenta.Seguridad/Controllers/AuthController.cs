@@ -1,4 +1,4 @@
-﻿using Aforo255.Cross.Token.Src;
+using Aforo255.Cross.Token.Src;
 using Consul;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -57,6 +57,8 @@ namespace MSVenta.Seguridad.Controllers
                     userPermisos.UserId,
                     userPermisos.Fullname,
                     userPermisos.Username,
+                    userPermisos.IdEmpleado,
+                    userPermisos.IdCliente,
                     Roles = userPermisos.Roles.Select(role => new
                     {
                         role.ID_Rol,

@@ -128,6 +128,18 @@ export const routes: Routes = [
         },
       },
       {
+        path: 'crear-item',
+        loadComponent: () =>
+          import('./modules/crear-item/crear-item.component').then(m => m.CrearItemComponent),
+        data: {
+          icon: 'pi pi-plus-circle',
+          title: 'Crear Item',
+          description: 'Creación de Producto o Insumo',
+          permission: 'Producto',
+          section: 'Almacén e Inventario'
+        },
+      },
+      {
         path: 'asignar-producto',
         loadChildren: () =>
           import('./modules/AsignarProducto/asignar-producto.route').then(m => m.asignar_producto_routes),
@@ -153,6 +165,46 @@ export const routes: Routes = [
           description: 'Gestión de Ventas',
           permission: 'Venta',
           section: 'Ventas'
+        },
+      },
+
+      // ==========================================
+      // 🛒 COMPRAS
+      // ==========================================
+      {
+        path: 'proveedor',
+        loadChildren: () =>
+          import('./modules/compras/proveedor/proveedor.route').then(m => m.proveedor_routes),
+        data: {
+          icon: 'pi pi-truck',
+          title: 'Proveedores',
+          description: 'Gestión de Proveedores',
+          permission: 'Proveedor',
+          section: 'Compras'
+        },
+      },
+      {
+        path: 'nota-compra',
+        loadChildren: () =>
+          import('./modules/compras/nota-compra/nota-compra.route').then(m => m.nota_compra_routes),
+        data: {
+          icon: 'pi pi-file-edit',
+          title: 'Nota de Compra',
+          description: 'Registro de Compras',
+          permission: 'Nota Compra',
+          section: 'Compras'
+        },
+      },
+      {
+        path: 'detalle-compra',
+        loadChildren: () =>
+          import('./modules/compras/detalle-compra/detalle-compra.route').then(m => m.detalle_compra_routes),
+        data: {
+          icon: 'pi pi-list',
+          title: 'Detalle de Compra',
+          description: 'Detalle de Notas de Compra',
+          permission: 'Detalle Compra',
+          section: 'Compras'
         },
       },
     ],

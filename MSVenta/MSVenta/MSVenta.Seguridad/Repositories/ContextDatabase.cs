@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MSVenta.Seguridad.Models;
 
 namespace MSVenta.Seguridad.Repositories
@@ -13,6 +13,7 @@ namespace MSVenta.Seguridad.Repositories
         public DbSet<Rol> Roles { get; set; }
         public DbSet<RolPermiso> RolPermisos { get; set; }
         public DbSet<RolPermisoUsuario> RolPermisoUsuarios { get; set; }
+        public DbSet<Empleado> Empleados { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,6 +23,14 @@ namespace MSVenta.Seguridad.Repositories
             modelBuilder.Entity<Rol>().ToTable("Rol");
             modelBuilder.Entity<RolPermiso>().ToTable("Rol_Permiso");
             modelBuilder.Entity<RolPermisoUsuario>().ToTable("Rol_Permiso_Usuario");
+            modelBuilder.Entity<Empleado>().ToTable("Empleado");
+
+            // Relación entre Usuario y Empleado
+            modelBuilder.Entity<Usuario>()
+                .HasOne(u => u.Empleado)
+                .WithMany(e => e.Usuarios)
+                .HasForeignKey(u => u.IdEmpleado)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // ... resto de configuraciones de relaciones
             // Relación entre Rol y RolPermiso

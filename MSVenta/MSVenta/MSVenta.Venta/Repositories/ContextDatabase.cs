@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MSVenta.Venta.Models;
 
 namespace MSVenta.Venta.Repositories
@@ -23,17 +23,35 @@ namespace MSVenta.Venta.Repositories
             modelBuilder.Entity<Models.Venta>().ToTable("ventas");
             modelBuilder.Entity<DetalleVenta>().ToTable("detalle_venta");
             modelBuilder.Entity<Categoria>().ToTable("categoria");
+            modelBuilder.Entity<Almacen>().ToTable("almacen");
 
             modelBuilder.Entity<Item>().ToTable("item");
             modelBuilder.Entity<Producto>().ToTable("item");
             modelBuilder.Entity<Insumo>().ToTable("item");
 
             modelBuilder.Entity<Item>()
-                .HasDiscriminator<string>("tipo")
+                .HasDiscriminator(i => i.Tipo)
                 .HasValue<Producto>("Producto")
                 .HasValue<Insumo>("Insumo");
 
+            modelBuilder.Entity<Item>()
+                .Property(i => i.Tipo)
+                .HasColumnName("tipo");
+
+            modelBuilder.Entity<Item>()
+                .Property(i => i.UnidadMedida)
+                .HasColumnName("unidad_medida");
+
+            modelBuilder.Entity<Item>()
+                .Property(i => i.CategoriaId)
+                .HasColumnName("categoria_id");
+
             modelBuilder.Entity<ProductoAlmacen>().ToTable("producto_almacen");
+            
+            modelBuilder.Entity<ProductoAlmacen>()
+                .Property(pa => pa.ItemId)
+                .HasColumnName("item_id");
+
             modelBuilder.Entity<ProductoAlmacen>()
                 .HasOne(pa => pa.Item)
                 .WithMany()

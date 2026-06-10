@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using MSVenta.Venta.Models;
 using MSVenta.Venta.Services;
+using MSVenta.Venta.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -117,5 +118,49 @@ namespace MSVenta.Venta.Controllers
             }
         }
 
+        [HttpPost("update-stock")]
+        public async Task<IActionResult> UpdateStock([FromBody] UpdateStockDto dto)
+        {
+            try
+            {
+                var result = await _productoAlmacenService.UpdateStockAsync(dto.ItemId, dto.AlmacenId, dto.Cantidad);
+                return Ok(new { mensaje = "Stock actualizado correctamente.", data = result });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { mensaje = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Ocurrió un error inesperado: " + ex.Message });
+            }
+        }
+
+        [HttpPost("bulk")]
+        public async Task<IActionResult> AsignarBulk([FromBody] AsignarBulkDto dto)
+        {
+            try
+            {
+                if (dto == null || dto.Items == null || dto.Items.Count == 0)
+                {
+                    return BadRequest(new { mensaje = "La lista de items no puede estar vacía." });
+                }
+
+                var resultados = await _productoAlmacenService.AddBulkAsync(dto.AlmacenId, dto.Items);
+                return Ok(new { mensaje = "Items asignados correctamente.", data = resultados });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { mensaje = ex.Message });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { mensaje = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Ocurrió un error inesperado: " + ex.Message });
+            }
+        }
     }
 }

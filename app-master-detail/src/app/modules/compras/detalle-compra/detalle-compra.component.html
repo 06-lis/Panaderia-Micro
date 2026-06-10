@@ -1,0 +1,153 @@
+@if (loading()) {
+  <div class="loading-container">
+    <i class="pi pi-spinner pi-spin text-3xl"></i>
+    <span>Cargando detalle...</span>
+  </div>
+}
+
+@if (!loading() && errorMsg()) {
+  <div class="error-page">
+    <i class="pi pi-exclamation-circle"></i>
+    <p>{{ errorMsg() }}</p>
+    <a routerLink="/dashboard/nota-compra" class="btn-primary">
+      <i class="pi pi-arrow-left"></i> Volver a Notas de Compra
+    </a>
+  </div>
+}
+
+@if (!loading() && nota()) {
+  <div class="page-container">
+    <!-- Back -->
+    <a routerLink="/dashboard/nota-compra" class="back-link">
+      <i class="pi pi-arrow-left"></i> Volver a Notas de Compra
+    </a>
+
+    <!-- Header Card -->
+    <div class="header-card">
+      <div class="header-left">
+        <div class="nota-badge">
+          <i class="pi pi-file-edit"></i>
+        </div>
+        <div>
+          <div class="nota-number">Nota de Compra #{{ nota()!.idNotaCompra }}</div>
+          <div class="nota-date">Fecha: {{ nota()!.fechaCompra | date:'dd/MM/yyyy HH:mm' }}</div>
+        </div>
+      </div>
+      <span class="badge" [class]="getEstadoClass(nota()!.estado)">
+        {{ nota()!.estado }}
+      </span>
+    </div>
+
+    <div class="content-grid">
+      <!-- Proveedor Info -->
+      <div class="info-card">
+        <h3 class="card-title">
+          <i class="pi pi-truck card-icon"></i>
+          Información del Proveedor
+        </h3>
+        <div class="info-rows">
+          <div class="info-row">
+            <span class="info-label">ID</span>
+            <span class="info-value">#{{ nota()!.idProveedor }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Nombre</span>
+            <span class="info-value">{{ proveedorNombre }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Tipo</span>
+            <span class="info-value">{{ nota()!.proveedor?.tipoProveedor ?? '—' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Teléfono</span>
+            <span class="info-value">{{ nota()!.proveedor?.telefono ?? '—' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Correo</span>
+            <span class="info-value">{{ nota()!.proveedor?.correo ?? '—' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Dirección</span>
+            <span class="info-value">{{ nota()!.proveedor?.direccion ?? '—' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen -->
+      <div class="info-card summary-card">
+        <h3 class="card-title">
+          <i class="pi pi-chart-bar card-icon"></i>
+          Resumen
+        </h3>
+        <div class="summary-rows">
+          <div class="summary-row">
+            <span class="sum-label">Ítems distintos</span>
+            <span class="sum-value">{{ nota()!.detalles.length }}</span>
+          </div>
+          <div class="summary-row">
+            <span class="sum-label">Unidades totales</span>
+            <span class="sum-value">{{ totalUnidades }}</span>
+          </div>
+          <div class="summary-row">
+            <span class="sum-label">Empleado Registrador</span>
+            <span class="sum-value">{{ empleadoNombre() }}</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-row total-row">
+            <span class="sum-label">TOTAL</span>
+            <span class="sum-total">S/ {{ nota()!.montoTotal | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detalles Table -->
+    <div class="table-card">
+      <h3 class="card-title" style="padding: 20px 20px 0;">
+        <i class="pi pi-list card-icon"></i>
+        Ítems de la Compra
+      </h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>ID Ítem</th>
+            <th>Almacén</th>
+            <th class="text-right">Cantidad</th>
+            <th class="text-right">Precio Unit.</th>
+            <th class="text-right">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (d of nota()!.detalles; track $index; let i = $index) {
+            <tr class="table-row">
+              <td class="td-idx">{{ i + 1 }}</td>
+              <td>
+                <span class="item-id-badge">Item #{{ d.idItem }}</span>
+              </td>
+              <td>
+                <span class="almacen-badge">Almacén #{{ d.idAlmacen }}</span>
+              </td>
+              <td class="text-right">{{ d.cantidad }}</td>
+              <td class="text-right">S/ {{ d.precio | number:'1.2-2' }}</td>
+              <td class="text-right subtotal">S/ {{ (d.cantidad * d.precio) | number:'1.2-2' }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-state">
+                <i class="pi pi-inbox"></i>
+                <span>Sin ítems en esta nota</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr class="total-footer">
+            <td colspan="5" class="total-label">TOTAL</td>
+            <td class="total-amount">S/ {{ nota()!.montoTotal | number:'1.2-2' }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+}

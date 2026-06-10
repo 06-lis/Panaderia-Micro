@@ -1,39 +1,82 @@
 .sidebar {
   padding: 5px;
 }
-.section-title {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #A68D7B; /* light wheat/beige */
-  text-transform: uppercase;
-  padding: 15px 10px 5px;
-  letter-spacing: 0.05em;
+
+/* ─── Section Header (clickable accordion trigger) ─── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 12px 10px 6px;
+  border-radius: 6px;
+  margin-top: 4px;
+  transition: background 0.15s ease;
 }
+.section-header:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.section-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #A68D7B;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.section-chevron {
+  font-size: 0.65rem;
+  color: #A68D7B;
+  transition: transform 0.25s ease;
+}
+.section-chevron.rotated {
+  transform: rotate(-90deg);
+}
+
+/* ─── Section Items (collapsible body) ─── */
+.section-items {
+  overflow: hidden;
+  max-height: 500px; /* large enough for any section */
+  transition: max-height 0.3s ease, opacity 0.25s ease;
+  opacity: 1;
+}
+.section-items.collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* ─── Nav Links ─── */
 a {
   display: flex;
   align-items: center;
-  padding: 10px 12px;
-  margin: 2px 0;
+  padding: 9px 12px;
+  margin: 2px 4px;
   text-decoration: none;
-  color: #E6DCD3; /* cream white */
+  color: #E6DCD3;
   border-radius: 8px;
   transition: all 0.15s ease-in-out;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
 }
 a:hover {
   background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
 }
 a.active {
-  background: #8E4E2A; /* teja active background */
+  background: #8E4E2A;
   color: #ffffff;
   font-weight: 600;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 a i {
   margin-right: 10px;
-  font-size: 1.15rem;
-  color: #C2A378; /* wheat yellow icons */
+  font-size: 1.05rem;
+  color: #C2A378;
+  min-width: 18px;
+  text-align: center;
 }
 a.active i {
   color: #ffffff;

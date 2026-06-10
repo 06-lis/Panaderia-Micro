@@ -1,0 +1,170 @@
+<div class="page-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="header-icon">
+        <i class="pi pi-truck"></i>
+      </div>
+      <div>
+        <h1 class="page-title">Proveedores</h1>
+        <p class="page-subtitle">Gestión de proveedores de insumos y materiales</p>
+      </div>
+    </div>
+    <button class="btn-primary" (click)="openCreateModal()">
+      <i class="pi pi-plus"></i>
+      Nuevo Proveedor
+    </button>
+  </div>
+
+  <!-- Search + Stats -->
+  <div class="toolbar">
+    <div class="search-box">
+      <i class="pi pi-search search-icon"></i>
+      <input
+        type="text"
+        placeholder="Buscar por nombre, correo o tipo..."
+        [value]="searchTerm()"
+        (input)="updateSearch($any($event.target).value)"
+        class="search-input"
+      />
+    </div>
+    <div class="stats-pills">
+      <span class="pill pill-total">Total: {{ proveedores().length }}</span>
+      <span class="pill pill-empresa">Empresas: {{ empresasCount }}</span>
+      <span class="pill pill-persona">Personas: {{ proveedores().length - empresasCount }}</span>
+    </div>
+  </div>
+
+  <!-- Error -->
+  @if (errorMsg()) {
+    <div class="error-banner">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ errorMsg() }}</span>
+      <button (click)="loadProveedores()">Reintentar</button>
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="loading-container">
+      <i class="pi pi-spinner pi-spin text-3xl"></i>
+      <span class="loading-text">Cargando proveedores...</span>
+    </div>
+  }
+
+  <!-- Table -->
+  @if (!loading() && !errorMsg()) {
+    <div class="table-card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Tipo</th>
+            <th>Nombre / Razón Social</th>
+            <th>Contacto</th>
+            <th>Dirección</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of filteredProveedores; track p.id; let i = $index) {
+            <tr class="table-row">
+              <td class="td-id">{{ p.idProveedor }}</td>
+              <td>
+                <span class="tipo-badge" [class.tipo-empresa]="p.tipoProveedor === 'Empresa'" [class.tipo-persona]="p.tipoProveedor === 'Persona'">
+                  <i class="pi" [class.pi-building]="p.tipoProveedor === 'Empresa'" [class.pi-user]="p.tipoProveedor === 'Persona'"></i>
+                  {{ p.tipoProveedor }}
+                </span>
+              </td>
+              <td>
+                <div class="proveedor-name">{{ getDisplayName(p) }}</div>
+              </td>
+              <td>
+                <div class="contact-info">
+                  <i class="pi pi-phone contact-icon"></i>{{ p.telefono }}
+                </div>
+                <div class="contact-info">
+                  <i class="pi pi-envelope contact-icon"></i>{{ p.correo }}
+                </div>
+              </td>
+              <td class="td-direccion">{{ p.direccion }}</td>
+              <td>
+                <div class="action-btns">
+                  <button class="btn-icon btn-edit" (click)="openEditModal(p)" title="Editar">
+                    <i class="pi pi-pencil"></i>
+                  </button>
+                  <button class="btn-icon btn-delete" (click)="deleteProveedor(p.idProveedor)" title="Eliminar">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-state">
+                <i class="pi pi-inbox"></i>
+                <span>No se encontraron proveedores</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<!-- Modal -->
+@if (showModal()) {
+  <div class="modal-backdrop" (click)="closeModal()"></div>
+  <div class="modal">
+    <div class="modal-header">
+      <h2>{{ editMode() ? 'Editar Proveedor' : 'Nuevo Proveedor' }}</h2>
+      <button class="modal-close" (click)="closeModal()"><i class="pi pi-times"></i></button>
+    </div>
+    <form (ngSubmit)="onSubmit()" class="modal-form">
+      <!-- Tipo -->
+      <div class="tipo-selector">
+        <button type="button" class="tipo-btn" [class.active]="form.tipoProveedor === 'Persona'" (click)="form.tipoProveedor = 'Persona'">
+          <i class="pi pi-user"></i> Persona
+        </button>
+        <button type="button" class="tipo-btn" [class.active]="form.tipoProveedor === 'Empresa'" (click)="form.tipoProveedor = 'Empresa'">
+          <i class="pi pi-building"></i> Empresa
+        </button>
+      </div>
+
+      <div class="form-grid">
+        @if (form.tipoProveedor === 'Persona') {
+          <div class="form-group form-full">
+            <label>Nombre Completo *</label>
+            <input type="text" [(ngModel)]="form.nombre" name="nombre" required placeholder="Juan Pérez" />
+          </div>
+        }
+        @if (form.tipoProveedor === 'Empresa') {
+          <div class="form-group form-full">
+            <label>Razón Social *</label>
+            <input type="text" [(ngModel)]="form.razonSocial" name="razonSocial" required placeholder="Empresa S.A." />
+          </div>
+        }
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="tel" [(ngModel)]="form.telefono" name="telefono" placeholder="7XXXXXXX" />
+        </div>
+        <div class="form-group">
+          <label>Correo</label>
+          <input type="email" [(ngModel)]="form.correo" name="correo" placeholder="correo@empresa.com" />
+        </div>
+        <div class="form-group form-full">
+          <label>Dirección</label>
+          <input type="text" [(ngModel)]="form.direccion" name="direccion" placeholder="Av. Ejemplo 123, Ciudad" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button type="submit" class="btn-primary">
+          <i class="pi pi-save"></i>
+          {{ editMode() ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+}

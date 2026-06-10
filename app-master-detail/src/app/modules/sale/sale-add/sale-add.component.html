@@ -1,105 +1,200 @@
-<div class="flex flex-col lg:flex-row rounded-lg gap-8 p-6 bg-gradient-to-br from-blue-900 via-gray-800 to-blue-700 text-[#3E261A] shadow-xl mt-4">
-  <!-- Sección de productos -->
-  <div class="lg:w-2/3 bg-[#FCFAF7] rounded-xl shadow-md border border-amber-100/60 p-6">
-    <!-- Botón de volver -->
-    <div class="flex justify-end mt-4">
-      <button
-        (click)="goBack()"
-        class="bg-[#5C3E21] text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:from-blue-700 hover:to-cyan-600 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 transition-all duration-300"
-      >
-        ← Volver
-      </button>
-    </div>
-    <h1 class="text-2xl font-bold mb-4 text-[#3E261A]">🛒 Productos Disponibles</h1>
-    <input
-      type="text"
-      placeholder="Buscar productos..."
-      [(ngModel)]="searchQuery"
-      (input)="filterProducts()"
-      class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition placeholder-amber-800/40 shadow-sm"
-    />
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Producto -->
-      <div
-        *ngFor="let productoAlmacen of filteredProductoAlmacen"
-        class="bg-white border border-amber-100 rounded-lg shadow-sm p-4 hover:shadow-md hover:scale-105 transition-all duration-200 text-amber-950"
-      >
-        <h2 class="font-semibold text-lg text-[#3E261A] mb-1">{{productoAlmacen.almacen?.nombre}}</h2>
-        <h2 class="font-semibold text-lg text-[#3E261A] mb-1">{{productoAlmacen.producto!.nombre}}</h2>
-        <p class="text-sm text-amber-800/80">Stock: {{productoAlmacen.stock}}</p>
-        <p class="text-xl font-bold text-white mb-2">{{productoAlmacen.producto!.precio}} Bs</p>
-        <button
-          (click)="addToCart(productoAlmacen)"
-          [disabled]="productoAlmacen.stock <= 0"
-          [ngClass]="{
-            'w-full py-2 rounded-lg transition-colors': true,
-            'bg-[#5C3E21] text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:from-blue-700 hover:to-cyan-600 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 transition-all duration-300': productoAlmacen.stock > 0,
-            'bg-gray-500 text-amber-800/80 cursor-not-allowed': productoAlmacen.stock <= 0
-          }"
-        >
-          {{ productoAlmacen.stock > 0 ? '+ Agregar al Carrito' : 'Sin Stock' }}
-        </button>
+<div class="p-6 max-w-7xl mx-auto space-y-6">
+  
+  <!-- Encabezado con datos de Registro -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-[#FAF6EE] border border-[#E8D9C8] rounded-2xl p-5 shadow-sm">
+    <div class="space-y-1">
+      <div class="flex items-center gap-2 text-[#8E4E2A] font-semibold">
+        <i class="pi pi-user text-lg"></i>
+        <span>Vendedor Registrador:</span>
+        <span class="bg-[#EADDC9] px-3 py-1 rounded-full text-[#3E261A] text-xs font-bold">{{ empleadoNombre }}</span>
       </div>
+      <h1 class="text-2xl font-black text-[#3E261A] tracking-tight">Nueva Venta de Productos</h1>
+      <p class="text-sm text-[#7D6656]">Agrega productos al carrito, selecciona un cliente y procesa la venta.</p>
     </div>
+    
+    <button
+      (click)="goBack()"
+      class="mt-4 md:mt-0 flex items-center gap-2 px-5 py-2.5 bg-white border border-[#D9C8B4] text-[#3E261A] hover:bg-[#FAF0E6] font-semibold rounded-xl shadow-sm transition-all duration-200"
+    >
+      <i class="pi pi-arrow-left"></i> Volver al Historial
+    </button>
   </div>
 
-  <!-- Sección del carrito -->
-  <div class="lg:w-1/3 bg-[#FCFAF7] rounded-xl shadow-md border border-amber-100/60 p-6">
-    <h1 class="text-2xl font-bold mb-4 text-[#3E261A]">🛍️ Carrito</h1>
-    <label for="customer-select" class="block text-sm font-medium text-amber-800/80 mb-2">
-      Seleccionar Cliente
-    </label>
-    <select
-      id="customer-select"
-      [(ngModel)]="selectedCustome"
-      class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition placeholder-amber-800/40 shadow-sm"
-    >
-      <option value="" disabled selected>Seleccione un cliente</option>
-      <option *ngFor="let customer of customers" [ngValue]="customer">
-        {{ customer.nombre}} {{ customer.apellidos }}
-      </option>
-    </select>
-
-    <ul class="space-y-4">
-      <!-- Elemento del carrito -->
-      <li *ngFor="let item of cartItems; let i = index" class="flex justify-between items-center bg-[#FAF6EE] border border-amber-100/60 p-4 rounded-lg shadow-sm">
-        <div>
-          <p class="font-semibold text-white">Tablet Lite {{item.producto.nombre}}</p>
-          <p class="text-sm text-amber-800/80">{{item.producto.precio}} Bs x {{item.cantidad}}</p>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Panel Izquierdo: Productos Disponibles (8 cols en pantallas grandes) -->
+    <div class="lg:col-span-7 bg-white rounded-2xl border border-[#F0E6D8] shadow-sm p-6 space-y-6">
+      
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 class="text-lg font-bold text-[#3E261A] flex items-center gap-2">
+          <i class="pi pi-th-large text-[#8E4E2A]"></i> Productos en Almacén
+        </h2>
+        
+        <!-- Caja de Búsqueda -->
+        <div class="relative w-full sm:w-64">
+          <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-[#9B7B6A]"></i>
+          <input
+            type="text"
+            placeholder="Buscar por nombre..."
+            [(ngModel)]="searchQuery"
+            (input)="filterProducts()"
+            class="w-full pl-9 pr-4 py-2 border border-[#E8D9C8] rounded-xl focus:border-[#8E4E2A] focus:ring-2 focus:ring-[#8E4E2A]/10 outline-none text-sm text-[#3E261A] transition"
+          />
         </div>
-        <div class="flex items-center space-x-2">
-          <button
-            class="w-8 h-8 bg-[#E6DCD3] text-[#3E261A] rounded-full hover:bg-[#D8C9B9]"
-          >
-            -
-          </button>
-          <span class="font-semibold text-white">{{item.cantidad}}</span>
-          <button
-            class="w-8 h-8 bg-[#E6DCD3] text-[#3E261A] rounded-full hover:bg-[#D8C9B9]"
-          >
-            +
-          </button>
-          <button
-            (click)="removeItem(i)"
-            class="w-8 h-8 bg-red-700 text-white rounded-full hover:bg-red-800"
-          >
-            🗑️
-          </button>
-        </div>
-      </li>
-    </ul>
+      </div>
 
-    <div class="border-t mt-6 pt-4">
-      <p class="text-lg font-semibold text-white flex justify-between">
-        Total: <span class="text-green-600 font-bold">{{this.totalAmount}} Bs</span>
-      </p>
-      <button
-        (click)="createSale()"
-        class="w-full mt-4 bg-[#5C3E21] text-white py-3 rounded-lg text-lg hover:from-blue-700 hover:to-cyan-600 transition-colors"
-      >
-        Crear Venta
-      </button>
+      <!-- Grid de Productos -->
+      <div *ngIf="filteredProductoAlmacen.length > 0; else noProducts" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto pr-2">
+        <div
+          *ngFor="let pa of filteredProductoAlmacen"
+          class="group bg-[#FDFBF7] hover:bg-[#F9F6F0] border border-[#FAF0E0] rounded-xl p-4 transition-all duration-200 flex flex-col justify-between shadow-sm hover:shadow-md"
+        >
+          <div class="space-y-2">
+            <div class="flex justify-between items-start">
+              <span class="text-[10px] font-bold tracking-wider uppercase bg-[#EBF5FF] text-[#1A56A0] px-2 py-0.5 rounded">
+                {{ pa.almacen?.nombre }}
+              </span>
+              <span 
+                [class]="pa.stock > 0 ? 'text-xs font-semibold text-[#1A6B4A]' : 'text-xs font-semibold text-red-600'"
+              >
+                Stock: {{ pa.stock }}
+              </span>
+            </div>
+            
+            <h3 class="font-bold text-[#3E261A] text-base group-hover:text-[#8E4E2A] transition-colors">
+              {{ pa.producto?.nombre }}
+            </h3>
+            
+            <p class="text-xs text-[#8E7968] line-clamp-1">
+              Categoría: {{ pa.producto?.categoria?.nombre || 'General' }}
+            </p>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-[#F0E6D8]/60 flex items-center justify-between">
+            <span class="text-[#1A6B4A] font-extrabold text-lg">{{ pa.producto?.precio | currency: 'Bs ' }}</span>
+            
+            <button
+              (click)="addToCart(pa)"
+              [disabled]="pa.stock <= 0"
+              [class]="pa.stock > 0 
+                ? 'px-3 py-1.5 bg-[#8E4E2A] hover:bg-[#703B1E] text-white text-xs font-bold rounded-lg shadow-sm hover:shadow transition'
+                : 'px-3 py-1.5 bg-gray-200 text-gray-400 text-xs font-bold rounded-lg cursor-not-allowed'"
+            >
+              {{ pa.stock > 0 ? '+ Agregar' : 'Agotado' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado Sin Productos -->
+      <ng-template #noProducts>
+        <div class="flex flex-col items-center justify-center py-12 text-[#9B7B6A] space-y-2">
+          <i class="pi pi-inbox text-4xl text-[#D9C8B4]"></i>
+          <p class="font-medium text-sm">No se encontraron productos disponibles.</p>
+        </div>
+      </ng-template>
+
     </div>
+
+    <!-- Panel Derecho: Carrito de Compras (5 cols) -->
+    <div class="lg:col-span-5 bg-white rounded-2xl border border-[#F0E6D8] shadow-sm p-6 flex flex-col justify-between space-y-6">
+      
+      <div class="space-y-4">
+        <h2 class="text-lg font-bold text-[#3E261A] flex items-center gap-2 border-b pb-3 border-[#F0E6D8]">
+          <i class="pi pi-shopping-bag text-[#8E4E2A]"></i> Detalle de Venta
+        </h2>
+
+        <!-- Selección de Cliente -->
+        <div class="space-y-1.5">
+          <label for="customer-select" class="text-xs font-bold uppercase tracking-wider text-[#7D6656]">
+            Cliente Requerido
+          </label>
+          <select
+            id="customer-select"
+            [(ngModel)]="selectedCustome"
+            class="w-full p-3 bg-white border border-[#E8D9C8] text-[#3E261A] rounded-xl focus:border-[#8E4E2A] focus:ring-2 focus:ring-[#8E4E2A]/10 outline-none text-sm shadow-sm transition"
+          >
+            <option [ngValue]="null" disabled selected>Seleccione un cliente...</option>
+            <option *ngFor="let customer of customers" [ngValue]="customer">
+              {{ customer.nombre }} {{ customer.apellidos }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Lista del Carrito -->
+        <div class="space-y-3">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#7D6656]">Items Seleccionados</span>
+          
+          <ul *ngIf="cartItems.length > 0; else emptyCart" class="space-y-2 max-h-[30vh] overflow-y-auto pr-1">
+            <li 
+              *ngFor="let item of cartItems; let i = index" 
+              class="flex justify-between items-center bg-[#FAF6EE] border border-[#F0E6D8]/60 p-3 rounded-xl gap-3 shadow-xs"
+            >
+              <div class="flex-1 min-w-0">
+                <p class="font-bold text-[#3E261A] text-sm truncate">{{ item.producto.nombre }}</p>
+                <p class="text-xs text-[#8E7968]">
+                  {{ item.producto.precio | currency: 'Bs ' }} en {{ item.alamacen.nombre }}
+                </p>
+              </div>
+
+              <!-- Controles de Cantidad -->
+              <div class="flex items-center gap-2">
+                <button
+                  (click)="decrementCartItem(i)"
+                  class="w-7 h-7 flex items-center justify-center bg-white border border-[#D9C8B4] text-[#3E261A] rounded-lg hover:bg-[#FAF0E6] transition active:scale-95 text-sm font-black"
+                >
+                  -
+                </button>
+                <span class="font-bold text-[#3E261A] text-sm min-w-4 text-center">{{ item.cantidad }}</span>
+                <button
+                  (click)="incrementCartItem(i)"
+                  class="w-7 h-7 flex items-center justify-center bg-white border border-[#D9C8B4] text-[#3E261A] rounded-lg hover:bg-[#FAF0E6] transition active:scale-95 text-sm font-black"
+                >
+                  +
+                </button>
+                
+                <!-- Botón Eliminar -->
+                <button
+                  (click)="removeItem(i)"
+                  class="w-7 h-7 flex items-center justify-center bg-red-50 border border-red-200 text-red-600 rounded-lg hover:bg-red-100 transition"
+                  title="Eliminar item"
+                >
+                  <i class="pi pi-trash text-xs"></i>
+                </button>
+              </div>
+            </li>
+          </ul>
+
+          <ng-template #emptyCart>
+            <div class="flex flex-col items-center justify-center py-8 bg-[#FAF6EE]/50 border border-dashed border-[#E8D9C8] rounded-xl text-[#9B7B6A] space-y-1">
+              <i class="pi pi-shopping-cart text-2xl text-[#D9C8B4]"></i>
+              <p class="text-xs">El carrito está vacío. Agrega productos.</p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Resumen y Acción de checkout -->
+      <div class="border-t border-[#F0E6D8] pt-4 space-y-4">
+        <div class="flex justify-between items-center text-[#3E261A]">
+          <span class="font-bold text-sm">Monto Total:</span>
+          <span class="text-2xl font-black text-[#1A6B4A] tracking-tight">
+            {{ totalAmount | currency: 'Bs ' }}
+          </span>
+        </div>
+
+        <button
+          (click)="createSale()"
+          [disabled]="cartItems.length === 0 || !selectedCustome"
+          [class]="(cartItems.length > 0 && selectedCustome)
+            ? 'w-full py-3 bg-[#1A6B4A] hover:bg-[#15543A] text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-150 transform hover:-translate-y-0.5 active:translate-y-0 text-center flex items-center justify-center gap-2'
+            : 'w-full py-3 bg-gray-200 text-gray-400 font-bold rounded-xl cursor-not-allowed text-center flex items-center justify-center gap-2'"
+        >
+          <i class="pi pi-check-circle"></i> Completar Venta
+        </button>
+      </div>
+
+    </div>
+
   </div>
 </div>

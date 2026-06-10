@@ -1,65 +1,100 @@
-<div class="p-6 mt-10 bg-white text-amber-950 rounded-2xl shadow-md border border-amber-100/70 border-t-4 border-t-[#5C3E21]">
-  <h2 class="text-3xl font-extrabold text-left text-[#3E261A] mb-8">Asignar Producto a Almacén</h2>
+<div class="p-8 mt-10 bg-white text-amber-950 rounded-2xl shadow-lg border border-amber-100/70 border-t-8 border-t-[#5C3E21] max-w-4xl mx-auto animated fadeIn">
+  <h2 class="text-3xl font-extrabold text-[#3E261A] mb-2 flex items-center gap-2">
+    <i class="pi pi-box text-[#8E4E2A]"></i> Asignar Stock a Almacén
+  </h2>
+  <p class="text-amber-800/70 text-sm mb-8">Asigna múltiples productos e insumos con diferentes cantidades de stock a un almacén específico.</p>
 
-  <div *ngIf="mensaje" class="mt-3 mb-4 p-4 bg-[#FAF6EE] border-l-4 border-[#8E4E2A] text-[#5C3E21] rounded-lg flex items-center justify-between">
-    <span>{{ mensaje }}</span>
-    <button (click)="mensaje = ''" class="text-[#8E4E2A] hover:text-[#5C3E21] font-bold">
-      &times;
-    </button>
-  </div>
-
-  <form [formGroup]="asignarForm" (ngSubmit)="onSubmit()" class="space-y-5">
-    <!-- Producto -->
-    <div>
-      <label for="ProductoId" class="block text-sm font-semibold text-[#3E261A] mb-1">Seleccionar Producto</label>
-      <select id="ProductoId" formControlName="ProductoId"
-        class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm">
-        <option value="" disabled selected>Seleccione un producto</option>
-        <option *ngFor="let producto of productos" [value]="producto.id">{{ producto.nombre }}</option>
-      </select>
-      <div *ngIf="asignarForm.controls['ProductoId'].invalid && asignarForm.controls['ProductoId'].touched"
-        class="text-red-500 text-sm mt-1">Este campo es obligatorio.</div>
-    </div>
-
-    <!-- Almacén -->
-    <div>
-      <label for="AlmacenId" class="block text-sm font-semibold text-[#3E261A] mb-1">Seleccionar Almacén</label>
+  <form [formGroup]="asignarForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    
+    <!-- Sección de Selección de Almacén -->
+    <div class="bg-[#FAF6EE] p-5 rounded-xl border border-amber-200/50 shadow-inner">
+      <label for="AlmacenId" class="block text-xs font-bold text-[#8E4E2A] uppercase tracking-wider mb-2">
+        1. Almacén de Destino
+      </label>
       <select id="AlmacenId" formControlName="AlmacenId"
-        class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm">
-        <option value="" disabled selected>Seleccione un almacén</option>
-        <option *ngFor="let almacen of almacenes" [value]="almacen.id">{{ almacen.nombre }} - {{ almacen.locacion }}</option>
+        class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm font-medium">
+        <option [value]="null" disabled selected>Seleccione el almacén de destino...</option>
+        <option *ngFor="let almacen of almacenes" [value]="almacen.id">
+          🏢 {{ almacen.nombre }} — {{ almacen.locacion }}
+        </option>
       </select>
       <div *ngIf="asignarForm.controls['AlmacenId'].invalid && asignarForm.controls['AlmacenId'].touched"
-        class="text-red-500 text-sm mt-1">Este campo es obligatorio.</div>
+        class="text-red-600 text-xs mt-1 font-semibold">
+        El almacén de destino es obligatorio.
+      </div>
     </div>
 
-    <!-- Stock -->
-    <div>
-      <label for="Stock" class="block text-sm font-semibold text-[#3E261A] mb-1">Cantidad de Stock</label>
-      <input id="Stock" formControlName="Stock" type="number" min="1"
-        class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm placeholder-amber-800/40" />
-      <div *ngIf="asignarForm.controls['Stock'].invalid && asignarForm.controls['Stock'].touched"
-        class="text-red-500 text-sm mt-1">Por favor ingrese una cantidad válida de Stock.</div>
+    <!-- Sección de Selección de Items y Stocks -->
+    <div class="border border-amber-100 rounded-xl p-5 bg-white shadow-sm space-y-4">
+      <div class="flex justify-between items-center mb-2">
+        <label class="block text-xs font-bold text-[#8E4E2A] uppercase tracking-wider">
+          2. Lista de Items y Cantidades
+        </label>
+        <button type="button" (click)="agregarFila()"
+          class="px-4 py-2 bg-[#8E4E2A] hover:bg-[#7D411F] text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 transition shadow-sm hover:scale-105">
+          <i class="pi pi-plus"></i> Agregar Fila
+        </button>
+      </div>
+
+      <!-- Contenedor del FormArray -->
+      <div formArrayName="Items" class="space-y-3">
+        <div *ngFor="let itemGroup of itemsFormArray.controls; let i = index" [formGroupName]="i"
+          class="flex flex-col md:flex-row items-center gap-3 p-4 bg-[#FAF6EE]/40 hover:bg-[#FAF6EE]/80 border border-amber-100/50 rounded-xl transition duration-150 row-animated">
+          
+          <span class="flex-none font-bold text-xs text-[#8E4E2A] bg-amber-100/70 w-8 h-8 rounded-full flex items-center justify-center shadow-sm">
+            {{ i + 1 }}
+          </span>
+
+          <!-- Selector de Item (Producto o Insumo) -->
+          <div class="flex-1 w-full">
+            <select formControlName="ItemId"
+              class="w-full p-2.5 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm text-sm">
+              <option [value]="null" disabled selected>Seleccione un item (producto o insumo)...</option>
+              <option *ngFor="let item of itemsList" [value]="item.id" [disabled]="isItemSeleccionado(item.id, i)">
+                {{ item.nombre }} ({{ item.tipo }}) — {{ item.unidadMedida || 'Unidad' }}
+              </option>
+            </select>
+            <div *ngIf="itemGroup.get('ItemId')?.invalid && itemGroup.get('ItemId')?.touched"
+              class="text-red-600 text-xs mt-1">El item es requerido.</div>
+          </div>
+
+          <!-- Input de Stock -->
+          <div class="w-full md:w-48">
+            <div class="relative rounded-lg shadow-sm">
+              <input type="number" formControlName="Stock" min="1" placeholder="Stock"
+                class="w-full p-2.5 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition placeholder-amber-800/30 text-sm" />
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <span class="text-amber-800/40 text-xs font-semibold">uds</span>
+              </div>
+            </div>
+            <div *ngIf="itemGroup.get('Stock')?.invalid && itemGroup.get('Stock')?.touched"
+              class="text-red-600 text-xs mt-1">Stock mínimo es 1.</div>
+          </div>
+
+          <!-- Botón de Eliminar Fila -->
+          <button type="button" (click)="eliminarFila(i)"
+            class="flex-none p-2.5 text-red-600 hover:text-white hover:bg-red-500 rounded-lg transition duration-200 border border-transparent hover:border-red-600"
+            title="Quitar item">
+            <i class="pi pi-trash text-base"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Mensaje si no hay filas cargadas (nunca debería ocurrir debido al OnInit, pero por seguridad) -->
+      <div *ngIf="itemsFormArray.length === 0" class="text-center py-6 text-amber-800/50 text-sm">
+        Haz clic en "Agregar Fila" para comenzar a asignar.
+      </div>
     </div>
 
-    <!-- Precio -->
-    <div *ngIf="asignarForm.contains('Precio')">
-      <label for="Precio" class="block text-sm font-semibold text-[#3E261A] mb-1">Precio (Bs)</label>
-      <input id="Precio" formControlName="Precio" type="number" min="0" step="0.01"
-        class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm placeholder-amber-800/40" />
-      <div *ngIf="asignarForm.controls['Precio']?.invalid && asignarForm.controls['Precio']?.touched"
-        class="text-red-500 text-sm mt-1">Por favor ingrese un precio válido.</div>
-    </div>
-
-    <!-- Botones -->
-    <div class="flex gap-4 pt-2">
+    <!-- Acciones Finales -->
+    <div class="flex flex-col sm:flex-row gap-4 pt-4 border-t border-amber-100">
       <button type="submit" [disabled]="asignarForm.invalid"
-        class="flex-1 px-5 py-2.5 bg-[#8E4E2A] hover:bg-[#7D411F] text-white font-semibold rounded-lg shadow-md transition-all hover:scale-105 disabled:opacity-60 disabled:cursor-not-allowed">
-        ✅ Asignar Producto
+        class="flex-1 px-6 py-3.5 bg-[#8E4E2A] hover:bg-[#7D411F] text-white font-bold rounded-xl shadow-md transition-all hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2">
+        <i class="pi pi-save"></i> Guardar Asignaciones
       </button>
       <button type="button" (click)="goBack()"
-        class="flex-1 px-5 py-2.5 bg-[#E6DCD3] hover:bg-[#D8C9B9] text-[#3E261A] font-semibold rounded-lg shadow-md transition-all">
-        ⬅ Volver
+        class="px-6 py-3.5 bg-[#E6DCD3] hover:bg-[#D8C9B9] text-[#3E261A] font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+        <i class="pi pi-arrow-left"></i> Volver
       </button>
     </div>
   </form>

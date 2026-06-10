@@ -71,14 +71,22 @@ export class SaleListComponent implements OnInit{
 
     this.saleDetailService.getDetallesPorVenta(sale.id).subscribe(
       (data: SaleDetail[]) => {
-      // this.sales = data;
-      this.saleDetail.set(data);
-      console.log('Detalle de Venta: ',this.saleDetail());
-      const salesData = this.saleDetail();
-      this.selectedSaleDetail = salesData;
-      console.log('selectedSaleDetail :',salesData);
-      this.cdr.markForCheck();
-    });
+        // Normalización: mapear item a producto si es necesario
+        data.forEach(d => {
+          if (d.productoAlmacen) {
+            if (d.productoAlmacen.item && !d.productoAlmacen.producto) {
+              d.productoAlmacen.producto = d.productoAlmacen.item;
+            }
+          }
+        });
+        this.saleDetail.set(data);
+        console.log('Detalle de Venta: ', this.saleDetail());
+        const salesData = this.saleDetail();
+        this.selectedSaleDetail = salesData;
+        console.log('selectedSaleDetail :', salesData);
+        this.cdr.markForCheck();
+      }
+    );
 
     console.log('this.saleDetail() :',this.saleDetail());
   }
@@ -112,5 +120,10 @@ export class SaleListComponent implements OnInit{
   createNewSale(): void {
     this.router.navigate(['/dashboard/sale/add']);
     // this.router.navigate(['/create']); // Redirige a la ruta /create
+  }
+
+  get totalAmountSelectedSale(): number {
+    if (!this.selectedSaleDetail) return 0;
+    return this.selectedSaleDetail.reduce((sum, d) => sum + (d.monto || 0), 0);
   }
 }

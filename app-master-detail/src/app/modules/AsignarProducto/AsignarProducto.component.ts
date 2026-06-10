@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsignarProductoAlmacenService } from './asignar-producto-almacen.service';
-import { ProductService } from '../product/service/product.service';
+import { ItemService } from '../crear-item/service/item.service';
 import { AlmacenService } from '../almacen/service/almacen.service';
-import { Product } from '../../interfaces/poduct.interface';
 import { Almacen } from '../../interfaces/almacen.interface';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-asignar-producto',
@@ -21,13 +21,13 @@ import { Almacen } from '../../interfaces/almacen.interface';
 export class AsignarProductoComponent implements OnInit {
   asignarForm!: FormGroup;
   almacenes: Almacen[] = [];
-  productos: Product[] = [];
+  itemsList: any[] = []; // Contiene todos los productos e insumos
   mensaje: string = '';
 
   constructor(
     private fb: FormBuilder,
     private asignarProductoAlmacenService: AsignarProductoAlmacenService,
-    private productoService: ProductService,
+    private itemService: ItemService,
     private almacenService: AlmacenService,
     private cdr: ChangeDetectorRef,
     private location: Location
@@ -35,23 +35,25 @@ export class AsignarProductoComponent implements OnInit {
 
   ngOnInit(): void {
     this.asignarForm = this.fb.group({
-      ProductoId: [null, Validators.required],
       AlmacenId: [null, Validators.required],
-      Stock: [null, [Validators.required, Validators.min(1)]]
+      Items: this.fb.array([])
     });
 
-    this.productoService.getProductAll().subscribe({
-      next: (productos) => {
-        this.productos = productos;
-        console.log('Productos cargados:', this.productos);
+    this.agregarFila();
+
+    // Cargar Items (Productos e Insumos)
+    this.itemService.getItems().subscribe({
+      next: (items) => {
+        this.itemsList = items;
+        console.log('Items cargados (Productos/Insumos):', this.itemsList);
         this.cdr.markForCheck();
       },
       error: (err) => {
-        console.error(err);
-        this.cdr.markForCheck();
-      },
+        console.error('Error al cargar items:', err);
+      }
     });
 
+    // Cargar Almacenes
     this.almacenService.getAlmacenes().subscribe({
       next: (almacenes) => {
         this.almacenes = almacenes;
@@ -59,10 +61,40 @@ export class AsignarProductoComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (err) => {
-        console.error(err);
-        this.cdr.markForCheck();
-      },
+        console.error('Error al cargar almacenes:', err);
+      }
     });
+  }
+
+  get itemsFormArray(): FormArray {
+    return this.asignarForm.get('Items') as FormArray;
+  }
+
+  crearFilaItem(): FormGroup {
+    return this.fb.group({
+      ItemId: [null, Validators.required],
+      Stock: [null, [Validators.required, Validators.min(1)]]
+    });
+  }
+
+  agregarFila(): void {
+    this.itemsFormArray.push(this.crearFilaItem());
+    this.cdr.markForCheck();
+  }
+
+  eliminarFila(index: number): void {
+    if (this.itemsFormArray.length > 1) {
+      this.itemsFormArray.removeAt(index);
+    } else {
+      this.itemsFormArray.at(0).reset();
+    }
+    this.cdr.markForCheck();
+  }
+
+  // Verifica si un item ya ha sido seleccionado en otra fila para evitar duplicados en la pantalla
+  isItemSeleccionado(itemId: number, currentIndex: number): boolean {
+    const selectedItems = this.itemsFormArray.value as { ItemId: any }[];
+    return selectedItems.some((val, idx) => val.ItemId && Number(val.ItemId) === Number(itemId) && idx !== currentIndex);
   }
 
   goBack(): void {
@@ -70,24 +102,68 @@ export class AsignarProductoComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.asignarForm.valid) {
-      console.log(this.asignarForm.value);
-      const data = this.asignarForm.value;
-      console.log('data', data);
-      this.asignarProductoAlmacenService.addProductoToAlmacen(data).subscribe(
-        (response) => {
-          this.mensaje = response.mensaje || 'Producto agregado exitosamente';
-          console.log(response.mensaje);
-          alert(this.mensaje);
-          this.asignarForm.reset();
-          this.cdr.markForCheck();
-        },
-        (error) => {
-          console.log(error);
-          this.mensaje = `${error}` || 'Error al agregar producto al almacén';
-          this.cdr.markForCheck();
-        }
-      );
+    if (this.asignarForm.invalid) {
+      this.asignarForm.markAllAsTouched();
+      return;
     }
+
+    const formValue = this.asignarForm.value;
+    const bulkPayload = {
+      AlmacenId: Number(formValue.AlmacenId),
+      Items: formValue.Items.map((item: any) => ({
+        ItemId: Number(item.ItemId),
+        Stock: Number(item.Stock)
+      }))
+    };
+
+    console.log('Payload a enviar:', bulkPayload);
+
+    Swal.fire({
+      title: '¿Confirmar asignaciones?',
+      text: 'Se registrará el stock de todos los items seleccionados en el almacén.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#8E4E2A',
+      cancelButtonColor: '#E6DCD3',
+      confirmButtonText: 'Sí, asignar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Guardando asignaciones...',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        this.asignarProductoAlmacenService.addBulkProductoToAlmacen(bulkPayload).subscribe({
+          next: (response) => {
+            Swal.close();
+            Swal.fire({
+              title: '¡Asignado con éxito!',
+              text: response.mensaje || 'Se han asignado todos los items correctamente.',
+              icon: 'success',
+              confirmButtonColor: '#8E4E2A'
+            }).then(() => {
+              this.itemsFormArray.clear();
+              this.agregarFila();
+              this.asignarForm.get('AlmacenId')?.reset();
+              this.cdr.markForCheck();
+            });
+          },
+          error: (error) => {
+            Swal.close();
+            Swal.fire({
+              title: 'Error al asignar',
+              text: error || 'Ocurrió un error inesperado al procesar la asignación.',
+              icon: 'error',
+              confirmButtonColor: '#8E4E2A'
+            });
+            this.cdr.markForCheck();
+          }
+        });
+      }
+    });
   }
 }

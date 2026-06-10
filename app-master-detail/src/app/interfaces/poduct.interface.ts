@@ -14,4 +14,5 @@ export interface Product {
   categoria?: Category;
   productoId?:number;
   nombreProducto?:string;
+  tipo?: string;
 }

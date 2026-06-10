@@ -44,6 +44,16 @@ export class AsignarProductoAlmacenService {
     );
   }
 
+  // Método para agregar varios productos/insumos al almacén en lote
+  addBulkProductoToAlmacen(bulkDto: any): Observable<any> {
+    const token = sessionStorage.getItem('token');
+    return this.http.post<any>(`${this.apiUrl}/bulk`, bulkDto, httpOptions(token)).pipe(
+      catchError((error) => {
+        return throwError(error.error.mensaje || 'Error desconocido');
+      })
+    );
+  }
+
   // Método para eliminar un producto del almacén
   quitarProducto(productoId: number, almacenId: number): Observable<any> {
     const token = sessionStorage.getItem('token');

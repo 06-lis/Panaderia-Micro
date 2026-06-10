@@ -70,4 +70,15 @@ export class ProductoAlmacenService {
           }
      }
 
+     public updateStock(itemId: number, almacenId: number, cantidad: number): Observable<any> {
+       const token = sessionStorage.getItem('token');
+       if (token) {
+         return this.http.post<any>(`${this.apiUrl}/update-stock`, { itemId, almacenId, cantidad }, httpOptions(token)).pipe(
+           catchError(this.handleError('updateStock', null))
+         );
+       } else {
+         return of(null);
+       }
+     }
+
 }

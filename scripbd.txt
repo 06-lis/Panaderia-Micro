@@ -275,3 +275,70 @@ INSERT INTO detalle_venta (id_producto_almacen, id_venta, cantidad, monto) VALUE
 ----------------------------------------------------------------
 ----------------------------------------------------------------
 
+
+----------------------------------------------------------------
+----------------------------------------------------------------
+---------------        MONGODB Compras (WSL)           ---------
+----------------------------------------------------------------
+----------------------------------------------------------------
+
+-- Base de datos: db_compras
+-- Motor: MongoDB (NoSQL)
+-- Puerto: 27017
+
+-- 1. Colección: proveedores
+-- Documento de ejemplo (Persona):
+-- {
+--   "_id": ObjectId("..."),
+--   "id_proveedor": 1,
+--   "tipo_proveedor": "Persona",
+--   "telefono": "76543210",
+--   "direccion": "Av. Principal 123",
+--   "correo": "proveedor@persona.com",
+--   "nombre": "Juan Pérez"
+-- }
+--
+-- Documento de ejemplo (Empresa):
+-- {
+--   "_id": ObjectId("..."),
+--   "id_proveedor": 2,
+--   "tipo_proveedor": "Empresa",
+--   "telefono": "76543211",
+--   "direccion": "Zona Industrial 456",
+--   "correo": "contacto@pempresa.com",
+--   "razon_social": "Pempresa S.A."
+-- }
+
+-- 2. Colección: notas_compra
+-- Documento de ejemplo:
+-- {
+--   "_id": ObjectId("..."),
+--   "id_nota_compra": 1,
+--   "fecha_compra": ISODate("2026-06-10T12:00:00Z"),
+--   "monto_total": NumberDecimal("150.00"),
+--   "estado": "Completada",
+--   "id_empleado": 1,
+--   "id_proveedor": 2,
+--   "detalles": [
+--     {
+--       "id_almacen": 1,
+--       "id_item": 3,
+--       "cantidad": 100,
+--       "precio": NumberDecimal("1.50")
+--     }
+--   ]
+-- }
+
+-- 3. Colección: counters (Generación de IDs autoincrementales)
+-- { "_id": "id_proveedor", "seq": 2 }
+-- { "_id": "id_nota_compra", "seq": 1 }
+
+----------------------------------------------------------------
+-- Comandos Docker/WSL para iniciar MongoDB:
+--
+-- sudo service docker start
+-- docker pull mongo
+-- docker run --name mongo-compras --network micro -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=Aforo255#2019 -p 27017:27017 -d mongo
+----------------------------------------------------------------
+
+

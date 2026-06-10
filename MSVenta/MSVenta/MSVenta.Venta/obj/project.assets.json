@@ -2204,19 +2204,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\lizet\\.nuget\\packages\\": {}
+    "C:\\Users\\aldearius\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Proyecto-Tec\\MS-SisVentas-Back-Front\\MSVenta\\MSVenta\\MSVenta.Venta\\MSVenta.Venta.csproj",
+      "projectUniqueName": "C:\\Users\\aldearius\\Documents\\Panaderia-Micro\\MSVenta\\MSVenta\\MSVenta.Venta\\MSVenta.Venta.csproj",
       "projectName": "MSVenta.Venta",
-      "projectPath": "E:\\Proyecto-Tec\\MS-SisVentas-Back-Front\\MSVenta\\MSVenta\\MSVenta.Venta\\MSVenta.Venta.csproj",
-      "packagesPath": "C:\\Users\\lizet\\.nuget\\packages\\",
-      "outputPath": "E:\\Proyecto-Tec\\MS-SisVentas-Back-Front\\MSVenta\\MSVenta\\MSVenta.Venta\\obj\\",
+      "projectPath": "C:\\Users\\aldearius\\Documents\\Panaderia-Micro\\MSVenta\\MSVenta\\MSVenta.Venta\\MSVenta.Venta.csproj",
+      "packagesPath": "C:\\Users\\aldearius\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\aldearius\\Documents\\Panaderia-Micro\\MSVenta\\MSVenta\\MSVenta.Venta\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\lizet\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\aldearius\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

@@ -1,0 +1,245 @@
+<div class="page-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="header-icon">
+        <i class="pi pi-file-edit"></i>
+      </div>
+      <div>
+        <h1 class="page-title">Notas de Compra</h1>
+        <p class="page-subtitle">Registro de órdenes de compra a proveedores</p>
+      </div>
+    </div>
+    <button class="btn-primary" (click)="openModal()">
+      <i class="pi pi-plus"></i>
+      Nueva Nota
+    </button>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-row">
+    @for (estado of ['Pendiente', 'Completada', 'Cancelada']; track estado) {
+      <div class="stat-card" [class.active-filter]="filterEstado() === estado" (click)="setFilter(estado)">
+        <i class="pi stat-icon"
+           [class.pi-clock]="estado === 'Pendiente'"
+           [class.pi-check-circle]="estado === 'Completada'"
+           [class.pi-times-circle]="estado === 'Cancelada'"
+           [class.icon-warning]="estado === 'Pendiente'"
+           [class.icon-success]="estado === 'Completada'"
+           [class.icon-danger]="estado === 'Cancelada'"></i>
+        <div>
+          <div class="stat-value">{{ getTotalByEstado(estado) }}</div>
+          <div class="stat-label">{{ estado }}s</div>
+        </div>
+      </div>
+    }
+    <div class="stat-card stat-total">
+      <i class="pi pi-list stat-icon icon-neutral"></i>
+      <div>
+        <div class="stat-value">{{ notas().length }}</div>
+        <div class="stat-label">Total</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="toolbar">
+    <div class="search-box">
+      <i class="pi pi-search search-icon"></i>
+      <input
+        type="text"
+        placeholder="Buscar por proveedor o N° nota..."
+        [value]="searchTerm()"
+        (input)="updateSearch($any($event.target).value)"
+        class="search-input"
+      />
+    </div>
+    @if (filterEstado()) {
+      <button class="btn-clear-filter" (click)="setFilter(filterEstado())">
+        <i class="pi pi-times"></i> Limpiar filtro
+      </button>
+    }
+  </div>
+
+  <!-- Error -->
+  @if (errorMsg()) {
+    <div class="error-banner">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ errorMsg() }}</span>
+      <button (click)="loadData()">Reintentar</button>
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="loading-container">
+      <i class="pi pi-spinner pi-spin text-3xl"></i>
+      <span>Cargando notas de compra...</span>
+    </div>
+  }
+
+  <!-- Table -->
+  @if (!loading()) {
+    <div class="table-card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>N° Nota</th>
+            <th>Fecha</th>
+            <th>Proveedor</th>
+            <th>Ítems</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (nota of filteredNotas; track nota.id) {
+            <tr class="table-row">
+              <td class="td-id">
+                <span class="nota-num">#{{ nota.idNotaCompra }}</span>
+              </td>
+              <td>{{ nota.fechaCompra | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <div class="proveedor-name">{{ getProveedorNombreForNota(nota) }}</div>
+                <div class="proveedor-ruc">{{ nota.proveedor?.tipoProveedor ?? 'Proveedor' }}</div>
+              </td>
+              <td>
+                <span class="items-badge">{{ nota.detalles.length }} ítem(s)</span>
+              </td>
+              <td>
+                <span class="total-amount">S/ {{ nota.montoTotal | number:'1.2-2' }}</span>
+              </td>
+              <td>
+                <span class="badge" [class]="getEstadoClass(nota.estado)">
+                  {{ nota.estado }}
+                </span>
+              </td>
+              <td>
+                <div class="action-btns">
+                  <a [routerLink]="['/dashboard/detalle-compra', nota.idNotaCompra]" class="btn-icon btn-view" title="Ver detalle">
+                    <i class="pi pi-eye"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="empty-state">
+                <i class="pi pi-inbox"></i>
+                <span>No hay notas de compra</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<!-- Nueva Nota Modal -->
+@if (showModal()) {
+  <div class="modal-backdrop" (click)="closeModal()"></div>
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <h2>Registrar Nota de Compra</h2>
+      <button class="modal-close" (click)="closeModal()"><i class="pi pi-times"></i></button>
+    </div>
+    
+    <div class="modal-body">
+      <!-- Datos Generales -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Proveedor *</label>
+          <select [(ngModel)]="form.idProveedor" name="idProveedor" class="form-select">
+            <option [value]="0">Seleccionar proveedor...</option>
+            @for (p of proveedores(); track p.id) {
+              <option [value]="p.idProveedor">{{ getProveedorNombreDirect(p) }} ({{ p.tipoProveedor }})</option>
+            }
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Empleado Registrador</label>
+          <input type="text" class="detail-input" style="height: 38px; background: #F5EDE3; font-weight: 600;" [value]="empleadoRegistrador()" readonly disabled />
+        </div>
+      </div>
+
+      <!-- Sección de Detalles -->
+      <div class="details-section">
+        <div class="details-header">
+          <h3>Items a Comprar</h3>
+          <button type="button" class="btn-add-detail" (click)="addDetail()">
+            <i class="pi pi-plus"></i> Agregar Ítem
+          </button>
+        </div>
+
+        <div class="details-list">
+          @if (form.detalles.length === 0) {
+            <div class="empty-state" style="padding: 24px 0 !important;">
+              <i class="pi pi-exclamation-triangle" style="font-size: 1.5rem;"></i>
+              <span style="font-size: 0.8rem;">Agrega al menos un detalle para registrar la compra.</span>
+            </div>
+          } @else {
+            <!-- Headers de la grilla de detalles -->
+            <div class="detail-row" style="background: transparent; border: none; padding-bottom: 2px; font-weight: 700; font-size: 0.72rem; color: #5C3317; text-transform: uppercase;">
+              <span>Almacén</span>
+              <span>Ítem / Producto</span>
+              <span style="text-align: center;">Cant.</span>
+              <span style="text-align: right;">Precio Unit.</span>
+              <span style="text-align: right;">Subtotal</span>
+              <span></span>
+            </div>
+
+            @for (d of form.detalles; track $index) {
+              <div class="detail-row">
+                <!-- Almacen dropdown -->
+                <select [(ngModel)]="d.idAlmacen" class="form-select" style="font-size: 0.8rem; padding: 6px;">
+                  <option [value]="0">Almacén...</option>
+                  @for (a of almacenes(); track a.id) {
+                    <option [value]="a.id">{{ a.nombre }}</option>
+                  }
+                </select>
+
+                <!-- Item dropdown -->
+                <select [(ngModel)]="d.idItem" class="form-select" style="font-size: 0.8rem; padding: 6px;">
+                  <option [value]="0">Ítem...</option>
+                  @for (i of items(); track i.id) {
+                    <option [value]="i.id">{{ i.nombre }} ({{ i.tipo }})</option>
+                  }
+                </select>
+
+                <!-- Cantidad -->
+                <input type="number" [(ngModel)]="d.cantidad" class="detail-input" style="text-align: center;" min="1" />
+
+                <!-- Precio -->
+                <input type="number" [(ngModel)]="d.precio" class="detail-input" style="text-align: right;" min="0" step="0.1" />
+
+                <!-- Subtotal -->
+                <span class="detail-subtotal">S/ {{ (d.cantidad * d.precio) | number:'1.2-2' }}</span>
+
+                <!-- Delete button -->
+                <button type="button" class="btn-remove-detail" (click)="removeDetail($index)">
+                  <i class="pi pi-trash"></i>
+                </button>
+              </div>
+            }
+          }
+        </div>
+
+        <!-- Total de Compra -->
+        <div class="total-summary-row">
+          <span style="color: #9B7B6A; font-size: 0.85rem; font-weight: 600; margin-right: 12px;">Total Compra:</span>
+          <span>S/ {{ calculatedTotal | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" (click)="closeModal()">Cancelar</button>
+      <button type="button" class="btn-primary" [disabled]="form.idProveedor === 0 || form.detalles.length === 0" (click)="saveNotaCompra()">
+        <i class="pi pi-check"></i> Registrar Compra
+      </button>
+    </div>
+  </div>
+}

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MSVenta.Seguridad.DTOs;
 using MSVenta.Seguridad.Models;
 using MSVenta.Seguridad.Repositories;
@@ -34,6 +34,8 @@ namespace MSVenta.Seguridad.Services
                 UserId = u.UserId,
                 Fullname = u.Fullname,
                 Username = u.Username,
+                IdEmpleado = u.IdEmpleado,
+                IdCliente = u.IdCliente,
                 Roles = u.RolPermisoUsuarios
                     .GroupBy(rpu => new { rpu.RolPermiso.Rol.ID_Rol, rpu.RolPermiso.Rol.Nombre_Rol })
                     .Select(group => new RolDTO
@@ -88,6 +90,8 @@ namespace MSVenta.Seguridad.Services
                 UserId = usuario.UserId,
                 Fullname = usuario.Fullname,
                 Username = usuario.Username,
+                IdEmpleado = usuario.IdEmpleado,
+                IdCliente = usuario.IdCliente,
                 Roles = roles
             };
 

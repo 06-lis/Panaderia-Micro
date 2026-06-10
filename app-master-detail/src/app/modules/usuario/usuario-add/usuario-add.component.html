@@ -51,6 +51,36 @@
         </div>
       </div>
 
+      <!-- Empleado (Opcional) -->
+      <div class="mb-5">
+        <label for="idEmpleado" class="text-amber-950 font-semibold mb-2 block text-sm">Empleado (Opcional)</label>
+        <select
+          id="idEmpleado"
+          class="w-full p-3 bg-[#FAF6EE] text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none rounded-lg shadow-sm transition-all"
+          formControlName="idEmpleado"
+        >
+          <option [ngValue]="null">Ninguno (No es un empleado)</option>
+          @for (emp of empleados; track emp.idEmpleado) {
+            <option [value]="emp.idEmpleado">{{ emp.nombre }} {{ emp.apellido }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Cliente (Opcional) -->
+      <div class="mb-5">
+        <label for="idCliente" class="text-amber-950 font-semibold mb-2 block text-sm">Cliente (Opcional)</label>
+        <select
+          id="idCliente"
+          class="w-full p-3 bg-[#FAF6EE] text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none rounded-lg shadow-sm transition-all"
+          formControlName="idCliente"
+        >
+          <option [ngValue]="null">Ninguno (No es un cliente)</option>
+          @for (cli of clientes; track cli.id || cli.customerId) {
+            <option [value]="cli.id || cli.customerId">{{ cli.nombre || cli.firstName }} {{ cli.apellidos || cli.pSurname }}</option>
+          }
+        </select>
+      </div>
+
       <!-- Botón para Crear Usuario -->
       <button
         type="submit"

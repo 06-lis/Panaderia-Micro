@@ -1,95 +1,140 @@
-<div class="flex flex-col md:flex-row bg-gradient-to-br from-blue-800 via-teal-700 to-cyan-700 text-[#3E261A] shadow-xl p-6 rounded-lg mt-6 backdrop-blur-md">
-  <!-- Lista de Ventas Recientes -->
-  <div class="w-full md:w-1/3 bg-white shadow-2xl rounded-lg p-6 overflow-y-auto max-h-screen backdrop-blur-md mb-6 md:mb-0">
-    <h2 class="text-2xl font-semibold mb-4 border-b pb-2 text-[#3E261A]">Ventas Recientes</h2>
-    <ul class="space-y-3">
-      <li
-        *ngFor="let sale of sales()"
-        (click)="selectSale(sale)"
-        class="p-4 flex justify-between items-center cursor-pointer rounded-lg hover:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105"
-      >
-        <!-- Información de la venta -->
-        <div>
-          <p class="font-semibold text-white">Venta #{{ sale.id }}</p>
-          <p class="font-semibold text-white">Cliente: {{ sale.cliente.nombre }} {{ sale.cliente.apellidos }}</p>
-        </div>
-        <!-- Acciones -->
-        <div class="text-right space-y-1">
-          <p class="font-bold text-amber-950">{{ sale.totalAmount | currency: 'Bs ' }}</p>
-          <!-- <button
-            (click)="removeSale(sale.id); $event.stopPropagation()"
-            class="bg-transparent text-red-500 hover:text-red-600 transition duration-200"
-          >
-            <img
-              class="h-6 w-6"
-              src="https://img.icons8.com/?size=100&id=63688&format=png&color=000000" alt="Eliminar">
-          </button> -->
-          <span
-            class="text-xs font-semibold px-2 py-1 rounded-full bg-green-600 text-white"
-          >
-            Completado
-          </span>
-        </div>
-      </li>
-    </ul>
+<div class="p-6 max-w-7xl mx-auto space-y-6">
+  
+  <!-- Encabezado de la Página -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[#FAF6EE] border border-[#E8D9C8] rounded-2xl p-5 shadow-sm">
+    <div>
+      <h1 class="text-2xl font-black text-[#3E261A] tracking-tight">Historial de Ventas</h1>
+      <p class="text-sm text-[#7D6656]">Visualiza y registra las ventas realizadas a tus clientes.</p>
+    </div>
+    
+    <button
+      (click)="createNewSale()"
+      class="mt-4 sm:mt-0 flex items-center gap-2 px-5 py-2.5 bg-[#1A6B4A] hover:bg-[#15543A] text-white font-bold rounded-xl shadow-md transition-all duration-200 transform hover:-translate-y-0.5"
+    >
+      <i class="pi pi-plus"></i> Nueva Venta
+    </button>
   </div>
 
-  <!-- Detalle de la Venta -->
-  <div class="w-full md:w-2/3 bg-white shadow-2xl rounded-lg ml-0 md:ml-6 p-6 max-h-screen backdrop-blur-md overflow-hidden">
-    <div class="flex justify-between items-center mb-4">
-      <button
-        (click)="createNewSale()"
-        class="  py-2 px-4 bg-[#5C3E21] text-white font-bold rounded-lg shadow-lg
-                 hover:from-blue-700 hover:to-cyan-600 transform hover:scale-105 focus:outline-none focus:ring-2
-                 focus:ring-cyan-500 focus:ring-opacity-50 transition-all duration-300"
-      >
-        Nueva Venta
-      </button>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Panel Izquierdo: Ventas Recientes (4 cols) -->
+    <div class="lg:col-span-4 bg-white border border-[#F0E6D8] rounded-2xl shadow-sm p-5 flex flex-col space-y-4">
+      <h2 class="text-lg font-bold text-[#3E261A] border-b pb-3 border-[#F0E6D8] flex items-center gap-2">
+        <i class="pi pi-history text-[#8E4E2A]"></i> Ventas Recientes
+      </h2>
+
+      <ul *ngIf="sales().length > 0; else noSales" class="space-y-2.5 max-h-[70vh] overflow-y-auto pr-1">
+        <li
+          *ngFor="let sale of sales()"
+          (click)="selectSale(sale)"
+          [class]="selectedSale?.id === sale.id 
+            ? 'p-4 rounded-xl border-2 border-[#8E4E2A] bg-[#FAF6EE] cursor-pointer transition-all duration-150' 
+            : 'p-4 rounded-xl border border-[#FAF0E0] bg-[#FDFBF7] hover:bg-[#F9F6F0] cursor-pointer transition-all duration-150'"
+        >
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="font-bold text-[#3E261A] text-sm">Venta #{{ sale.id }}</p>
+              <p class="text-xs text-[#8E7968] mt-0.5">
+                Cliente: {{ sale.cliente?.nombre }} {{ sale.cliente?.apellidos }}
+              </p>
+            </div>
+            <div class="text-right space-y-1">
+              <span class="text-xs font-bold px-2 py-0.5 rounded bg-green-100 text-green-800">
+                Completada
+              </span>
+              <p class="text-xs text-[#8E7968] block mt-1">
+                {{ sale.fecha | date: 'dd/MM/yyyy' }}
+              </p>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <ng-template #noSales>
+        <div class="flex flex-col items-center justify-center py-12 text-[#9B7B6A] space-y-2">
+          <i class="pi pi-calendar-times text-3xl text-[#D9C8B4]"></i>
+          <p class="text-xs">No hay ventas registradas.</p>
+        </div>
+      </ng-template>
     </div>
 
-    <div *ngIf="true">
-      <div *ngIf="user()">
-        <!-- Si user no es null, mostrar los detalles -->
-        <p class="mt-2 text-white"><span class="font-bold">Usuario:</span> {{ user()?.fullname ?? 'No disponible' }}</p>
+    <!-- Panel Derecho: Detalle de Venta Seleccionada (8 cols) -->
+    <div class="lg:col-span-8 bg-white border border-[#F0E6D8] rounded-2xl shadow-sm p-6 space-y-6">
+      
+      <div *ngIf="selectedSale; else selectVentaPrompt" class="space-y-6">
+        
+        <h2 class="text-lg font-bold text-[#3E261A] border-b pb-3 border-[#F0E6D8] flex items-center gap-2">
+          <i class="pi pi-file text-[#8E4E2A]"></i> Detalles de la Venta #{{ selectedSale.id }}
+        </h2>
+
+        <!-- Ficha de Datos de la Venta -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-[#FDFBF7] border border-[#FAF0E0] rounded-xl p-4">
+          <div class="space-y-0.5">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#9B7B6A]">Cliente</span>
+            <p class="text-sm font-bold text-[#3E261A]">{{ selectedSale.cliente?.nombre }} {{ selectedSale.cliente?.apellidos }}</p>
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#9B7B6A]">Fecha Registro</span>
+            <p class="text-sm font-bold text-[#3E261A]">{{ selectedSale.fecha | date: 'dd/MM/yyyy, h:mm a' }}</p>
+          </div>
+          <div class="space-y-0.5">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#9B7B6A]">Vendedor</span>
+            <p class="text-sm font-bold text-[#3E261A]">{{ user()?.fullname || 'Cargando...' }}</p>
+          </div>
+        </div>
+
+        <!-- Tabla de Productos Detallados -->
+        <div class="space-y-2">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-[#7D6656]">Productos Vendidos</h3>
+          
+          <div class="overflow-x-auto rounded-xl border border-[#F0E6D8] shadow-xs">
+            <table class="w-full border-collapse text-left text-sm text-[#3E261A]">
+              <thead>
+                <tr class="bg-[#FAF6EE] border-b border-[#E8D9C8]">
+                  <th class="p-3 font-bold text-xs uppercase text-[#7D6656]">ID Detalle</th>
+                  <th class="p-3 font-bold text-xs uppercase text-[#7D6656]">Producto</th>
+                  <th class="p-3 font-bold text-xs uppercase text-[#7D6656]">Almacén</th>
+                  <th class="p-3 font-bold text-xs uppercase text-[#7D6656] text-center">Cantidad</th>
+                  <th class="p-3 font-bold text-xs uppercase text-[#7D6656] text-right">Precio Unit.</th>
+                  <th class="p-3 font-bold text-xs uppercase text-[#7D6656] text-right">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[#F0E6D8]/60 bg-white">
+                <tr *ngFor="let detalle of selectedSaleDetail" class="hover:bg-[#FDFBF7]/60 transition-colors">
+                  <td class="p-3 text-xs font-mono text-[#8E7968]">#{{ detalle.id }}</td>
+                  <td class="p-3 font-bold text-[#3E261A]">{{ detalle.productoAlmacen?.producto?.nombre || 'Producto' }}</td>
+                  <td class="p-3 text-xs text-[#8E7968]">{{ detalle.productoAlmacen?.almacen?.nombre || 'N/A' }}</td>
+                  <td class="p-3 text-center font-semibold">{{ detalle.cantidad }}</td>
+                  <td class="p-3 text-right text-[#8E7968]">
+                    {{ ((detalle.monto || 0) / (detalle.cantidad || 1)) | currency: 'Bs ' }}
+                  </td>
+                  <td class="p-3 text-right font-bold text-[#1A6B4A]">{{ detalle.monto | currency: 'Bs ' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Resumen de Montos -->
+        <div class="flex justify-end pt-4 border-t border-[#F0E6D8]">
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-bold text-[#7D6656]">Monto Total Venta:</span>
+            <span class="text-xl font-extrabold text-[#1A6B4A]">
+              {{ totalAmountSelectedSale | currency: 'Bs ' }}
+            </span>
+          </div>
+        </div>
 
       </div>
 
-      <div *ngIf="!user()">
-        <!-- Si user es null, mostrar un mensaje alternativo -->
-        <p>No hay usuario disponible</p>
-      </div>
-      <p class="mt-2 text-white"><span class="font-bold">Cliente:</span> {{ selectedSale?.cliente?.nombre }}</p>
-      <p class="mt-2 text-white"><span class="font-bold">IdVenta:</span> {{ selectedSale?.id }}</p>
-      <p class="mt-2 text-white"><span class="font-bold">Fecha:</span> {{ selectedSale?.fecha | date }}</p>
-      <p class="mt-2 text-2xl font-bold text-green-400">
-        <!-- Total: {{ 100  | currency: 'Bs ' }} -->
-      </p>
+      <ng-template #selectVentaPrompt>
+        <div class="flex flex-col items-center justify-center py-24 text-[#9B7B6A] space-y-3">
+          <i class="pi pi-arrow-left text-4xl text-[#D9C8B4] animate-pulse"></i>
+          <p class="font-medium text-sm">Selecciona una venta de la lista para ver su detalle.</p>
+        </div>
+      </ng-template>
 
-      <h3 class="mt-6 text-lg font-semibold text-white">Productos</h3>
-      <div class="overflow-x-auto max-h-96">
-        <table class="table-auto w-full text-sm text-center mt-2 text-white bg-white rounded-lg shadow-lg border-separate border-spacing-1 border border-amber-100/50">
-          <thead>
-            <tr class="bg-[#5C3E21] text-white border-b border-[#3E261A]">
-              <th class="p-2 ">IdDetalle</th>
-              <th class="p-2">Producto</th>
-              <th class="p-2">Cantidad</th>
-              <th class="p-2">Almacen</th>
-              <th class="p-2">Cliente</th>
-              <th class="p-2 ">Monto</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let detalle of selectedSaleDetail">
-              <td class="p-2">{{ detalle.id }}</td>
-              <td class="p-2">{{ detalle.productoAlmacen!.producto!.nombre }}</td>
-              <td class="p-2">{{ detalle.cantidad }}</td>
-              <td class="p-2">{{ detalle.productoAlmacen!.almacen!.nombre }}</td>
-              <td class="p-2">{{ detalle.venta!.cliente.nombre }} {{ detalle.venta!.cliente.apellidos }}</td>
-              <td class="p-2">{{ detalle.monto | currency: 'Bs ' }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
+
   </div>
 </div>

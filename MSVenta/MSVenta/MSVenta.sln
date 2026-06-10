@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSVenta.Venta", "MSVenta.Ve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSVenta.Gateway", "MSVenta.Gateway\MSVenta.Gateway.csproj", "{D7B71E63-1D95-47D3-93CE-8BF487E1D19F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSVenta.Compras", "MSVenta.Compras\MSVenta.Compras.csproj", "{F7015A52-28DF-416A-A0CA-79BCD95108CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{D7B71E63-1D95-47D3-93CE-8BF487E1D19F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7B71E63-1D95-47D3-93CE-8BF487E1D19F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7B71E63-1D95-47D3-93CE-8BF487E1D19F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7015A52-28DF-416A-A0CA-79BCD95108CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7015A52-28DF-416A-A0CA-79BCD95108CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7015A52-28DF-416A-A0CA-79BCD95108CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7015A52-28DF-416A-A0CA-79BCD95108CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,142 @@
+<div class="container mx-auto p-4 max-w-7xl">
+  <!-- Title and Header -->
+  <div class="mb-8 border-b border-amber-100 pb-4">
+    <h2 class="text-4xl font-extrabold text-[#3E261A] flex items-center gap-2">
+      <i class="pi pi-plus-circle text-3xl text-[#8E4E2A]"></i>
+      Gestión de Items y Categorías
+    </h2>
+    <p class="text-sm text-amber-800/70 mt-1 font-medium">
+      Crea nuevos productos o insumos y gestiona sus categorías desde una sola pantalla integrada.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+    
+    <!-- CARD 1: CREAR ITEM (PRODUCTO / INSUMO) -->
+    <div class="lg:col-span-2 bg-white rounded-2xl shadow-xl border border-amber-100/50 p-8 hover:shadow-2xl transition duration-300">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-bold text-[#3E261A] flex items-center gap-2">
+          <i class="pi pi-box text-xl text-[#8E4E2A]"></i>
+          Nuevo Item (Insumo / Producto)
+        </h3>
+        <!-- Badge indicativo -->
+        <span [ngClass]="itemForm.get('tipo')?.value === 'Producto' ? 'bg-amber-100 text-amber-800 border-amber-200' : 'bg-orange-100 text-orange-800 border-orange-200'" 
+              class="px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full border">
+          {{ itemForm.get('tipo')?.value }}
+        </span>
+      </div>
+
+      <form [formGroup]="itemForm" (ngSubmit)="onSubmitItem()" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Tipo de Item (Selector) -->
+          <div class="form-group col-span-1 md:col-span-2 bg-amber-50/40 p-4 rounded-xl border border-amber-100 flex flex-col space-y-2">
+            <span class="text-sm font-semibold text-[#3E261A]">¿Qué tipo de item deseas crear?</span>
+            <div class="flex gap-4">
+              <label class="flex items-center space-x-2 cursor-pointer font-medium text-amber-950">
+                <input type="radio" value="Producto" formControlName="tipo" class="w-4 h-4 text-[#8E4E2A] focus:ring-[#8E4E2A] border-amber-300">
+                <span>🧁 Producto Final (Venta)</span>
+              </label>
+              <label class="flex items-center space-x-2 cursor-pointer font-medium text-amber-950">
+                <input type="radio" value="Insumo" formControlName="tipo" class="w-4 h-4 text-[#8E4E2A] focus:ring-[#8E4E2A] border-amber-300">
+                <span>🌾 Insumo / Materia Prima</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Nombre -->
+          <div class="form-group">
+            <label for="nombre" class="block text-sm font-semibold text-[#3E261A] mb-1">Nombre del Item</label>
+            <input id="nombre" formControlName="nombre" type="text" placeholder="Ej: Harina de Trigo, Croissant"
+                   class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition placeholder-amber-800/40 shadow-sm" />
+            <div *ngIf="itemForm.get('nombre')?.invalid && itemForm.get('nombre')?.touched" class="text-xs text-red-500 mt-1">
+              El nombre es obligatorio (máx. 50 caracteres).
+            </div>
+          </div>
+
+          <!-- Precio -->
+          <div class="form-group">
+            <label for="precio" class="block text-sm font-semibold text-[#3E261A] mb-1">Precio Unitario ($)</label>
+            <input id="precio" formControlName="precio" type="number" step="0.01" placeholder="0.00"
+                   class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition placeholder-amber-800/40 shadow-sm" />
+            <div *ngIf="itemForm.get('precio')?.invalid && itemForm.get('precio')?.touched" class="text-xs text-red-500 mt-1">
+              El precio es obligatorio y debe ser mayor o igual a 0.
+            </div>
+          </div>
+
+          <!-- Unidad de Medida -->
+          <div class="form-group">
+            <label for="unidadMedida" class="block text-sm font-semibold text-[#3E261A] mb-1">Unidad de Medida</label>
+            <input id="unidadMedida" formControlName="unidadMedida" type="text" placeholder="Ej: Kilogramos, Unidades, Litros"
+                   class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition placeholder-amber-800/40 shadow-sm" />
+            <div *ngIf="itemForm.get('unidadMedida')?.invalid && itemForm.get('unidadMedida')?.touched" class="text-xs text-red-500 mt-1">
+              La unidad de medida es obligatoria (máx. 20 caracteres).
+            </div>
+          </div>
+
+          <!-- Categoría -->
+          <div class="form-group">
+            <label for="categoriaId" class="block text-sm font-semibold text-[#3E261A] mb-1">Categoría</label>
+            <select id="categoriaId" formControlName="categoriaId"
+                    class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm">
+              <option [value]="null" disabled selected>Seleccione una categoría</option>
+              <option *ngFor="let cat of categories" [value]="cat.id || cat.idCategoria">{{ cat.nombre }}</option>
+            </select>
+            <div *ngIf="itemForm.get('categoriaId')?.invalid && itemForm.get('categoriaId')?.touched" class="text-xs text-red-500 mt-1">
+              Seleccione una categoría válida.
+            </div>
+          </div>
+
+          <!-- Imagen (Solo visible si Tipo == Producto) -->
+          <div *ngIf="itemForm.get('tipo')?.value === 'Producto'" class="form-group col-span-1 md:col-span-2">
+            <label for="imagen" class="block text-sm font-semibold text-[#3E261A] mb-1">URL de la Imagen del Producto</label>
+            <input id="imagen" formControlName="imagen" type="text" placeholder="https://ejemplo.com/imagen.jpg"
+                   class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition placeholder-amber-800/40 shadow-sm" />
+            <div *ngIf="itemForm.get('imagen')?.invalid && itemForm.get('imagen')?.touched" class="text-xs text-red-500 mt-1">
+              La URL de la imagen es obligatoria para los productos.
+            </div>
+          </div>
+
+        </div>
+
+        <div class="flex justify-end gap-4 border-t border-amber-100 pt-6">
+          <button type="submit" [disabled]="itemForm.invalid"
+                  class="px-6 py-3 bg-[#5C3E21] hover:bg-[#4E3426] text-white font-bold rounded-lg shadow-lg hover:scale-102 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+            <i class="pi pi-check mr-2"></i> Guardar Item
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- CARD 2: CREAR CATEGORÍA RÁPIDA -->
+    <div class="bg-white rounded-2xl shadow-xl border border-amber-100/50 p-8 hover:shadow-2xl transition duration-300">
+      <h3 class="text-2xl font-bold text-[#3E261A] mb-6 flex items-center gap-2">
+        <i class="pi pi-tags text-xl text-[#8E4E2A]"></i>
+        Nueva Categoría
+      </h3>
+
+      <form [formGroup]="categoryForm" (ngSubmit)="onSubmitCategory()" class="space-y-6">
+        <div class="form-group">
+          <label for="catNombre" class="block text-sm font-semibold text-[#3E261A] mb-1">Nombre de la Categoría</label>
+          <input id="catNombre" formControlName="nombre" type="text" placeholder="Ej: Panes, Repostería, Harinas"
+                 class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition placeholder-amber-800/40 shadow-sm" />
+          <div *ngIf="categoryForm.get('nombre')?.invalid && categoryForm.get('nombre')?.touched" class="text-xs text-red-500 mt-1">
+            El nombre es obligatorio (máx. 50 caracteres).
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="categoryForm.invalid"
+                class="w-full py-3 bg-[#E6DCD3] hover:bg-[#D8C9B9] text-[#3E261A] font-bold rounded-lg shadow-md hover:scale-102 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+          <i class="pi pi-plus mr-2"></i> Crear Categoría
+        </button>
+      </form>
+
+      <!-- Mensaje de ayuda -->
+      <div class="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-100 text-xs text-amber-900/80 leading-relaxed">
+        <i class="pi pi-info-circle mr-1 text-[#8E4E2A]"></i>
+        Al crear una categoría aquí, se agregará inmediatamente al selector de categorías del formulario de item para que puedas usarla de inmediato.
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,451 @@
+/* ─── Shared Page Styles (reusable across compras module) ─── */
+.page-container {
+  padding: 0;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8E4E2A, #C2703A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.3rem;
+  box-shadow: 0 4px 12px rgba(142, 78, 42, 0.3);
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #3E261A;
+  margin: 0;
+}
+
+.page-subtitle {
+  font-size: 0.82rem;
+  color: #9B7B6A;
+  margin: 2px 0 0;
+}
+
+/* ─── Toolbar ─── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  position: relative;
+  flex: 1;
+  min-width: 240px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9B7B6A;
+  font-size: 0.9rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 12px 10px 36px;
+  border: 1px solid #E8D9C8;
+  border-radius: 10px;
+  background: white;
+  font-size: 0.875rem;
+  color: #3E261A;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  border-color: #8E4E2A;
+  box-shadow: 0 0 0 3px rgba(142, 78, 42, 0.12);
+}
+
+.stats-pills {
+  display: flex;
+  gap: 8px;
+}
+
+.pill { padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
+.pill-total { background: #F0E6D8; color: #5C3317; }
+.pill-empresa { background: #EBF5FF; color: #1A56A0; }
+.pill-persona { background: #F0FDF4; color: #166534; }
+
+/* ─── Tipo Badge ─── */
+.tipo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.tipo-empresa { background: #EBF5FF; color: #1A56A0; }
+.tipo-persona { background: #F0FDF4; color: #166534; }
+
+/* ─── Error Banner ─── */
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #FEE2E2;
+  border: 1px solid #FECACA;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 0.875rem;
+  color: #991B1B;
+}
+.error-banner i { font-size: 1.1rem; }
+.error-banner button {
+  margin-left: auto;
+  background: #991B1B;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+/* ─── Buttons ─── */
+.btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #8E4E2A, #B0602F);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(142, 78, 42, 0.35);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(142, 78, 42, 0.45);
+}
+
+.btn-secondary {
+  padding: 10px 18px;
+  background: white;
+  color: #3E261A;
+  border: 1px solid #D9C8B4;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-secondary:hover { background: #FAF0E6; }
+
+/* ─── Table ─── */
+.table-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(62, 38, 26, 0.07);
+  overflow: hidden;
+  border: 1px solid #F0E6D8;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table thead tr {
+  background: linear-gradient(90deg, #3E261A, #5C3317);
+}
+
+.data-table th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #C2A378;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+}
+
+.table-row {
+  border-bottom: 1px solid #F5EDE3;
+  transition: background 0.15s;
+}
+
+.table-row:hover { background: #FDFAF7; }
+.table-row:last-child { border-bottom: none; }
+
+.data-table td {
+  padding: 14px 16px;
+  font-size: 0.875rem;
+  color: #4A3022;
+  vertical-align: middle;
+}
+
+.td-id {
+  color: #9B7B6A;
+  font-size: 0.8rem;
+  width: 40px;
+}
+
+.proveedor-name {
+  font-weight: 600;
+  color: #3E261A;
+}
+
+.proveedor-ruc {
+  font-size: 0.78rem;
+  color: #9B7B6A;
+  margin-top: 2px;
+}
+
+.contact-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: #5C4033;
+  margin-bottom: 2px;
+}
+
+.contact-icon {
+  color: #C2A378;
+  font-size: 0.75rem;
+  min-width: 14px;
+}
+
+.td-direccion {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.82rem;
+  color: #7A5C48;
+}
+
+/* ─── Badge ─── */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-active { background: #D4EDDA; color: #1A6B2F; }
+.badge-inactive { background: #F8D7DA; color: #721C24; }
+
+/* ─── Action Buttons ─── */
+.action-btns {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+}
+
+.btn-edit { background: #FFF3CD; color: #856404; }
+.btn-edit:hover { background: #FFE69C; }
+.btn-delete { background: #F8D7DA; color: #721C24; }
+.btn-delete:hover { background: #F5C6CB; }
+
+/* ─── Empty State ─── */
+.empty-state {
+  text-align: center;
+  padding: 48px 16px !important;
+  color: #9B7B6A;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.empty-state i { font-size: 2.5rem; color: #D9C8B4; }
+
+/* ─── Loading ─── */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px;
+  color: #9B7B6A;
+}
+
+.loading-text { font-size: 0.9rem; }
+
+/* ─── Modal ─── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 15, 5, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 20px;
+  padding: 28px;
+  z-index: 101;
+  width: 90%;
+  max-width: 580px;
+  box-shadow: 0 24px 64px rgba(30, 15, 5, 0.25);
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translate(-50%, -48%); opacity: 0.7; } to { transform: translate(-50%, -50%); opacity: 1; } }
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.modal-header h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #3E261A;
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #9B7B6A;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.modal-close:hover { color: #3E261A; background: #F0E6D8; }
+
+.modal-form .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-full {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #5C3317;
+}
+
+.form-group input {
+  padding: 10px 12px;
+  border: 1px solid #E8D9C8;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #3E261A;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+  border-color: #8E4E2A;
+  box-shadow: 0 0 0 3px rgba(142, 78, 42, 0.12);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #F0E6D8;
+}
+
+/* ─── Tipo Selector ─── */
+.tipo-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tipo-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 2px solid #E8D9C8;
+  border-radius: 10px;
+  background: white;
+  color: #9B7B6A;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tipo-btn.active {
+  border-color: #8E4E2A;
+  background: #FFF7F0;
+  color: #5C3317;
+}
+
+.tipo-btn:hover:not(.active) {
+  background: #FAF6F2;
+}

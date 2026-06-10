@@ -5,6 +5,7 @@ export interface ProductoAlmacen {
   id?: number;
   productoId?: number;
   producto?: Product;
+  item?: Product;
   almacenId?: number;
   almacen?: Almacen;
   stock: number;

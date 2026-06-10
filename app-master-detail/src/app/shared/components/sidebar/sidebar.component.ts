@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -13,6 +13,9 @@ export class SidebarComponent {
   @Input() routes: any[] = [];
   @Input() userPermissions: any[] = [];
 
+  // All sections start expanded (empty = none collapsed)
+  collapsedSections = signal<Set<string>>(new Set());
+
   get sections() {
     const grouped = new Map<string, any[]>();
     (this.routes || []).forEach(route => {
@@ -21,6 +24,22 @@ export class SidebarComponent {
       grouped.get(section)!.push(route);
     });
     return Array.from(grouped, ([name, routes]) => ({ name, routes }));
+  }
+
+  isSectionCollapsed(name: string): boolean {
+    return this.collapsedSections().has(name);
+  }
+
+  toggleSection(name: string): void {
+    this.collapsedSections.update(prev => {
+      const next = new Set(prev);
+      if (next.has(name)) {
+        next.delete(name);
+      } else {
+        next.add(name);
+      }
+      return next;
+    });
   }
 
   hasPermission(permissionName: string): boolean {

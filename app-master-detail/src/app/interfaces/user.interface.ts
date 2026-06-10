@@ -13,4 +13,6 @@ export interface User {
   password?: string;
   roles?: Rol[];
   token?: string;
+  idEmpleado?: number;
+  idCliente?: number;
 }

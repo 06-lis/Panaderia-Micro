@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MSVenta.Venta.DTOs;
 using MSVenta.Venta.Models;
 using MSVenta.Venta.Repositories;
@@ -57,7 +57,7 @@ namespace MSVenta.Venta.Services
             }
 
             // 🔹 Verificar si el ItemId y el AlmacenId existen en la base de datos
-            var productoExiste = await _context.Productos.AnyAsync(p => p.Id == productoAlmacen.ItemId);
+            var productoExiste = await _context.Items.AnyAsync(i => i.Id == productoAlmacen.ItemId);
             var almacenExiste = await _context.Almacenes.AnyAsync(a => a.Id == productoAlmacen.AlmacenId);
 
             if (!productoExiste)
@@ -168,7 +168,7 @@ namespace MSVenta.Venta.Services
             try
             {
                 // Validar si el producto existe en la base de datos
-                var producto = await _context.Productos.FindAsync(ItemId);
+                var producto = await _context.Items.FindAsync(ItemId);
                 if (producto == null)
                 {
                     throw new KeyNotFoundException($"El producto con ID {ItemId} no existe.");
@@ -233,7 +233,86 @@ namespace MSVenta.Venta.Services
                 throw new Exception("Ocurrió un error inesperado: " + ex.Message);
             }
         }
+        public async Task<ProductoAlmacen> UpdateStockAsync(int itemId, int almacenId, int quantity)
+        {
+            var productoAlmacen = await _context.ProductosAlmacenes
+                .FirstOrDefaultAsync(pa => pa.ItemId == itemId && pa.AlmacenId == almacenId);
 
+            if (productoAlmacen == null)
+            {
+                var itemExiste = await _context.Items.AnyAsync(i => i.Id == itemId);
+                var almacenExiste = await _context.Almacenes.AnyAsync(a => a.Id == almacenId);
 
+                if (!itemExiste || !almacenExiste)
+                {
+                    throw new KeyNotFoundException("El Item o el Almacén especificado no existe.");
+                }
+
+                productoAlmacen = new ProductoAlmacen
+                {
+                    ItemId = itemId,
+                    AlmacenId = almacenId,
+                    Stock = quantity
+                };
+                _context.ProductosAlmacenes.Add(productoAlmacen);
+            }
+            else
+            {
+                productoAlmacen.Stock += quantity;
+                _context.ProductosAlmacenes.Update(productoAlmacen);
+            }
+
+            await _context.SaveChangesAsync();
+            return productoAlmacen;
+        }
+
+        public async Task<List<ProductoAlmacen>> AddBulkAsync(int almacenId, List<ItemStockDto> itemsDto)
+        {
+            var almacenExiste = await _context.Almacenes.AnyAsync(a => a.Id == almacenId);
+            if (!almacenExiste)
+            {
+                throw new KeyNotFoundException($"No se encontró un almacén con ID {almacenId}.");
+            }
+
+            var resultados = new List<ProductoAlmacen>();
+
+            foreach (var itemDto in itemsDto)
+            {
+                if (itemDto.ItemId <= 0 || itemDto.Stock <= 0)
+                {
+                    throw new ArgumentException("El ItemId y el Stock deben ser mayores que cero.");
+                }
+
+                var itemExiste = await _context.Items.AnyAsync(i => i.Id == itemDto.ItemId);
+                if (!itemExiste)
+                {
+                    throw new KeyNotFoundException($"No se encontró un item con ID {itemDto.ItemId}.");
+                }
+
+                var existing = await _context.ProductosAlmacenes
+                    .FirstOrDefaultAsync(pa => pa.ItemId == itemDto.ItemId && pa.AlmacenId == almacenId);
+
+                if (existing != null)
+                {
+                    existing.Stock = itemDto.Stock;
+                    _context.ProductosAlmacenes.Update(existing);
+                    resultados.Add(existing);
+                }
+                else
+                {
+                    var nuevo = new ProductoAlmacen
+                    {
+                        ItemId = itemDto.ItemId,
+                        AlmacenId = almacenId,
+                        Stock = itemDto.Stock
+                    };
+                    _context.ProductosAlmacenes.Add(nuevo);
+                    resultados.Add(nuevo);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return resultados;
+        }
     }
 }
