@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component ,OnInit } from '@angular/core';
-
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsignarProductoAlmacenService } from './asignar-producto-almacen.service';
 import { ProductService } from '../product/service/product.service';
@@ -18,18 +18,19 @@ import { Almacen } from '../../interfaces/almacen.interface';
   styleUrl: './AsignarProducto.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AsignarProductoComponent implements  OnInit{
+export class AsignarProductoComponent implements OnInit {
   asignarForm!: FormGroup;
-  almacenes :Almacen[]=[];
-  productos :Product[]=[];
+  almacenes: Almacen[] = [];
+  productos: Product[] = [];
   mensaje: string = '';
 
   constructor(
     private fb: FormBuilder,
-    private asignarProductoAlmacenService:AsignarProductoAlmacenService,
-    private productoService:ProductService,
-    private almacenService:AlmacenService,
-    private cdr: ChangeDetectorRef
+    private asignarProductoAlmacenService: AsignarProductoAlmacenService,
+    private productoService: ProductService,
+    private almacenService: AlmacenService,
+    private cdr: ChangeDetectorRef,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
@@ -64,28 +65,29 @@ export class AsignarProductoComponent implements  OnInit{
     });
   }
 
+  goBack(): void {
+    this.location.back();
+  }
+
   onSubmit() {
     if (this.asignarForm.valid) {
       console.log(this.asignarForm.value);
       const data = this.asignarForm.value;
-      console.log('data',data);
+      console.log('data', data);
       this.asignarProductoAlmacenService.addProductoToAlmacen(data).subscribe(
-      (response) => {
-        // Si la operación fue exitosa
-        this.mensaje = response.mensaje || 'Producto agregado exitosamente';//
-        console.log(response.mensaje)
-        alert(this.mensaje);
-        this.asignarForm.reset();
-        this.cdr.markForCheck();
-      },
-      (error) => {
-        // Si ocurre un error
-        console.log(error);
-        this.mensaje = `${error}` || 'Error al agregar producto al almacén ';
-        this.cdr.markForCheck();
-      }
+        (response) => {
+          this.mensaje = response.mensaje || 'Producto agregado exitosamente';
+          console.log(response.mensaje);
+          alert(this.mensaje);
+          this.asignarForm.reset();
+          this.cdr.markForCheck();
+        },
+        (error) => {
+          console.log(error);
+          this.mensaje = `${error}` || 'Error al agregar producto al almacén';
+          this.cdr.markForCheck();
+        }
       );
-      // Aquí iría la lógica para guardar los datos en el backend
     }
   }
- }
+}
