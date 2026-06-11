@@ -1,0 +1,15 @@
+using System.Collections.Generic;
+
+namespace MSVenta.Produccion.Models
+{
+    public class Receta
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string Descripcion { get; set; }
+        public int ProductoId { get; set; }
+        public int CantidadRequerida { get; set; }
+
+        public ICollection<DetalleReceta> Detalles { get; set; } = new List<DetalleReceta>();
+    }
+}

@@ -34,6 +34,18 @@ namespace MSVenta.Venta.Controllers
             return Ok(productoAlmacen);
         }
 
+        [HttpGet("stock/{itemId}/{almacenId}")]
+        public async Task<ActionResult<ProductoAlmacen>> GetStock(int itemId, int almacenId)
+        {
+            var all = await _productoAlmacenService.GetAllAsync();
+            var matched = System.Linq.Enumerable.FirstOrDefault(all, pa => pa.ItemId == itemId && pa.AlmacenId == almacenId);
+            if (matched == null) 
+            {
+                return Ok(new ProductoAlmacen { ItemId = itemId, AlmacenId = almacenId, Stock = 0 });
+            }
+            return Ok(matched);
+        }
+
         [HttpPost]
         public async Task<ActionResult<ProductoAlmacen>> AsignarProductoAlmacen(ProductoAlmacen productoAlmacen)
         {

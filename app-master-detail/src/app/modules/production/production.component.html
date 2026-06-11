@@ -1,0 +1,85 @@
+<div class="container mx-auto p-4 md:p-6 text-amber-950">
+  <!-- Header Card -->
+  <div class="mb-8 p-6 bg-gradient-to-br from-[#3E261A] to-[#603820] text-white rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative overflow-hidden border border-amber-900/20">
+    <!-- Subtle abstract shapes in background -->
+    <div class="absolute -right-16 -top-16 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute -left-16 -bottom-16 w-48 h-48 bg-amber-700/10 rounded-full blur-3xl"></div>
+
+    <div class="relative z-10">
+      <h2 class="text-3xl font-extrabold tracking-tight flex items-center gap-3">
+        <i class="pi pi-hammer text-[#C2A378]"></i>
+        <span>Producción y Recetas</span>
+      </h2>
+      <p class="text-amber-200/80 mt-1 max-w-xl text-sm font-medium">
+        Administra las recetas de tus productos estrella y solicita, valida y aprueba lotes de producción optimizando el stock de tus almacenes.
+      </p>
+    </div>
+
+    <!-- Actions button based on current view/tab -->
+    <div class="relative z-10" *ngIf="currentView === 'list'">
+      <button *ngIf="currentTab === 'recipes'"
+              (click)="setView('add-recipe')"
+              class="px-5 py-2.5 bg-[#8E4E2A] hover:bg-[#A95E35] text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 text-sm active:scale-95 border border-amber-800/30">
+        <i class="pi pi-plus"></i>
+        <span>Nueva Receta</span>
+      </button>
+
+      <button *ngIf="currentTab === 'orders'"
+              (click)="setView('add-order')"
+              class="px-5 py-2.5 bg-[#8E4E2A] hover:bg-[#A95E35] text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 text-sm active:scale-95 border border-amber-800/30">
+        <i class="pi pi-plus"></i>
+        <span>Solicitar Producción</span>
+      </button>
+    </div>
+
+    <div class="relative z-10" *ngIf="currentView !== 'list'">
+      <button (click)="setView('list')"
+              class="px-5 py-2.5 bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold rounded-xl shadow transition-all duration-200 flex items-center gap-2 text-sm active:scale-95 border border-amber-200/50">
+        <i class="pi pi-arrow-left"></i>
+        <span>Volver al Panel</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main View Toggles -->
+  <div *ngIf="currentView === 'list'" class="mb-6">
+    <!-- Custom tab buttons -->
+    <div class="flex border-b border-amber-200/40 space-x-1 p-1 bg-[#F5EFE4] rounded-2xl max-w-md shadow-inner border border-amber-100/30">
+      <button (click)="setTab('orders')"
+              [class.bg-white]="currentTab === 'orders'"
+              [class.text-amber-950]="currentTab === 'orders'"
+              [class.shadow-md]="currentTab === 'orders'"
+              [class.text-amber-700]="currentTab !== 'orders'"
+              class="flex-1 py-2 px-4 rounded-xl font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2 active:scale-98">
+        <i class="pi pi-list"></i>
+        <span>Órdenes de Producción</span>
+      </button>
+      <button (click)="setTab('recipes')"
+              [class.bg-white]="currentTab === 'recipes'"
+              [class.text-amber-950]="currentTab === 'recipes'"
+              [class.shadow-md]="currentTab === 'recipes'"
+              [class.text-amber-700]="currentTab !== 'recipes'"
+              class="flex-1 py-2 px-4 rounded-xl font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2 active:scale-98">
+        <i class="pi pi-cog"></i>
+        <span>Recetario</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Render Appropriate View -->
+  <div class="bg-white border border-amber-100/40 rounded-3xl p-6 shadow-xl transition-all duration-300">
+    <ng-container [ngSwitch]="currentView">
+      <!-- List View -->
+      <ng-container *ngSwitchCase="'list'">
+        <app-production-list *ngIf="currentTab === 'orders'"></app-production-list>
+        <app-recipe-list *ngIf="currentTab === 'recipes'"></app-recipe-list>
+      </ng-container>
+
+      <!-- Add Recipe View -->
+      <app-recipe-form *ngSwitchCase="'add-recipe'" (saved)="setView('list')"></app-recipe-form>
+
+      <!-- Add Production Order View -->
+      <app-production-form *ngSwitchCase="'add-order'" (saved)="setView('list')"></app-production-form>
+    </ng-container>
+  </div>
+</div>

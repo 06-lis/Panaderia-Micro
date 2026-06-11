@@ -1,0 +1,114 @@
+<div class="max-w-2xl mx-auto">
+  <div class="flex items-center gap-3 mb-6 pb-3 border-b border-amber-200/30">
+    <div class="w-10 h-10 bg-[#8E4E2A] text-white rounded-xl flex items-center justify-center shadow-md">
+      <i class="pi pi-hammer text-lg"></i>
+    </div>
+    <div>
+      <h3 class="text-xl font-extrabold text-amber-950">Solicitar Orden de Producción</h3>
+      <p class="text-xs text-amber-800/70">Pre-calcula los movimientos de existencias y solicita aprobación de producción.</p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loadingData" class="flex flex-col items-center justify-center py-12">
+    <div class="w-8 h-8 border-4 border-amber-200 border-t-[#8E4E2A] rounded-full animate-spin"></div>
+    <span class="text-xs font-semibold text-amber-800 mt-2">Cargando datos del sistema...</span>
+  </div>
+
+  <form *ngIf="!loadingData" [formGroup]="productionForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <!-- Form Card -->
+    <div class="bg-[#FAF6EE] p-6 rounded-2xl border border-amber-200/30 space-y-4 shadow-sm">
+      <h4 class="text-xs font-bold text-amber-900/60 uppercase tracking-widest border-b border-amber-255/10 pb-2">Datos de la Solicitud</h4>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Recipe Selector -->
+        <div>
+          <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Receta *</label>
+          <select formControlName="recetaId"
+                  class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-sm shadow-sm"
+                  [class.border-red-400]="productionForm.get('recetaId')?.touched && productionForm.get('recetaId')?.invalid">
+            <option [ngValue]="null">Selecciona una receta...</option>
+            <option *ngFor="let rec of recipes" [value]="rec.id">{{ rec.nombre }} (Base: {{ rec.cantidadRequerida }} unidades)</option>
+          </select>
+          <div *ngIf="productionForm.get('recetaId')?.touched && productionForm.get('recetaId')?.invalid" class="text-red-550 text-xs mt-1 font-bold">
+            Debes seleccionar una receta base.
+          </div>
+        </div>
+
+        <!-- Warehouse Selector -->
+        <div>
+          <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Almacén Destino *</label>
+          <select formControlName="almacenId"
+                  class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-sm shadow-sm"
+                  [class.border-red-400]="productionForm.get('almacenId')?.touched && productionForm.get('almacenId')?.invalid">
+            <option [ngValue]="null">Selecciona el almacén...</option>
+            <option *ngFor="let alm of almacenes" [value]="alm.id">{{ alm.nombre }}</option>
+          </select>
+          <div *ngIf="productionForm.get('almacenId')?.touched && productionForm.get('almacenId')?.invalid" class="text-red-550 text-xs mt-1 font-bold">
+            Debes seleccionar un almacén para el movimiento.
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Lote Selector -->
+        <div>
+          <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Lote / Multiplicador *</label>
+          <input type="number"
+                 formControlName="lote"
+                 class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-sm shadow-sm"
+                 [class.border-red-400]="productionForm.get('lote')?.touched && productionForm.get('lote')?.invalid" />
+          <div *ngIf="productionForm.get('lote')?.touched && productionForm.get('lote')?.invalid" class="text-red-550 text-xs mt-1 font-bold">
+            El lote multiplicador debe ser mayor o igual a 1.
+          </div>
+          <p class="text-[10px] text-amber-800/70 mt-1 leading-normal italic">
+            * Multiplicará la cantidad a producir y los insumos requeridos de la receta por este factor.
+          </p>
+        </div>
+
+        <!-- Requester Employee -->
+        <div>
+          <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Solicitado Por *</label>
+          <select formControlName="empleadoSolicitaId"
+                  class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-sm shadow-sm"
+                  [class.border-red-400]="productionForm.get('empleadoSolicitaId')?.touched && productionForm.get('empleadoSolicitaId')?.invalid">
+            <option [ngValue]="null">Selecciona el empleado solicitante...</option>
+            <option *ngFor="let emp of employees" [value]="emp.idEmpleado">{{ emp.nombre }} {{ emp.apellido }}</option>
+          </select>
+          <div *ngIf="productionForm.get('empleadoSolicitaId')?.touched && productionForm.get('empleadoSolicitaId')?.invalid" class="text-red-550 text-xs mt-1 font-bold">
+            Debes indicar quién solicita la producción.
+          </div>
+        </div>
+      </div>
+
+      <!-- Observations -->
+      <div>
+        <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Observaciones / Notas</label>
+        <textarea formControlName="observaciones"
+                  placeholder="Ej. Producción de lote especial para el fin de semana."
+                  rows="3"
+                  class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-sm shadow-sm resize-none"
+                  [class.border-red-400]="productionForm.get('observaciones')?.touched && productionForm.get('observaciones')?.invalid"></textarea>
+        <div *ngIf="productionForm.get('observaciones')?.touched && productionForm.get('observaciones')?.invalid" class="text-red-550 text-xs mt-0.5 font-bold">
+          Las observaciones no pueden exceder los 200 caracteres.
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit buttons -->
+    <div class="flex justify-end gap-3 pt-4 border-t border-amber-100/50">
+      <button type="button"
+              (click)="saved.emit()"
+              class="px-5 py-2.5 bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold rounded-xl text-sm transition-all duration-200 active:scale-95 border border-amber-200/30">
+        Cancelar
+      </button>
+      
+      <button type="submit"
+              [disabled]="productionForm.invalid || saving"
+              class="px-5 py-2.5 bg-[#8E4E2A] hover:bg-[#A95E35] disabled:bg-amber-300 disabled:opacity-50 text-white font-bold rounded-xl text-sm shadow-md hover:shadow-lg transition-all duration-200 active:scale-95 flex items-center gap-2 border border-amber-800/30">
+        <span *ngIf="saving" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+        <span>{{ saving ? 'Creando Solicitud...' : 'Solicitar Lote' }}</span>
+      </button>
+    </div>
+  </form>
+</div>

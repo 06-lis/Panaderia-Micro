@@ -1,0 +1,147 @@
+<div class="max-w-3xl mx-auto">
+  <div class="flex items-center gap-3 mb-6 pb-3 border-b border-amber-200/30">
+    <div class="w-10 h-10 bg-[#8E4E2A] text-white rounded-xl flex items-center justify-center shadow-md">
+      <i class="pi pi-cog text-lg"></i>
+    </div>
+    <div>
+      <h3 class="text-xl font-extrabold text-amber-950">Registrar Nueva Receta</h3>
+      <p class="text-xs text-amber-800/70">Define los insumos necesarios para fabricar un producto terminado.</p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loadingItems" class="flex flex-col items-center justify-center py-12">
+    <div class="w-8 h-8 border-4 border-amber-200 border-t-[#8E4E2A] rounded-full animate-spin"></div>
+    <span class="text-xs font-semibold text-amber-800 mt-2">Cargando catálogo de productos...</span>
+  </div>
+
+  <form *ngIf="!loadingItems" [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <!-- General Info Card -->
+    <div class="bg-[#FAF6EE] p-5 rounded-2xl border border-amber-200/30 space-y-4 shadow-sm">
+      <h4 class="text-xs font-bold text-amber-900/60 uppercase tracking-widest border-b border-amber-255/10 pb-2">Información General</h4>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Nombre de la Receta *</label>
+          <input type="text"
+                 formControlName="nombre"
+                 placeholder="Ej. Receta de Pan de Chocolate"
+                 class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-sm shadow-sm"
+                 [class.border-red-400]="recipeForm.get('nombre')?.touched && recipeForm.get('nombre')?.invalid" />
+          <div *ngIf="recipeForm.get('nombre')?.touched && recipeForm.get('nombre')?.invalid" class="text-red-550 text-xs mt-1 font-bold">
+            El nombre es obligatorio (máx. 100 caracteres).
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Rendimiento Base (Unidades) *</label>
+          <input type="number"
+                 formControlName="cantidadRequerida"
+                 placeholder="Cantidad de salida de la receta"
+                 class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-sm shadow-sm"
+                 [class.border-red-400]="recipeForm.get('cantidadRequerida')?.touched && recipeForm.get('cantidadRequerida')?.invalid" />
+          <div *ngIf="recipeForm.get('cantidadRequerida')?.touched && recipeForm.get('cantidadRequerida')?.invalid" class="text-red-550 text-xs mt-1 font-bold">
+            La cantidad de salida base debe ser mayor o igual a 1.
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Producto Terminado *</label>
+          <select formControlName="productoId"
+                  class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-sm shadow-sm"
+                  [class.border-red-400]="recipeForm.get('productoId')?.touched && recipeForm.get('productoId')?.invalid">
+            <option [ngValue]="null">Selecciona el producto a fabricar...</option>
+            <option *ngFor="let prod of productos" [value]="prod.id || prod.itemId">{{ prod.nombre || prod.nombreProducto }}</option>
+          </select>
+          <div *ngIf="recipeForm.get('productoId')?.touched && recipeForm.get('productoId')?.invalid" class="text-red-550 text-xs mt-1 font-bold">
+            Debes seleccionar un producto terminado.
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Descripción</label>
+          <input type="text"
+                 formControlName="descripcion"
+                 placeholder="Instrucciones breves o notas..."
+                 class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-sm shadow-sm" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Ingredients / Insumos Card -->
+    <div class="bg-white p-5 rounded-2xl border border-amber-200/30 space-y-4 shadow-sm">
+      <div class="flex justify-between items-center border-b border-amber-100 pb-2">
+        <h4 class="text-xs font-bold text-amber-900/60 uppercase tracking-widest">Ingredientes Requeridos (Insumos)</h4>
+        <button type="button"
+                (click)="agregarInsumo()"
+                class="px-3 py-1.5 bg-[#8E4E2A]/10 hover:bg-[#8E4E2A]/20 text-[#8E4E2A] hover:text-[#8E4E2A] font-bold rounded-lg transition-all text-xs flex items-center gap-1 active:scale-95">
+          <i class="pi pi-plus"></i>
+          <span>Añadir Insumo</span>
+        </button>
+      </div>
+
+      <!-- Dynamic list -->
+      <div formArrayName="detalles" class="space-y-3">
+        <div *ngFor="let det of detallesFormArray.controls; let i = index" 
+             [formGroupName]="i" 
+             class="flex flex-col sm:flex-row items-center gap-3 p-3 bg-[#FAF6EE]/50 rounded-xl border border-amber-100/40 relative group animate-[fadeIn_0.15s_ease-out]">
+          
+          <!-- Insumo Dropdown -->
+          <div class="flex-1 w-full">
+            <select formControlName="insumoId"
+                    class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-xs shadow-sm">
+              <option [ngValue]="null">Selecciona el insumo...</option>
+              <option *ngFor="let ins of insumos" 
+                      [value]="ins.id || ins.itemId"
+                      [disabled]="isInsumoSeleccionado(ins.id || ins.itemId, i)">
+                {{ ins.nombre || ins.nombreProducto }}
+              </option>
+            </select>
+            <div *ngIf="det.get('insumoId')?.touched && det.get('insumoId')?.invalid" class="text-red-550 text-[10px] mt-0.5 font-bold">
+              Selección requerida.
+            </div>
+          </div>
+
+          <!-- Cantidad Input -->
+          <div class="w-full sm:w-40">
+            <div class="relative rounded-xl shadow-sm">
+              <input type="number"
+                     formControlName="cantidadRequerida"
+                     placeholder="Cant."
+                     class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-xs" />
+            </div>
+            <div *ngIf="det.get('cantidadRequerida')?.touched && det.get('cantidadRequerida')?.invalid" class="text-red-550 text-[10px] mt-0.5 font-bold">
+              Debe ser >= 1.
+            </div>
+          </div>
+
+          <!-- Trash action -->
+          <button type="button"
+                  (click)="eliminarInsumo(i)"
+                  class="p-2 bg-red-50 hover:bg-red-100 text-red-650 rounded-xl transition-all border border-red-150/40 active:scale-95 shrink-0"
+                  title="Quitar ingrediente">
+            <i class="pi pi-trash text-xs"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit buttons -->
+    <div class="flex justify-end gap-3 pt-4 border-t border-amber-100/50">
+      <button type="button"
+              (click)="saved.emit()"
+              class="px-5 py-2.5 bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold rounded-xl text-sm transition-all duration-200 active:scale-95 border border-amber-200/30">
+        Cancelar
+      </button>
+      
+      <button type="submit"
+              [disabled]="recipeForm.invalid || saving"
+              class="px-5 py-2.5 bg-[#8E4E2A] hover:bg-[#A95E35] disabled:bg-amber-300 disabled:opacity-50 text-white font-bold rounded-xl text-sm shadow-md hover:shadow-lg transition-all duration-200 active:scale-95 flex items-center gap-2 border border-amber-800/30">
+        <span *ngIf="saving" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+        <span>{{ saving ? 'Guardando...' : 'Guardar Receta' }}</span>
+      </button>
+    </div>
+  </form>
+</div>

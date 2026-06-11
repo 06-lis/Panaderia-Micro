@@ -207,6 +207,22 @@ export const routes: Routes = [
           section: 'Compras'
         },
       },
+
+      // ==========================================
+      // 🍞 PRODUCCIÓN
+      // ==========================================
+      {
+        path: 'produccion',
+        loadChildren: () =>
+          import('./modules/production/production.route').then(m => m.production_routes),
+        data: {
+          icon: 'pi pi-hammer',
+          title: 'Producción',
+          description: 'Gestión de Recetas y Tablero de Producción',
+          permission: 'Produccion',
+          section: 'Producción'
+        },
+      },
     ],
   },
   {

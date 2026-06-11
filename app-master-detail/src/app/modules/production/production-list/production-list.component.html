@@ -1,0 +1,212 @@
+<div class="space-y-6">
+  <!-- Filter Badges / Tab bar -->
+  <div class="flex items-center justify-between border-b border-amber-100 pb-3">
+    <div class="flex space-x-2">
+      <button (click)="setFilter('pendiente')"
+              [class.bg-[#8E4E2A]]="currentStatusFilter === 'pendiente'"
+              [class.text-white]="currentStatusFilter === 'pendiente'"
+              [class.bg-[#FAF6EE]]="currentStatusFilter !== 'pendiente'"
+              [class.text-amber-800]="currentStatusFilter !== 'pendiente'"
+              class="px-4 py-2 rounded-xl text-xs font-bold transition-all border border-amber-200/30 flex items-center gap-1.5 active:scale-95">
+        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+        <span>Pendientes</span>
+      </button>
+      <button (click)="setFilter('aprobado')"
+              [class.bg-[#8E4E2A]]="currentStatusFilter === 'aprobado'"
+              [class.text-white]="currentStatusFilter === 'aprobado'"
+              [class.bg-[#FAF6EE]]="currentStatusFilter !== 'aprobado'"
+              [class.text-amber-800]="currentStatusFilter !== 'aprobado'"
+              class="px-4 py-2 rounded-xl text-xs font-bold transition-all border border-amber-200/30 flex items-center gap-1.5 active:scale-95">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span>Aprobados</span>
+      </button>
+      <button (click)="setFilter('rechazado')"
+              [class.bg-[#8E4E2A]]="currentStatusFilter === 'rechazado'"
+              [class.text-white]="currentStatusFilter === 'rechazado'"
+              [class.bg-[#FAF6EE]]="currentStatusFilter !== 'rechazado'"
+              [class.text-amber-800]="currentStatusFilter !== 'rechazado'"
+              class="px-4 py-2 rounded-xl text-xs font-bold transition-all border border-amber-200/30 flex items-center gap-1.5 active:scale-95">
+        <span class="w-2 h-2 rounded-full bg-red-400"></span>
+        <span>Rechazados</span>
+      </button>
+    </div>
+    
+    <div class="text-xs font-bold text-amber-700/80">
+      Mostrando {{ filteredProductions.length }} solicitudes
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 space-y-3">
+    <div class="w-10 h-10 border-4 border-amber-200 border-t-[#8E4E2A] rounded-full animate-spin"></div>
+    <span class="text-sm font-semibold text-amber-800 animate-pulse">Cargando órdenes de producción...</span>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && filteredProductions.length === 0" class="text-center py-20 bg-[#FAF6EE] rounded-3xl border border-amber-100">
+    <div class="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3 border border-amber-200/50">
+      <i class="pi pi-list text-2xl text-amber-600"></i>
+    </div>
+    <h3 class="text-md font-extrabold text-amber-950">No hay órdenes en este estado</h3>
+    <p class="text-xs text-amber-800/60 mt-1">Todas las órdenes han sido procesadas.</p>
+  </div>
+
+  <!-- Table View -->
+  <div *ngIf="!loading && filteredProductions.length > 0" class="bg-white border border-amber-200/30 rounded-2xl overflow-hidden shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse text-sm">
+        <thead>
+          <tr class="bg-[#F5EFE4] text-amber-950 font-bold border-b border-amber-200/50">
+            <th class="py-3 px-4 text-center">ID</th>
+            <th class="py-3 px-4">Fecha Solicitud</th>
+            <th class="py-3 px-4">Solicitado Por</th>
+            <th class="py-3 px-4">Cantidad</th>
+            <th class="py-3 px-4">Estado</th>
+            <th class="py-3 px-4 text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let prod of filteredProductions" 
+              class="hover:bg-amber-50/40 transition-colors border-b border-amber-100/30">
+            <td class="py-3 px-4 text-center font-bold text-amber-950">#{{ prod.id }}</td>
+            <td class="py-3 px-4 text-amber-900">{{ prod.fechaSolicitud | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td class="py-3 px-4 font-semibold text-amber-900">{{ prod.nombreEmpleadoSolicita }}</td>
+            <td class="py-3 px-4 text-amber-900 font-bold">{{ prod.cantidadProducida }} unidades</td>
+            <td class="py-3 px-4">
+              <span [ngClass]="{
+                'bg-amber-100 text-amber-850 border border-amber-200': prod.estado.toLowerCase() === 'pendiente',
+                'bg-emerald-100 text-emerald-850 border border-emerald-200': prod.estado.toLowerCase() === 'aprobado',
+                'bg-red-100 text-red-850 border border-red-200': prod.estado.toLowerCase() === 'rechazado'
+              }" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider">
+                {{ prod.estado }}
+              </span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center justify-center gap-2">
+                <button (click)="openDetails(prod)"
+                        class="p-1.5 bg-amber-150/40 hover:bg-[#8E4E2A]/10 text-[#8E4E2A] rounded-lg border border-amber-200/40 transition-all active:scale-95"
+                        title="Ver Detalles">
+                  <i class="pi pi-eye text-xs"></i>
+                </button>
+                
+                <ng-container *ngIf="prod.estado.toLowerCase() === 'pendiente'">
+                  <button (click)="approveProduction(prod)"
+                          class="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg border border-emerald-100/50 transition-all active:scale-95"
+                          title="Aprobar Orden (Valida Stock)">
+                    <i class="pi pi-check text-xs"></i>
+                  </button>
+                  <button (click)="rejectProduction(prod)"
+                          class="p-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg border border-red-100/50 transition-all active:scale-95"
+                          title="Rechazar Orden">
+                    <i class="pi pi-times text-xs"></i>
+                  </button>
+                </ng-container>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Detailed Production Modal -->
+  <div *ngIf="showDetailsModal && selectedProduction" 
+       class="fixed inset-0 bg-[#3E261A]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border border-amber-100 animate-[fadeIn_0.2s_ease-out]">
+      <!-- Header -->
+      <div class="bg-[#3E261A] text-white p-5 flex justify-between items-center relative">
+        <div>
+          <span class="text-xs text-[#C2A378] font-bold uppercase tracking-widest">Detalle de Producción</span>
+          <h3 class="text-xl font-extrabold">Orden #{{ selectedProduction.id }}</h3>
+        </div>
+        <button (click)="closeDetails()" 
+                class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+        <!-- Metadata -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-3 bg-[#FAF6EE] rounded-2xl border border-amber-100/40 text-xs space-y-1">
+            <div><span class="font-bold text-amber-800/60 uppercase">Solicitante:</span> <span class="font-extrabold text-amber-950">{{ selectedProduction.nombreEmpleadoSolicita }}</span></div>
+            <div><span class="font-bold text-amber-800/60 uppercase">Fecha Solicitud:</span> <span class="font-bold text-amber-950">{{ selectedProduction.fechaSolicitud | date:'dd/MM/yyyy HH:mm' }}</span></div>
+            <div><span class="font-bold text-amber-800/60 uppercase">Estado:</span> 
+              <span class="font-extrabold uppercase ml-1" [ngClass]="{
+                'text-amber-600': selectedProduction.estado.toLowerCase() === 'pendiente',
+                'text-green-650': selectedProduction.estado.toLowerCase() === 'aprobado',
+                'text-red-650': selectedProduction.estado.toLowerCase() === 'rechazado'
+              }">{{ selectedProduction.estado }}</span>
+            </div>
+          </div>
+          
+          <div class="p-3 bg-[#FAF6EE] rounded-2xl border border-amber-100/40 text-xs space-y-1">
+            <div><span class="font-bold text-amber-800/60 uppercase">Autorizante:</span> <span class="font-extrabold text-amber-950">{{ selectedProduction.nombreEmpleadoAutoriza || 'Aún no autorizado' }}</span></div>
+            <div><span class="font-bold text-amber-800/60 uppercase">Fecha Autorización:</span> <span class="font-bold text-amber-950">{{ selectedProduction.fechaAutorizacion ? (selectedProduction.fechaAutorizacion | date:'dd/MM/yyyy HH:mm') : 'N/A' }}</span></div>
+            <div><span class="font-bold text-amber-800/60 uppercase">Observaciones:</span> <span class="font-medium text-amber-950 italic">"{{ selectedProduction.observaciones || 'Ninguna' }}"</span></div>
+          </div>
+        </div>
+
+        <!-- Inventory Movements Table -->
+        <div>
+          <h4 class="text-xs font-bold text-amber-800/60 uppercase tracking-wider mb-2">Movimientos de Stock Planificados</h4>
+          <div class="border border-amber-200/30 rounded-2xl overflow-hidden shadow-sm">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-[#F5EFE4] text-amber-950 font-bold border-b border-amber-200/50">
+                  <th class="py-2.5 px-3">Item (Producto / Insumo)</th>
+                  <th class="py-2.5 px-3">Tipo</th>
+                  <th class="py-2.5 px-3">Almacén</th>
+                  <th class="py-2.5 px-3 text-right">Cantidad</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let det of selectedProduction.detalles; let last = last" 
+                    class="hover:bg-amber-50/40 transition-colors border-b border-amber-100/30"
+                    [class.border-b-0]="last">
+                  <td class="py-2.5 px-3 font-semibold text-amber-950">{{ det.nombreItem }}</td>
+                  <td class="py-2.5 px-3">
+                    <span [ngClass]="{
+                      'bg-emerald-100 text-emerald-800': det.tipoMovimiento === 'Ingreso',
+                      'bg-amber-100 text-amber-800': det.tipoMovimiento === 'Egreso'
+                    }" class="inline-flex px-2 py-0.5 rounded-md font-bold text-[10px]">
+                      {{ det.tipoMovimiento }}
+                    </span>
+                  </td>
+                  <td class="py-2.5 px-3 text-amber-900">Almacén #{{ det.almacenId }}</td>
+                  <td class="py-2.5 px-3 text-right font-bold" 
+                      [class.text-emerald-700]="det.tipoMovimiento === 'Ingreso'"
+                      [class.text-amber-700]="det.tipoMovimiento === 'Egreso'">
+                    {{ det.tipoMovimiento === 'Egreso' ? '-' : '+' }}{{ det.cantidad }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="p-4 bg-amber-50 border-t border-amber-100 flex justify-between">
+        <div>
+          <ng-container *ngIf="selectedProduction.estado.toLowerCase() === 'pendiente'">
+            <button (click)="approveProduction(selectedProduction); closeDetails()" 
+                    class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition-all active:scale-95 shadow mr-2">
+              Aprobar Orden
+            </button>
+            <button (click)="rejectProduction(selectedProduction); closeDetails()" 
+                    class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl text-xs transition-all active:scale-95 shadow">
+              Rechazar
+            </button>
+          </ng-container>
+        </div>
+        
+        <button (click)="closeDetails()" 
+                class="px-5 py-2 bg-[#3E261A] hover:bg-[#523322] text-white font-bold rounded-xl text-xs transition-all active:scale-95 shadow">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
