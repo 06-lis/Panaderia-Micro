@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MSVenta.Seguridad.Models;
 using MSVenta.Seguridad.Repositories;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSVenta.Seguridad.Services
@@ -59,6 +60,16 @@ namespace MSVenta.Seguridad.Services
             if (rolPermisoUsuario != null)
             {
                 _context.RolPermisoUsuarios.Remove(rolPermisoUsuario);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteByUserId(int userId)
+        {
+            var toRemove = await _context.RolPermisoUsuarios.Where(x => x.UserId == userId).ToListAsync();
+            if (toRemove.Count > 0)
+            {
+                _context.RolPermisoUsuarios.RemoveRange(toRemove);
                 await _context.SaveChangesAsync();
             }
         }

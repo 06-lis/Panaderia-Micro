@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\aldearius\\Documents\\Panaderia-Micro\\MSVenta\\MSVenta\\MSVenta.Produccion\\MSVenta.Produccion.csproj": {}
+    "E:\\Proyecto-Tec\\MS-SisVentas-Back-Front\\MSVenta\\MSVenta\\MSVenta.Produccion\\MSVenta.Produccion.csproj": {}
   },
   "projects": {
-    "C:\\Users\\aldearius\\Documents\\Panaderia-Micro\\MSVenta\\MSVenta\\MSVenta.Produccion\\MSVenta.Produccion.csproj": {
+    "E:\\Proyecto-Tec\\MS-SisVentas-Back-Front\\MSVenta\\MSVenta\\MSVenta.Produccion\\MSVenta.Produccion.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\aldearius\\Documents\\Panaderia-Micro\\MSVenta\\MSVenta\\MSVenta.Produccion\\MSVenta.Produccion.csproj",
+        "projectUniqueName": "E:\\Proyecto-Tec\\MS-SisVentas-Back-Front\\MSVenta\\MSVenta\\MSVenta.Produccion\\MSVenta.Produccion.csproj",
         "projectName": "MSVenta.Produccion",
-        "projectPath": "C:\\Users\\aldearius\\Documents\\Panaderia-Micro\\MSVenta\\MSVenta\\MSVenta.Produccion\\MSVenta.Produccion.csproj",
-        "packagesPath": "C:\\Users\\aldearius\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\aldearius\\Documents\\Panaderia-Micro\\MSVenta\\MSVenta\\MSVenta.Produccion\\obj\\",
+        "projectPath": "E:\\Proyecto-Tec\\MS-SisVentas-Back-Front\\MSVenta\\MSVenta\\MSVenta.Produccion\\MSVenta.Produccion.csproj",
+        "packagesPath": "C:\\Users\\lizet\\.nuget\\packages\\",
+        "outputPath": "E:\\Proyecto-Tec\\MS-SisVentas-Back-Front\\MSVenta\\MSVenta\\MSVenta.Produccion\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\aldearius\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\lizet\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

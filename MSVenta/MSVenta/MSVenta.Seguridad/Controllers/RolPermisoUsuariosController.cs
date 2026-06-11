@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using MSVenta.Seguridad.Models;
 using MSVenta.Seguridad.Services;
 using System.Collections.Generic;
@@ -37,6 +37,13 @@ namespace MSVenta.Seguridad.Controllers
         {
             var createdRolPermisoUsuario = await _rolPermisoUsuarioService.CreateRolPermisoUsuario(rolpermisousuario);
             return CreatedAtAction(nameof(GetRolPermisoUsuarios), new { id = createdRolPermisoUsuario.ID_Usuario_Rol_Permiso }, createdRolPermisoUsuario);
+        }
+
+        [HttpDelete("usuario/{userId}")]
+        public async Task<IActionResult> DeleteByUserId(int userId)
+        {
+            await _rolPermisoUsuarioService.DeleteByUserId(userId);
+            return NoContent();
         }
 
         public IActionResult Index()

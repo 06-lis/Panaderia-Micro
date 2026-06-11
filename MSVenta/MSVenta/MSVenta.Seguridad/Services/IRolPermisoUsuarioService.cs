@@ -1,4 +1,4 @@
-﻿using MSVenta.Seguridad.Models;
+using MSVenta.Seguridad.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,5 +11,6 @@ namespace MSVenta.Seguridad.Services
         Task<RolPermisoUsuario> CreateRolPermisoUsuario(RolPermisoUsuario rolPermisoUsuario);
         Task UpdateRolPermisoUsuario(RolPermisoUsuario rolPermisoUsuario);
         Task DeleteRolPermisoUsuario(int id);
+        Task DeleteByUserId(int userId);
     }
 }

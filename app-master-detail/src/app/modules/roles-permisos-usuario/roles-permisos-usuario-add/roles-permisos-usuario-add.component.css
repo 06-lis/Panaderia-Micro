@@ -1,3 +1,39 @@
 :host {
   display: block;
 }
+
+/* Contenedor de permisos y scrollbar premium */
+.permisos-container::-webkit-scrollbar {
+  width: 8px;
+}
+.permisos-container::-webkit-scrollbar-track {
+  background: #fbf9f6;
+  border-radius: 4px;
+}
+.permisos-container::-webkit-scrollbar-thumb {
+  background: #e6dfd5;
+  border-radius: 4px;
+}
+.permisos-container::-webkit-scrollbar-thumb:hover {
+  background: #8e4e2a;
+}
+
+/* Estilo para los nombres de permisos como código */
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.85rem;
+  color: #5c3e21;
+  background: #faf6ee;
+  padding: 3px 6px;
+  border-radius: 6px;
+  border: 1px solid #f3ebe1;
+  transition: all 0.2s ease;
+}
+
+/* Efecto activo cuando el checkbox está seleccionado */
+input[type="checkbox"]:checked + label code {
+  color: #ffffff;
+  background: #8e4e2a;
+  border-color: #8e4e2a;
+  font-weight: 600;
+}
