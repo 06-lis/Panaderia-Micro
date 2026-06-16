@@ -186,6 +186,19 @@ export class RolService {
         return of({} as RolPermisoUsuario); // Retorna un objeto vacío si no hay token
       }
     }
+
+    deleteRolUsuarioByUserId(userId: number): Observable<any> {
+      const urlRolUsuario: string = `${environment.URL_SERVICIOS}/rolpermisousuarios/usuario/${userId}`;
+      const token = sessionStorage.getItem('token');
+      if (token) {
+        return this.http
+          .delete<any>(urlRolUsuario, httpOptions(token))
+          .pipe(catchError(this.handleError('deleteRolUsuarioByUserId')));
+      } else {
+        console.error('No hay token disponible');
+        return of(null);
+      }
+    }
     // Fin de métodos para asignar rol permisos a un Usuario /////////////
 
 

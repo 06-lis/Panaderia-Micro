@@ -141,6 +141,22 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/rolpermisousuarios/usuario/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5001
+        }
+      ],
+      "UpstreamPathTemplate": "/api/rolpermisousuarios/usuario/{userId}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "SECURITY-TOKEN",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/empleado",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

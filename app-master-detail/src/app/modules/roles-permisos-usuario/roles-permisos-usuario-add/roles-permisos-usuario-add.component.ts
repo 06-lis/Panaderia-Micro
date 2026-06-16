@@ -6,7 +6,10 @@ import { User } from '../../../interfaces/user.interface';
 import { Rol } from '../../../interfaces/rol.interface';
 import { UsuarioService } from '../../usuario/usuario.service';
 import { RolService } from '../../rol/rol.service';
+import { PermisoService } from '../../permisos/permiso.service';
+import { Permiso } from '../../../interfaces/permiso.interface';
 import { RolPermisoUsuario } from '../../../interfaces/rol-permiso-usuario.interface';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-roles-permisos-usuario-add',
@@ -21,100 +24,182 @@ export class RolesPermisosUsuarioAddComponent implements OnInit {
   user: User | undefined;
   userId!: number;
 
-  selectedUser: number | null = null; // Usuario seleccionado
-  selectedRoles: any[] = []; // Roles seleccionados
-  asignaciones: any[] = []; // Asignaciones de usuario-rol
-
   roles: Rol[] = [];
+  permisos: Permiso[] = [];
+  selectedRolId: number | null = null;
+  activeRolPermisoIds: number[] = [];
+  searchQuery: string = '';
+
+  get allRolPermisos(): any[] {
+    const list: any[] = [];
+    this.roles.forEach(rol => {
+      if (rol.rolPermisos) {
+        rol.rolPermisos.forEach(rp => {
+          if (!list.some(item => item.iD_Rol_Permiso === rp.iD_Rol_Permiso)) {
+            list.push({
+              ...rp,
+              nombreRol: rol.nombre_Rol
+            });
+          }
+        });
+      }
+    });
+    return list.sort((a, b) => (a.nombrePermiso || '').localeCompare(b.nombrePermiso || ''));
+  }
+
+  get filteredRolPermisos(): any[] {
+    const query = this.searchQuery.toLowerCase().trim();
+    if (!query) {
+      return this.allRolPermisos;
+    }
+    return this.allRolPermisos.filter(rp =>
+      rp.nombrePermiso?.toLowerCase().includes(query) ||
+      rp.nombreRol?.toLowerCase().includes(query)
+    );
+  }
+
+  selectAll(): void {
+    this.activeRolPermisoIds = this.allRolPermisos.map(rp => rp.iD_Rol_Permiso!);
+    this.cdr.markForCheck();
+  }
+
+  deselectAll(): void {
+    this.activeRolPermisoIds = [];
+    this.cdr.markForCheck();
+  }
+
+  restoreDefault(): void {
+    if (this.selectedRolId) {
+      this.onRoleSelect();
+    } else {
+      this.activeRolPermisoIds = [];
+      this.cdr.markForCheck();
+    }
+  }
+
   constructor(
     private usuarioService: UsuarioService,
     private rolService: RolService,
+    private permisosService: PermisoService,
     private cdr: ChangeDetectorRef,
-    private router: Router, // Inyectar Router
+    private router: Router,
     private route: ActivatedRoute
   ) {}
+
   ngOnInit(): void {
     this.userId = +this.route.snapshot.paramMap.get('id')!;
-    this.loadUsuario();
-    this.loadRoles();
+    this.loadData();
   }
 
-  loadUsuario(): void {
-    this.usuarioService.getUsuarioById(this.userId).subscribe({
-      next: (usuarios) => {
-        this.user = usuarios;
-        console.log('Usuarios cargados:', this.user);
-        this.cdr.markForCheck();
-      },
-      error: (err) => {
-        console.error(err);
-        this.cdr.markForCheck();
-      },
-    });
-  }
+  loadData(): void {
+    // 1. Cargar permisos globales
+    this.permisosService.getPermisos().subscribe({
+      next: (permisosData) => {
+        this.permisos = permisosData;
 
-  loadRoles(): void {
-    this.rolService.getRoles().subscribe({
-      next: (roles) => {
-        this.roles = roles;
-        console.log('Roles cargados:', roles);
-        this.cdr.markForCheck();
-      },
-      error: (err) => {
-        console.error(err);
-        this.cdr.markForCheck();
-      },
-    });
-  }
-
-  asignarRoles() {
-    if (this.selectedUser && this.selectedRoles.length > 0) {
-      this.selectedRoles.forEach((rol) => {
-        this.asignaciones.push({
-          userId: this.selectedUser,
-          rol,
+        // 2. Cargar roles con sus mapeos de permisos
+        this.rolService.getRoles().subscribe({
+          next: (rolesData) => {
+            this.roles = rolesData.map(rol => ({
+              ...rol,
+              rolPermisos: rol.rolPermisos?.map(rp => ({
+                ...rp,
+                nombrePermiso: this.permisos.find(p => p.iD_Permiso === rp.iD_Permiso)?.nombre_Permiso
+              }))
+            }));
+            this.cdr.markForCheck();
+          },
+          error: (err) => console.error(err)
         });
-      });
 
-      console.log('Asignaciones:', this.asignaciones);
+        // 3. Cargar la información del usuario
+        this.usuarioService.getUsuarioById(this.userId).subscribe({
+          next: (userData) => {
+            this.user = userData;
+            this.cdr.markForCheck();
+          },
+          error: (err) => console.error(err)
+        });
+
+        // 4. Cargar los permisos asignados actualmente al usuario
+        this.rolService.getRolPermisoUsuario().subscribe({
+          next: (links) => {
+            const userLinks = links.filter(x => x.userId === this.userId);
+            this.activeRolPermisoIds = userLinks.map(x => x.iD_Rol_Permiso);
+            console.log('Permisos activos del usuario:', this.activeRolPermisoIds);
+            this.cdr.markForCheck();
+          },
+          error: (err) => console.error(err)
+        });
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  isPermissionSelected(idRolPermiso: number): boolean {
+    return this.activeRolPermisoIds.includes(idRolPermiso);
+  }
+
+  togglePermission(idRolPermiso: number, event: any): void {
+    const checked = event.target.checked;
+    if (checked) {
+      if (!this.activeRolPermisoIds.includes(idRolPermiso)) {
+        this.activeRolPermisoIds.push(idRolPermiso);
+      }
     } else {
-      alert('Selecciona un usuario y al menos un rol.');
+      this.activeRolPermisoIds = this.activeRolPermisoIds.filter(id => id !== idRolPermiso);
     }
   }
 
-  transformarDatos(userId: number, data: any[]): any {
-    return {
-      userId: userId,
-      rolpermiso: data
-        // .filter(item => item.userId === userId) // Filtramos por el userId específico
-        .flatMap((item) => item.rol.rolPermisos) // Extraemos los permisos
-        .map((permiso) => ({ iD_Rol_Permiso: permiso.iD_Rol_Permiso })), // Formateamos
-    };
+  onRoleSelect(): void {
+    if (this.selectedRolId) {
+      const selectedRole = this.roles.find(r => r.iD_Rol === +this.selectedRolId!);
+      if (selectedRole && selectedRole.rolPermisos) {
+        // Marcamos los del rol seleccionado
+        this.activeRolPermisoIds = selectedRole.rolPermisos.map(rp => rp.iD_Rol_Permiso!);
+        console.log('Cargados permisos por defecto del rol:', selectedRole.nombre_Rol, this.activeRolPermisoIds);
+        this.cdr.markForCheck();
+      }
+    }
   }
 
   save(): void {
-    // 🔹 3. Construcción del objeto para la API
-    const rolData = this.transformarDatos(this.userId, this.asignaciones);
+    // 1. Eliminar los permisos anteriores del usuario
+    this.rolService.deleteRolUsuarioByUserId(this.userId).subscribe({
+      next: () => {
+        // 2. Si hay nuevos permisos seleccionados, crearlos
+        if (this.activeRolPermisoIds.length > 0) {
+          const requests = this.activeRolPermisoIds.map(id => {
+            const payload: RolPermisoUsuario = {
+              userId: this.userId,
+              iD_Rol_Permiso: id
+            };
+            return this.rolService.createRolUsuario(payload);
+          });
 
-    console.log('Datos a enviar:', rolData.rolpermiso);
+          forkJoin(requests).subscribe({
+            next: () => {
+              alert('Cambios guardados con éxito.');
+              this.router.navigate(['/dashboard/roles-permisos-usuario']);
+            },
+            error: (err) => {
+              console.error('Error al asignar permisos:', err);
+              alert('Ocurrió un error al guardar los permisos.');
+            }
+          });
+        } else {
+          alert('Cambios guardados con éxito (se quitaron todos los permisos).');
+          this.router.navigate(['/dashboard/roles-permisos-usuario']);
+        }
+      },
+      error: (err) => {
+        console.error('Error al limpiar permisos anteriores:', err);
+        alert('Ocurrió un error al limpiar los permisos anteriores.');
+      }
+    });
+  }
 
-    // 🔹 4. Insertar nuevos permisos
-    if (rolData.rolpermiso.length > 0) {
-      rolData.rolpermiso.forEach((permiso: any) => {
-        var rolpermisoUsuario: RolPermisoUsuario = {
-          userId: this.userId,
-          iD_Rol_Permiso: permiso.iD_Rol_Permiso,
-        };
-
-        console.log('Datos a enviar rolpermisoUsuario:', rolpermisoUsuario);
-
-        this.rolService.createRolUsuario(rolpermisoUsuario).subscribe(
-          (response) => console.log('Permiso insertado:', response),
-          (error) => console.error('Error al insertar permiso:', error)
-        );
-      });
-      alert('✅ Cambios guardados con éxito.');
-      this.router.navigate(['/dashboard/roles-permisos-usuario']);
-    }
+  goBack(): void {
+    this.router.navigate(['/dashboard/roles-permisos-usuario']);
   }
 }

@@ -14,36 +14,32 @@
   </div>
 
   <div class="overflow-x-auto">
-    <table class="w-full table-auto text-sm text-center bg-white rounded-xl border-collapse border border-amber-100/60">
+    <table class="w-full table-auto text-sm bg-white rounded-xl border-collapse border border-amber-100/60">
       <thead>
         <tr class="bg-[#5C3E21] text-white border-b border-[#3E261A]">
-          <th class="px-4 py-2 text-left ">ID</th>
-          <th class="px-4 py-2 text-left">Rol</th>
-          <th class="px-4 py-2 text-left">Permisos</th>
-          <th class="px-4 py-2 text-left ">Acciones</th>
+          <th class="px-6 py-4 text-center w-16">ID</th>
+          <th class="px-6 py-4 text-left">Rol</th>
+          <th class="px-6 py-4 text-left">Permisos</th>
+          <th class="px-6 py-4 text-center w-32">Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let rol of roles" class="hover:bg-[#FAF6EE] transition-colors duration-200 border-b border-amber-100/50">
-          <td class="px-6 py-4 text-amber-950">{{ rol.iD_Rol }}</td>
-          <td class="px-6 py-4 text-amber-950">{{ rol.nombre_Rol }}</td>
-          <td class="px-6 py-4 text-amber-950">
-            <div class="flex flex-wrap gap-2 justify-start">
-              <ng-container *ngIf="rol.rolPermisos && rol.rolPermisos.length > 0; else noPermisos">
-                <span *ngFor="let permiso of rol.rolPermisos" class="px-3 py-1 bg-[#8E4E2A]/15 text-[#5C3E21] border border-[#8E4E2A]/30 rounded-full text-xs font-semibold">
-                  {{ permiso.nombrePermiso }}
-                </span>
-              </ng-container>
-              <ng-template #noPermisos>
-                <span class="text-amber-800/80">No tiene permisos asignados</span>
-              </ng-template>
-            </div>
+          <td class="px-6 py-4 text-center font-semibold text-amber-950">{{ rol.iD_Rol }}</td>
+          <td class="px-6 py-4 text-left font-medium text-amber-950">{{ rol.nombre_Rol }}</td>
+          <td class="px-6 py-4 text-left">
+            <span class="inline-flex items-center px-4 py-1.5 bg-gray-100 text-gray-700 border border-gray-300 rounded-full text-xs font-semibold shadow-sm">
+              {{ rol.rolPermisos ? rol.rolPermisos.length : 0 }} permisos
+            </span>
           </td>
-          <td class="px-6 py-4 flex justify-evenly items-center">
-            <a [routerLink]="['/dashboard/roles-permisos/add', rol.iD_Rol]"
-              class="px-4 py-2 bg-[#8E4E2A] hover:bg-[#7D411F] text-white font-semibold rounded-lg shadow-md transition-all">
-              Asignar Permisos
-            </a>
+          <td class="px-6 py-4">
+            <div class="flex justify-center items-center">
+              <a [routerLink]="['/dashboard/roles-permisos/add', rol.iD_Rol]"
+                 class="w-10 h-10 bg-[#3E261A] hover:bg-[#5C3E21] text-[#F5EFE4] flex items-center justify-center rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer"
+                 title="Asignar Permisos">
+                <i class="pi pi-lock text-base"></i>
+              </a>
+            </div>
           </td>
         </tr>
       </tbody>
