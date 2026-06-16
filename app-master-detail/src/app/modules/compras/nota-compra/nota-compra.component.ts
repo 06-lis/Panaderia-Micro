@@ -212,7 +212,8 @@ export class NotaCompraComponent implements OnInit {
       idAlmacen: Number(d.idAlmacen),
       idItem: Number(d.idItem),
       cantidad: Number(d.cantidad),
-      precio: Number(d.precio)
+      precio: Number(d.precio),
+      fechaVencimiento: d.fechaVencimiento ? new Date(d.fechaVencimiento).toISOString() : undefined
     }));
 
     this.notaService.createNotaCompra(this.form).subscribe({

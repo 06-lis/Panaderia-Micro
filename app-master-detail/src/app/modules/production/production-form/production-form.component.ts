@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProductionService } from '../service/production.service';
 import { RecipeService } from '../service/recipe.service';
-import { AlmacenService } from '../../almacen/service/almacen.service';
 import { EmpleadoService } from '../../usuario/empleado.service';
 import Swal from 'sweetalert2';
 
@@ -20,7 +19,6 @@ export class ProductionFormComponent implements OnInit {
 
   productionForm!: FormGroup;
   recipes: any[] = [];
-  almacenes: any[] = [];
   employees: any[] = [];
   loadingData = false;
   saving = false;
@@ -29,7 +27,6 @@ export class ProductionFormComponent implements OnInit {
     private fb: FormBuilder,
     private productionService: ProductionService,
     private recipeService: RecipeService,
-    private almacenService: AlmacenService,
     private empleadoService: EmpleadoService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -40,9 +37,9 @@ export class ProductionFormComponent implements OnInit {
 
     this.productionForm = this.fb.group({
       recetaId: [null, Validators.required],
-      almacenId: [null, Validators.required],
       lote: [1, [Validators.required, Validators.min(1)]],
       empleadoSolicitaId: [defaultEmpId, Validators.required],
+      fechaVencimiento: [null],
       observaciones: ['', [Validators.maxLength(200)]]
     });
 
@@ -60,15 +57,6 @@ export class ProductionFormComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (err) => console.error('Error al cargar recetas en formulario:', err)
-    });
-
-    // Load warehouses
-    this.almacenService.getAlmacenes().subscribe({
-      next: (almacenesData) => {
-        this.almacenes = almacenesData;
-        this.cdr.markForCheck();
-      },
-      error: (err) => console.error('Error al cargar almacenes en formulario:', err)
     });
 
     // Load employees
@@ -98,9 +86,9 @@ export class ProductionFormComponent implements OnInit {
     const val = this.productionForm.value;
     const payload = {
       recetaId: Number(val.recetaId),
-      almacenId: Number(val.almacenId),
       lote: Number(val.lote),
       empleadoSolicitaId: Number(val.empleadoSolicitaId),
+      fechaVencimiento: val.fechaVencimiento ? new Date(val.fechaVencimiento).toISOString() : undefined,
       observaciones: val.observaciones || ''
     };
 

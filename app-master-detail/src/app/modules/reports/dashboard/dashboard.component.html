@@ -1,0 +1,200 @@
+<div class="p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">Dashboard de Reportes</h2>
+    <div class="flex space-x-4">
+      <button 
+        (click)="exportPdf()" 
+        [disabled]="exporting"
+        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center shadow-sm transition-colors disabled:opacity-50">
+        <svg *ngIf="!exporting" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <svg *ngIf="exporting" class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        {{ exporting ? 'Exportando...' : 'Exportar a PDF' }}
+      </button>
+      <div class="bg-blue-50 text-blue-700 px-4 py-2 rounded-lg text-sm font-semibold flex items-center shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Inteligencia de Negocios
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="flex justify-center items-center h-64">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  </div>
+
+  <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <div class="ml-3">
+        <p class="text-sm text-red-700">{{error}}</p>
+      </div>
+    </div>
+  </div>
+
+  <div #dashboardContent>
+    <div *ngIf="!loading && dashboardData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Ventas -->
+    <div class="metric-card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center hover:shadow-md transition-shadow">
+      <div class="rounded-full bg-blue-100 p-3 mr-4 text-blue-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      </div>
+      <div class="min-w-0">
+        <p class="text-sm font-medium text-gray-500">Total Ventas</p>
+        <p class="text-3xl font-bold text-gray-800">{{dashboardData.totalVentas}}</p>
+      </div>
+    </div>
+
+    <!-- Compras -->
+    <div class="metric-card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center hover:shadow-md transition-shadow">
+      <div class="rounded-full bg-green-100 p-3 mr-4 text-green-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="min-w-0">
+        <p class="text-sm font-medium text-gray-500">Total Compras</p>
+        <p class="text-3xl font-bold text-gray-800">{{dashboardData.totalCompras}}</p>
+      </div>
+    </div>
+
+    <!-- Producciones -->
+    <div class="metric-card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center hover:shadow-md transition-shadow">
+      <div class="rounded-full bg-purple-100 p-3 mr-4 text-purple-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+      </div>
+      <div class="min-w-0">
+        <p class="text-sm font-medium text-gray-500">Prod. Completadas</p>
+        <p class="text-3xl font-bold text-gray-800">{{dashboardData.produccionesCompletadas}}</p>
+      </div>
+    </div>
+
+    <!-- Inventario -->
+    <div class="metric-card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center hover:shadow-md transition-shadow">
+      <div class="rounded-full bg-orange-100 p-3 mr-4 text-orange-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </div>
+      <div class="min-w-0">
+        <p class="text-sm font-medium text-gray-500">Insumos/Lotes</p>
+        <p class="text-3xl font-bold text-gray-800">{{dashboardData.insumosBajoStock}}</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && dashboardData" class="mt-6 w-full max-w-full overflow-hidden">
+    <!-- Fila superior: Gráfico Lineal (Flujo) -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6 w-full max-w-full overflow-x-auto">
+      <h3 class="text-lg font-semibold text-gray-700 mb-4">Flujo de Operaciones (Últimos 30 días)</h3>
+      <div style="position: relative; height:300px; width:100%">
+        <p-chart type="line" [data]="lineData" [options]="lineOptions" [responsive]="true"></p-chart>
+      </div>
+    </div>
+
+    <!-- Fila central: Pastel y Barras -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 w-full max-w-full overflow-hidden">
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 min-w-0">
+        <h3 class="text-lg font-semibold text-gray-700 mb-4">Distribución de Operaciones</h3>
+        <div style="position: relative; height:300px; width:100%">
+          <p-chart type="pie" [data]="pieData" [options]="pieOptions" [responsive]="true"></p-chart>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 min-w-0">
+        <h3 class="text-lg font-semibold text-gray-700 mb-4">Comparativa de Métricas</h3>
+        <div style="position: relative; height:300px; width:100%">
+          <p-chart type="bar" [data]="barData" [options]="barOptions" [responsive]="true"></p-chart>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila inferior: Listas -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Tabla de Vencimientos -->
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <h3 class="text-lg font-semibold text-gray-700 mb-4 text-red-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          Productos Próximos a Vencer
+        </h3>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm text-left text-gray-500">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+              <tr>
+                <th scope="col" class="px-4 py-3">Lote / Almacén</th>
+                <th scope="col" class="px-4 py-3">Vencimiento</th>
+                <th scope="col" class="px-4 py-3">Stock</th>
+                <th scope="col" class="px-4 py-3">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let prod of dashboardData.productosPorVencer" class="bg-white border-b hover:bg-gray-50">
+                <td class="px-4 py-3 font-medium text-gray-900">Lote {{prod.idLote}} ({{prod.nombreAlmacen}})</td>
+                <td class="px-4 py-3">{{prod.fechaVencimiento | date:'dd/MM/yyyy'}}</td>
+                <td class="px-4 py-3">{{prod.cantidadDisponible}}</td>
+                <td class="px-4 py-3">
+                  <span class="px-2 py-1 rounded text-xs font-semibold"
+                        [ngClass]="{'bg-red-100 text-red-800': prod.estado === 'Vencido', 'bg-yellow-100 text-yellow-800': prod.estado !== 'Vencido'}">
+                    {{prod.estado}}
+                  </span>
+                </td>
+              </tr>
+              <tr *ngIf="dashboardData.productosPorVencer?.length === 0">
+                <td colspan="4" class="px-4 py-6 text-center text-gray-500">No hay productos próximos a vencer.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tabla de Más Vendidos -->
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <h3 class="text-lg font-semibold text-gray-700 mb-4 text-green-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+          </svg>
+          Ítems Más Vendidos (Top 5)
+        </h3>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm text-left text-gray-500">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+              <tr>
+                <th scope="col" class="px-4 py-3">#</th>
+                <th scope="col" class="px-4 py-3">Ítem / Producto</th>
+                <th scope="col" class="px-4 py-3 text-right">Cantidad Vendida</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of dashboardData.itemsMasUsados; let i = index" class="bg-white border-b hover:bg-gray-50">
+                <td class="px-4 py-3 font-bold">{{i + 1}}</td>
+                <td class="px-4 py-3 font-medium text-gray-900">{{item.nombreItem}}</td>
+                <td class="px-4 py-3 text-right font-bold text-green-600">+{{item.cantidadVendida}}</td>
+              </tr>
+              <tr *ngIf="dashboardData.itemsMasUsados?.length === 0">
+                <td colspan="3" class="px-4 py-6 text-center text-gray-500">No hay registros de ventas.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>

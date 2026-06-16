@@ -1,0 +1,103 @@
+<div class="p-6 max-w-7xl mx-auto space-y-6">
+  <!-- Header Section -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-12 h-12 bg-gradient-to-br from-[#8E4E2A] to-[#603218] text-white rounded-2xl flex items-center justify-center shadow-lg transform transition hover:scale-105">
+        <i class="pi pi-box text-xl"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-extrabold text-amber-950 tracking-tight">Lotes de Inventario</h2>
+        <p class="text-sm text-amber-800/80 font-medium">Gestión y trazabilidad del stock almacenado por lote.</p>
+      </div>
+    </div>
+    
+    <div class="relative w-full md:w-72">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-amber-800/50">
+        <i class="pi pi-search"></i>
+      </div>
+      <input type="text"
+             [(ngModel)]="searchTerm"
+             (keyup)="filterLotes()"
+             placeholder="Buscar por item, almacén o ID..."
+             class="w-full pl-10 pr-4 py-2.5 bg-white/80 backdrop-blur-md border border-amber-200/50 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#8E4E2A]/50 focus:border-[#8E4E2A] transition-all text-sm font-medium text-amber-950 placeholder:text-amber-800/40" />
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex flex-col items-center justify-center py-20 bg-white/50 backdrop-blur-sm rounded-3xl border border-amber-100/50 shadow-sm">
+    <div class="w-10 h-10 border-4 border-amber-200 border-t-[#8E4E2A] rounded-full animate-spin"></div>
+    <span class="text-sm font-bold text-amber-900/60 mt-4 uppercase tracking-widest">Cargando inventario...</span>
+  </div>
+
+  <!-- Data Table Card -->
+  <div *ngIf="!loading" class="bg-white rounded-3xl shadow-xl shadow-amber-900/5 border border-amber-100/50 overflow-hidden relative">
+    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#8E4E2A] via-amber-600 to-[#8E4E2A]"></div>
+    
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm whitespace-nowrap">
+        <thead class="bg-amber-50/50 text-xs uppercase font-extrabold text-amber-900/70 border-b border-amber-100/50">
+          <tr>
+            <th class="px-6 py-4 tracking-wider">ID Lote</th>
+            <th class="px-6 py-4 tracking-wider">Almacén</th>
+            <th class="px-6 py-4 tracking-wider">Item</th>
+            <th class="px-6 py-4 tracking-wider text-right">Cant. Disponible</th>
+            <th class="px-6 py-4 tracking-wider text-right">Precio Unitario</th>
+            <th class="px-6 py-4 tracking-wider">F. Vencimiento</th>
+            <th class="px-6 py-4 tracking-wider text-center">Estado</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-amber-100/50 text-amber-950">
+          <tr *ngFor="let lote of filteredLotes" class="hover:bg-amber-50/30 transition-colors duration-150 group">
+            <td class="px-6 py-4 font-bold text-amber-900">#{{ lote.id_lote | number:'3.0-0' }}</td>
+            <td class="px-6 py-4 font-medium">{{ lote.almacen_nombre || 'N/A' }}</td>
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-700">
+                  <i class="pi pi-box text-xs"></i>
+                </div>
+                <span class="font-bold">{{ lote.item_nombre || 'N/A' }}</span>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-bold"
+                    [ngClass]="{'bg-red-50 text-red-700': lote.cantidad_disponible === 0, 'bg-emerald-50 text-emerald-700': lote.cantidad_disponible > 0}">
+                {{ lote.cantidad_disponible | number:'1.2-2' }}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-right font-medium text-amber-900/80">
+              Bs. {{ lote.precio_unitario | number:'1.2-2' }}
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-1.5" *ngIf="lote.fecha_vencimiento">
+                <i class="pi pi-calendar text-xs text-amber-800/50"></i>
+                <span class="font-medium text-amber-800">{{ lote.fecha_vencimiento | date:'mediumDate' }}</span>
+              </div>
+              <span *ngIf="!lote.fecha_vencimiento" class="text-amber-800/40 text-xs font-bold uppercase">No expira</span>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <span class="px-3 py-1 text-xs font-bold rounded-full border"
+                    [ngClass]="{
+                      'bg-emerald-50 border-emerald-200 text-emerald-700': lote.estado === 'Activo',
+                      'bg-amber-50 border-amber-200 text-amber-700': lote.estado === 'Agotado',
+                      'bg-red-50 border-red-200 text-red-700': lote.estado === 'Vencido'
+                    }">
+                {{ lote.estado || 'N/A' }}
+              </span>
+            </td>
+          </tr>
+
+          <!-- Empty State -->
+          <tr *ngIf="filteredLotes.length === 0">
+            <td colspan="7" class="px-6 py-16 text-center">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-100/50 mb-4">
+                <i class="pi pi-inbox text-2xl text-amber-800/40"></i>
+              </div>
+              <h3 class="text-lg font-bold text-amber-950 mb-1">No hay lotes disponibles</h3>
+              <p class="text-sm text-amber-800/60">No se encontraron registros de inventario.</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

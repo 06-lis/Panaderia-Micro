@@ -223,6 +223,69 @@ export const routes: Routes = [
           section: 'Producción'
         },
       },
+
+      // ==========================================
+      // 📦 INVENTARIO (NUEVO)
+      // ==========================================
+      {
+        path: 'inventario/lotes',
+        loadComponent: () =>
+          import('./modules/inventario/lotes/lotes.component').then(m => m.LotesComponent),
+        data: {
+          icon: 'pi pi-box',
+          title: 'Lotes Inventario',
+          description: 'Gestión de Lotes y Trazabilidad',
+          permission: 'Lotes Inventario',
+          section: 'Almacén e Inventario'
+        },
+      },
+      {
+        path: 'inventario/movimientos',
+        loadComponent: () =>
+          import('./modules/inventario/movimientos/movimientos.component').then(m => m.MovimientosComponent),
+        data: {
+          icon: 'pi pi-sort-alt',
+          title: 'Movimientos',
+          description: 'Historial de Movimientos de Inventario',
+          permission: 'Lotes Inventario', // O uno específico si existe
+          section: 'Almacén e Inventario'
+        },
+      },
+      {
+        path: 'inventario/traspasos',
+        loadComponent: () =>
+          import('./modules/inventario/traspasos/traspasos.component').then(m => m.TraspasosComponent),
+        data: {
+          icon: 'pi pi-arrow-right-arrow-left',
+          title: 'Traspasos',
+          description: 'Traspasos entre Almacenes',
+          permission: 'Traspasos',
+          section: 'Almacén e Inventario'
+        },
+      },
+      {
+        path: 'inventario/configuracion',
+        loadComponent: () =>
+          import('./modules/inventario/configuracion/configuracion.component').then(m => m.ConfiguracionComponent),
+        data: {
+          icon: 'pi pi-cog',
+          title: 'Configuracion Inventario',
+          description: 'Configuración de Parámetros de Inventario',
+          permission: 'Configuracion Inventario',
+          section: 'Almacén e Inventario'
+        },
+      },
+      {
+        path: 'reports',
+        loadChildren: () =>
+          import('./modules/reports/reports.module').then(m => m.ReportsModule),
+        data: {
+          icon: 'pi pi-chart-bar',
+          title: 'Dashboard',
+          description: 'Dashboard de Reportes y Métricas',
+          section: 'Reportes'
+        },
+      },
     ],
   },
   {

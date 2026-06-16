@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MSVenta.Venta.Models;
 using MSVenta.Venta.Repositories;
 using Org.BouncyCastle.Crypto;
@@ -12,8 +12,13 @@ namespace MSVenta.Venta.Services
     public class VentaService : IVentaService
     {
         private readonly ContextDatabase _context;
+        private readonly IInventarioService _inventarioService;
 
-        public VentaService(ContextDatabase context) => _context = context;
+        public VentaService(ContextDatabase context, IInventarioService inventarioService)
+        {
+            _context = context;
+            _inventarioService = inventarioService;
+        }
 
         public async Task<IEnumerable<Models.Venta>> GetAllVentas()
         {

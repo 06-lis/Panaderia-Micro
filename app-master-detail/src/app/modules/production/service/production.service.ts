@@ -42,7 +42,7 @@ export class ProductionService {
     }
   }
 
-  public solicitarProduccion(dto: { recetaId: number; almacenId: number; lote: number; empleadoSolicitaId: number; observaciones: string }): Observable<Produccion> {
+  public solicitarProduccion(dto: { recetaId: number; lote: number; empleadoSolicitaId: number; observaciones: string; fechaVencimiento?: string; }): Observable<Produccion> {
     const token = sessionStorage.getItem('token');
     if (token) {
       return this.http.post<Produccion>(`${this.apiUrl}/solicitar`, dto, httpOptions(token)).pipe(
@@ -55,10 +55,10 @@ export class ProductionService {
     }
   }
 
-  public aprobarProduccion(id: number, empleadoAutorizaId: number): Observable<any> {
+  public aprobarProduccion(id: number, empleadoAutorizaId: number, almacenId: number): Observable<any> {
     const token = sessionStorage.getItem('token');
     if (token) {
-      const dto = { empleadoAutorizaId };
+      const dto = { empleadoAutorizaId, almacenId };
       return this.http.post(`${this.apiUrl}/aprobar/${id}`, dto, httpOptions(token)).pipe(
         catchError((error) => {
           return throwError(error.error?.mensaje || 'Error al aprobar la producción');

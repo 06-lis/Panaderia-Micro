@@ -25,7 +25,7 @@ namespace MSVenta.Compras.Services
             try
             {
                 string uri = _configuration["proxy:urlVenta"];
-                var url = $"{uri}/update-stock";
+                var url = $"{uri}/ingreso";
 
                 Console.WriteLine($"Sending stock update to {url} with ItemId={dto.ItemId}, AlmacenId={dto.AlmacenId}, Cantidad={dto.Cantidad}");
                 var response = await _httpClient.PostAsync(url, dto);

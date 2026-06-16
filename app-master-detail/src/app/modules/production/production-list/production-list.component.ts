@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ProductionService } from '../service/production.service';
 import { ItemService } from '../../crear-item/service/item.service';
 import { EmpleadoService } from '../../usuario/empleado.service';
+import { AlmacenService } from '../../almacen/service/almacen.service';
+import { InventarioService } from '../../inventario/service/inventario.service';
 import { Produccion } from '../../../interfaces/production.interface';
 import Swal from 'sweetalert2';
 
@@ -19,15 +21,23 @@ export class ProductionListComponent implements OnInit {
   itemsMap = new Map<number, string>();
   employeesMap = new Map<number, string>();
   employeesList: any[] = [];
+  almacenes: any[] = [];
   loading = false;
   currentStatusFilter: 'pendiente' | 'aprobado' | 'rechazado' = 'pendiente';
   selectedProduction: Produccion | null = null;
   showDetailsModal = false;
+  
+  showApprovalModal = false;
+  selectedAlmacenId: number = 0;
+  approvalLotes: any[] = [];
+  productionMovimientos: any[] = []; // Para historial de lotes
 
   constructor(
     private productionService: ProductionService,
     private itemService: ItemService,
     private empleadoService: EmpleadoService,
+    private almacenService: AlmacenService,
+    private inventarioService: InventarioService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -52,6 +62,13 @@ export class ProductionListComponent implements OnInit {
         console.error('Error al cargar items en lista de produccion:', err);
         this.loadEmployees();
       }
+    });
+
+    this.almacenService.getAlmacenes().subscribe({
+      next: (almacenesData) => {
+        this.almacenes = almacenesData;
+      },
+      error: (err) => console.error('Error al cargar almacenes:', err)
     });
   }
 
@@ -108,55 +125,114 @@ export class ProductionListComponent implements OnInit {
   openDetails(prod: Produccion): void {
     this.selectedProduction = prod;
     this.showDetailsModal = true;
+    this.productionMovimientos = [];
+    
+    if (prod.estado.toLowerCase() === 'aprobado') {
+      this.inventarioService.getMovimientos().subscribe({
+        next: (movimientos) => {
+          // Adivinar movimientos relacionados a esta producción (consumos recientes de los items de la orden)
+          const itemIds = prod.detalles?.map(d => d.itemId) || [];
+          
+          this.productionMovimientos = movimientos.filter(m => 
+            m.tipo_movimiento === 'Consumo' && 
+            itemIds.includes(m.id_item)
+            // Ideally filter by date close to prod.fechaAutorizacion, but we take all for traceability
+          ).slice(0, 10); // Show max 10 recent consumptions for these items
+          this.cdr.markForCheck();
+        }
+      });
+    }
+    
     this.cdr.markForCheck();
   }
 
   closeDetails(): void {
     this.selectedProduction = null;
     this.showDetailsModal = false;
+    this.productionMovimientos = [];
     this.cdr.markForCheck();
   }
 
-  approveProduction(prod: Produccion): void {
-    if (!prod.id) return;
+  openApprovalValidation(prod: Produccion): void {
+    this.selectedProduction = prod;
+    this.selectedAlmacenId = 0;
+    this.approvalLotes = [];
+    this.showApprovalModal = true;
+    this.cdr.markForCheck();
+  }
+
+  closeApprovalModal(): void {
+    this.selectedProduction = null;
+    this.showApprovalModal = false;
+    this.approvalLotes = [];
+    this.cdr.markForCheck();
+  }
+
+  onAlmacenSelected(event: any): void {
+    this.selectedAlmacenId = Number(event.target.value);
+    if (this.selectedAlmacenId > 0 && this.selectedProduction) {
+      // Fetch lotes for this almacen
+      this.inventarioService.getLotes().subscribe({
+        next: (lotes) => {
+          // Filter lotes belonging to the selected warehouse and corresponding to the required items
+          const requiredItemIds = this.selectedProduction?.detalles?.filter(d => d.tipoMovimiento === 'Egreso').map(d => d.itemId) || [];
+          
+          this.approvalLotes = lotes.filter(l => 
+            l.id_almacen === this.selectedAlmacenId && 
+            requiredItemIds.includes(l.id_item) &&
+            l.cantidad_disponible > 0
+          );
+          this.cdr.markForCheck();
+        }
+      });
+    } else {
+      this.approvalLotes = [];
+      this.cdr.markForCheck();
+    }
+  }
+
+  approveProduction(): void {
+    if (!this.selectedProduction || !this.selectedProduction.id) return;
+    if (this.selectedAlmacenId === 0) {
+      Swal.fire('Error', 'Debes seleccionar un almacén válido.', 'error');
+      return;
+    }
+
+    const prodId = this.selectedProduction.id;
+    const almacenId = this.selectedAlmacenId;
 
     const userSession = JSON.parse(sessionStorage.getItem('user') || '{}');
     const employeeId = userSession.idEmpleado;
 
     if (employeeId) {
-      this.executeApproval(prod.id, employeeId);
+      this.executeApproval(prodId, employeeId, almacenId);
     } else {
-      const options: { [key: string]: string } = {};
+      // Ask for Employee if missing
+      const empOptions: { [key: string]: string } = {};
       this.employeesList.forEach(e => {
-        options[e.idEmpleado.toString()] = `${e.nombre} ${e.apellido}`;
+        empOptions[e.idEmpleado.toString()] = `${e.nombre} ${e.apellido}`;
       });
 
       Swal.fire({
         title: 'Seleccionar Empleado Autorizador',
-        text: 'Tu usuario no está vinculado a un empleado registrado. Selecciona quién autoriza esta producción:',
+        text: 'Selecciona quién autoriza esta producción:',
         input: 'select',
-        inputOptions: options,
+        inputOptions: empOptions,
         inputPlaceholder: 'Selecciona un empleado...',
         showCancelButton: true,
         confirmButtonColor: '#8E4E2A',
         cancelButtonColor: '#3E261A',
         confirmButtonText: 'Autorizar',
-        cancelButtonText: 'Cancelar',
-        inputValidator: (value) => {
-          if (!value) {
-            return 'Debes seleccionar un empleado autorizador';
-          }
-          return null;
-        }
-      }).then((result) => {
-        if (result.isConfirmed && result.value) {
-          this.executeApproval(prod.id!, Number(result.value));
+        cancelButtonText: 'Cancelar'
+      }).then((resultEmp) => {
+        if (resultEmp.isConfirmed && resultEmp.value) {
+          this.executeApproval(prodId, Number(resultEmp.value), almacenId);
         }
       });
     }
   }
 
-  private executeApproval(id: number, employeeId: number): void {
+  private executeApproval(id: number, employeeId: number, almacenId: number): void {
     Swal.fire({
       title: 'Aprobando orden...',
       text: 'Se validará el stock de insumos y se actualizarán las existencias.',
@@ -166,9 +242,10 @@ export class ProductionListComponent implements OnInit {
       }
     });
 
-    this.productionService.aprobarProduccion(id, employeeId).subscribe({
+    this.productionService.aprobarProduccion(id, employeeId, almacenId).subscribe({
       next: (response) => {
         Swal.close();
+        this.closeApprovalModal();
         Swal.fire({
           icon: 'success',
           title: '¡Producción Aprobada!',

@@ -5,6 +5,7 @@ export interface DetalleCompra {
   idItem: number;
   cantidad: number;
   precio: number;
+  fechaVencimiento?: string;
   // campos enriquecidos para mostrar en la UI
   nombreItem?: string;
   subtotal?: number;
@@ -32,5 +33,6 @@ export interface CreateNotaCompraDto {
     idItem: number;
     cantidad: number;
     precio: number;
+    fechaVencimiento?: string;
   }[];
 }

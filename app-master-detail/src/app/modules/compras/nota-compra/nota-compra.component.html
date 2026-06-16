@@ -187,6 +187,7 @@
               <span>Ítem / Producto</span>
               <span style="text-align: center;">Cant.</span>
               <span style="text-align: right;">Precio Unit.</span>
+              <span style="text-align: center;">Vencimiento</span>
               <span style="text-align: right;">Subtotal</span>
               <span></span>
             </div>
@@ -214,6 +215,9 @@
 
                 <!-- Precio -->
                 <input type="number" [(ngModel)]="d.precio" class="detail-input" style="text-align: right;" min="0" step="0.1" />
+
+                <!-- Vencimiento -->
+                <input type="date" [(ngModel)]="d.fechaVencimiento" class="detail-input" style="text-align: center; padding: 6px; font-size: 0.8rem;" />
 
                 <!-- Subtotal -->
                 <span class="detail-subtotal">S/ {{ (d.cantidad * d.precio) | number:'1.2-2' }}</span>

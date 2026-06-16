@@ -22,7 +22,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Recipe Selector -->
-        <div>
+        <div class="md:col-span-2">
           <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Receta *</label>
           <select formControlName="recetaId"
                   class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-sm shadow-sm"
@@ -32,20 +32,6 @@
           </select>
           <div *ngIf="productionForm.get('recetaId')?.touched && productionForm.get('recetaId')?.invalid" class="text-red-550 text-xs mt-1 font-bold">
             Debes seleccionar una receta base.
-          </div>
-        </div>
-
-        <!-- Warehouse Selector -->
-        <div>
-          <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Almacén Destino *</label>
-          <select formControlName="almacenId"
-                  class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-sm shadow-sm"
-                  [class.border-red-400]="productionForm.get('almacenId')?.touched && productionForm.get('almacenId')?.invalid">
-            <option [ngValue]="null">Selecciona el almacén...</option>
-            <option *ngFor="let alm of almacenes" [value]="alm.id">{{ alm.nombre }}</option>
-          </select>
-          <div *ngIf="productionForm.get('almacenId')?.touched && productionForm.get('almacenId')?.invalid" class="text-red-550 text-xs mt-1 font-bold">
-            Debes seleccionar un almacén para el movimiento.
           </div>
         </div>
       </div>
@@ -81,9 +67,22 @@
         </div>
       </div>
 
-      <!-- Observations -->
-      <div>
-        <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Observaciones / Notas</label>
+      <!-- Fecha Vencimiento and Observations -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Fecha Vencimiento -->
+        <div>
+          <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Fecha Vencimiento</label>
+          <input type="date"
+                 formControlName="fechaVencimiento"
+                 class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-sm shadow-sm" />
+          <p class="text-[10px] text-amber-800/70 mt-1 leading-normal italic">
+            * Opcional. Indica la fecha de expiración del lote a producir.
+          </p>
+        </div>
+
+        <!-- Observations -->
+        <div>
+          <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Observaciones / Notas</label>
         <textarea formControlName="observaciones"
                   placeholder="Ej. Producción de lote especial para el fin de semana."
                   rows="3"
@@ -91,6 +90,7 @@
                   [class.border-red-400]="productionForm.get('observaciones')?.touched && productionForm.get('observaciones')?.invalid"></textarea>
         <div *ngIf="productionForm.get('observaciones')?.touched && productionForm.get('observaciones')?.invalid" class="text-red-550 text-xs mt-0.5 font-bold">
           Las observaciones no pueden exceder los 200 caracteres.
+        </div>
         </div>
       </div>
     </div>

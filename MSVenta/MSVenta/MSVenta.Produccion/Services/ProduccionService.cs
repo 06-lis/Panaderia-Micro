@@ -61,13 +61,21 @@ namespace MSVenta.Produccion.Services
                 throw new ArgumentException("El número de lotes debe ser mayor a cero.");
             }
 
+            string observacionesConFecha = dto.Observaciones;
+            if (dto.FechaVencimiento.HasValue)
+            {
+                observacionesConFecha = string.IsNullOrEmpty(observacionesConFecha) 
+                    ? $"[FechaVencimiento:{dto.FechaVencimiento.Value:yyyy-MM-dd}]" 
+                    : $"{observacionesConFecha} [FechaVencimiento:{dto.FechaVencimiento.Value:yyyy-MM-dd}]";
+            }
+
             // 3. Crear cabecera de Producción
             var produccion = new Models.Produccion
             {
                 Estado = "pendiente",
                 FechaSolicitud = DateTime.Now,
                 EmpleadoSolicitaId = dto.EmpleadoSolicitaId,
-                Observaciones = dto.Observaciones,
+                Observaciones = observacionesConFecha,
                 CantidadProducida = dto.Lote * receta.CantidadRequerida
             };
 
@@ -76,7 +84,7 @@ namespace MSVenta.Produccion.Services
             var detalleIngreso = new DetalleProduccion
             {
                 ItemId = receta.ProductoId,
-                AlmacenId = dto.AlmacenId,
+                AlmacenId = 0, // Se definirá al aprobar
                 Cantidad = dto.Lote * receta.CantidadRequerida,
                 TipoMovimiento = "Ingreso"
             };
@@ -89,7 +97,7 @@ namespace MSVenta.Produccion.Services
                 {
                     ItemId = detReceta.InsumoId,
                     DetalleRecetaId = detReceta.Id,
-                    AlmacenId = dto.AlmacenId,
+                    AlmacenId = 0, // Se definirá al aprobar
                     Cantidad = dto.Lote * detReceta.CantidadRequerida,
                     TipoMovimiento = "Egreso"
                 };
@@ -126,6 +134,12 @@ namespace MSVenta.Produccion.Services
                 throw new InvalidOperationException($"La producción con ID {id} no se puede aprobar porque está en estado '{produccion.Estado}'.");
             }
 
+            // Actualizar AlmacenId en todos los detalles
+            foreach (var detalle in produccion.Detalles)
+            {
+                detalle.AlmacenId = dto.AlmacenId;
+            }
+
             // 3. VERIFICACIÓN DE STOCK DE INSUMOS
             var detallesEgreso = produccion.Detalles.Where(d => d.TipoMovimiento == "Egreso").ToList();
             var erroresStock = new List<string>();
@@ -153,12 +167,29 @@ namespace MSVenta.Produccion.Services
                 {
                     ItemId = egreso.ItemId,
                     AlmacenId = egreso.AlmacenId,
-                    Cantidad = -egreso.Cantidad
+                    Cantidad = -egreso.Cantidad,
+                    EmpleadoId = dto.EmpleadoAutorizaId
                 });
 
                 if (!ok)
                 {
                     throw new Exception($"Fallo de integración al reducir el stock del insumo ID {egreso.ItemId} en el Almacén {egreso.AlmacenId}.");
+                }
+            }
+
+            // Parsear FechaVencimiento de las Observaciones
+            System.DateTime? fechaVencimiento = null;
+            if (!string.IsNullOrEmpty(produccion.Observaciones) && produccion.Observaciones.Contains("[FechaVencimiento:"))
+            {
+                var startIndex = produccion.Observaciones.IndexOf("[FechaVencimiento:") + "[FechaVencimiento:".Length;
+                var endIndex = produccion.Observaciones.IndexOf("]", startIndex);
+                if (endIndex > startIndex)
+                {
+                    var dateStr = produccion.Observaciones.Substring(startIndex, endIndex - startIndex);
+                    if (System.DateTime.TryParse(dateStr, out var parsedDate))
+                    {
+                        fechaVencimiento = parsedDate;
+                    }
                 }
             }
 
@@ -170,7 +201,9 @@ namespace MSVenta.Produccion.Services
                 {
                     ItemId = detalleIngreso.ItemId,
                     AlmacenId = detalleIngreso.AlmacenId,
-                    Cantidad = detalleIngreso.Cantidad
+                    Cantidad = detalleIngreso.Cantidad,
+                    EmpleadoId = dto.EmpleadoAutorizaId,
+                    FechaVencimiento = fechaVencimiento
                 });
 
                 if (!ok)

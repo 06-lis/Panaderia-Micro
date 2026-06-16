@@ -66,7 +66,10 @@ namespace MSVenta.Compras.Services
                 {
                     ItemId = detalle.IdItem,
                     AlmacenId = detalle.IdAlmacen,
-                    Cantidad = detalle.Cantidad
+                    Cantidad = detalle.Cantidad,
+                    CostoUnitario = detalle.Precio,
+                    EmpleadoId = compra.IdEmpleado,
+                    FechaVencimiento = detalle.FechaVencimiento
                 };
 
                 bool stockUpdated = await _ventaService.UpdateStockAsync(updateStockDto);

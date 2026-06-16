@@ -11,8 +11,13 @@ namespace MSVenta.Venta.Services
     public class DetalleVentaService : IDetalleVentaService
     {
         private readonly ContextDatabase _context;
+        private readonly IInventarioService _inventarioService;
 
-        public DetalleVentaService(ContextDatabase context) => _context = context;
+        public DetalleVentaService(ContextDatabase context, IInventarioService inventarioService)
+        {
+            _context = context;
+            _inventarioService = inventarioService;
+        }
 
         public async Task<IEnumerable<DetalleVenta>> GetAllDetalles()
             => await _context.DetallesVenta
@@ -51,14 +56,25 @@ namespace MSVenta.Venta.Services
         public async Task CreateDetalle(DetalleVenta detalle)
         {
             // Validar existencia de Venta y ProductoAlmacen
-            if (!await _context.Ventas.AnyAsync(v => v.Id == detalle.VentaId))
+            var venta = await _context.Ventas.FirstOrDefaultAsync(v => v.Id == detalle.VentaId);
+            if (venta == null)
                 throw new Exception("Venta no existe");
 
-            if (!await _context.ProductosAlmacenes.AnyAsync(pa => pa.Id == detalle.ProductoAlmacenId))
-                throw new Exception("Producto en almac�n no existe");
+            var productoAlmacen = await _context.ProductosAlmacenes.FirstOrDefaultAsync(pa => pa.Id == detalle.ProductoAlmacenId);
+            if (productoAlmacen == null)
+                throw new Exception("Producto en almacén no existe");
 
             await _context.DetallesVenta.AddAsync(detalle);
             await _context.SaveChangesAsync();
+
+            // Consumir el stock de cada detalle en el microservicio Inventario
+            bool consumoResult = await _inventarioService.ConsumirStockAsync(productoAlmacen.ItemId, productoAlmacen.AlmacenId, detalle.Cantidad, venta.UsuarioId);
+            if (!consumoResult)
+            {
+                // Si falla el consumo, se podría lanzar una excepción y revertir la transacción.
+                // Idealmente envuelto en un transaction local si se puede.
+                throw new Exception($"No se pudo consumir el stock para el Item {productoAlmacen.ItemId}.");
+            }
         }
 
         public async Task UpdateDetalle(DetalleVenta detalle)
@@ -75,3 +91,4 @@ namespace MSVenta.Venta.Services
         }
     }
 }
+

@@ -43,6 +43,7 @@ namespace MSVenta.Venta
             services.AddScoped<IDetalleVentaService, DetalleVentaService>();
             services.AddScoped<ProductoAlmacenService>();
             services.AddScoped<ICategoriaService, CategoriaService>();
+            services.AddScoped<IInventarioService, MSVenta.Venta.Services.InventarioService>();
 
             services.AddProxyHttp();
             services.AddScoped<IUsuarioService, UsuarioService>();

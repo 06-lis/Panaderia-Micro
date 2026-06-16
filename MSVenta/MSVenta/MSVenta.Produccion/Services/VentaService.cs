@@ -22,17 +22,25 @@ namespace MSVenta.Produccion.Services
         {
             try
             {
-                string baseUrl = _configuration["proxy:urlVenta"];
+                string baseUrl = _configuration["proxy:urlInventario"];
                 string url = $"{baseUrl}/productoalmacen/stock/{itemId}/{almacenId}";
 
-                Console.WriteLine($"[Produccion] GET Stock from: {url}");
+                Console.WriteLine($"[Produccion] GET Stock from Lotes: {url}");
                 var responseStr = await _httpClient.GetStringAsync(url);
                 
                 if (!string.IsNullOrEmpty(responseStr))
                 {
-                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                    var result = JsonSerializer.Deserialize<ProductoAlmacenDto>(responseStr, options);
-                    return result;
+                    using (JsonDocument doc = JsonDocument.Parse(responseStr))
+                    {
+                        var root = doc.RootElement;
+                        if (root.TryGetProperty("stock", out var stockProp))
+                        {
+                            if (stockProp.ValueKind == JsonValueKind.Number)
+                            {
+                                return new ProductoAlmacenDto { ItemId = itemId, AlmacenId = almacenId, Stock = (int)stockProp.GetDecimal() };
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -46,8 +54,15 @@ namespace MSVenta.Produccion.Services
         {
             try
             {
-                string baseUrl = _configuration["proxy:urlVenta"];
-                string url = $"{baseUrl}/productoalmacen/update-stock";
+                string baseUrl = _configuration["proxy:urlInventario"];
+                string endpoint = dto.Cantidad >= 0 ? "ingreso" : "consumo";
+                string url = $"{baseUrl}/{endpoint}";
+
+                // Inventario endpoints expect positive quantities
+                dto.Cantidad = Math.Abs(dto.Cantidad);
+                
+                // Produccion might not have cost info for products yet, assume 0
+                if (dto.CostoUnitario == 0) dto.CostoUnitario = 0;
 
                 Console.WriteLine($"[Produccion] POST update-stock to: {url} with ItemId={dto.ItemId}, AlmacenId={dto.AlmacenId}, Cantidad={dto.Cantidad}");
                 var response = await _httpClient.PostAsync(url, dto);

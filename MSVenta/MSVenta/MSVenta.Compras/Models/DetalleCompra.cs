@@ -15,5 +15,8 @@ namespace MSVenta.Compras.Models
 
         [BsonElement("precio")]
         public decimal Precio { get; set; }
+
+        [BsonElement("fecha_vencimiento")]
+        public System.DateTime? FechaVencimiento { get; set; }
     }
 }
