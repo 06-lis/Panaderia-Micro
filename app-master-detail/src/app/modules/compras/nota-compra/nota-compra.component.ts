@@ -218,6 +218,11 @@ export class NotaCompraComponent implements OnInit {
 
     this.notaService.createNotaCompra(this.form).subscribe({
       next: (response) => {
+        if (!response) {
+          // If response is null, it means an error was caught and logged in the service
+          Swal.fire('Error', 'Ocurrió un error al registrar la nota de compra. Verifica los datos.', 'error');
+          return;
+        }
         Swal.fire({
           icon: 'success',
           title: 'Compra Registrada',
@@ -242,6 +247,18 @@ export class NotaCompraComponent implements OnInit {
 
   updateSearch(value: string): void {
     this.searchTerm.set(value);
+  }
+
+  get insumos(): any[] {
+    return this.items().filter(i => i.tipo?.toLowerCase() === 'insumo');
+  }
+
+  get almacenesPermitidos(): Almacen[] {
+    return this.almacenes().filter(a => {
+      if (!a.tipo) return true;
+      const t = a.tipo.toLowerCase();
+      return t === 'insumo' || t === 'mixto';
+    });
   }
 
   getEstadosUnicos(): string[] {

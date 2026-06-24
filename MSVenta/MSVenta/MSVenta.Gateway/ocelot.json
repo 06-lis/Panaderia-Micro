@@ -5,24 +5,29 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "ms_seguridad",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/token",
-      "UpstreamHttpMethod": [ "Post" ]
+      "UpstreamHttpMethod": [
+        "Post"
+      ]
     },
     {
       "DownstreamPathTemplate": "/api/usuario",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "ms_seguridad",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/usuario",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -33,12 +38,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "ms_seguridad",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/usuario/{id}",
-      "UpstreamHttpMethod": [ "Delete", "Get" ],
+      "UpstreamHttpMethod": [
+        "Delete",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -49,12 +57,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "ms_seguridad",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/roles",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -65,12 +76,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "ms_seguridad",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/roles/{id}",
-      "UpstreamHttpMethod": [ "Delete", "Get" ],
+      "UpstreamHttpMethod": [
+        "Delete",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -81,12 +95,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "ms_seguridad",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/permiso",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -97,12 +114,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "ms_seguridad",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/rolpermisos",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -113,12 +133,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "ms_seguridad",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/rolpermisos/{id}",
-      "UpstreamHttpMethod": [ "Delete", "Get" ],
+      "UpstreamHttpMethod": [
+        "Delete",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -129,12 +152,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "ms_seguridad",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/rolpermisousuarios",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -145,12 +171,14 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "ms_seguridad",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/rolpermisousuarios/usuario/{userId}",
-      "UpstreamHttpMethod": [ "Delete" ],
+      "UpstreamHttpMethod": [
+        "Delete"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -161,12 +189,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "ms_seguridad",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/empleado",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -177,12 +208,16 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "ms_seguridad",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/empleado/{id}",
-      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ],
+      "UpstreamHttpMethod": [
+        "Get",
+        "Put",
+        "Delete"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -193,12 +228,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/item",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -209,12 +247,14 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/item/{id}",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -225,12 +265,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/producto",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -241,12 +284,17 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/producto/{id_producto}",
-      "UpstreamHttpMethod": [ "Post", "Get" ,"Delete","Put" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get",
+        "Delete",
+        "Put"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -257,12 +305,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/categoria",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -273,12 +324,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/almacen",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -289,12 +343,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/venta",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -305,12 +362,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/venta/{id}",
-      "UpstreamHttpMethod": [ "Delete", "Get" ],
+      "UpstreamHttpMethod": [
+        "Delete",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -321,12 +381,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/detalleventa",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -337,12 +400,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/detalleventa/{id}",
-      "UpstreamHttpMethod": [ "Delete", "Get" ],
+      "UpstreamHttpMethod": [
+        "Delete",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -353,12 +419,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/productoalmacen",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -369,12 +438,14 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/productoalmacen/bulk",
-      "UpstreamHttpMethod": [ "Post" ],
+      "UpstreamHttpMethod": [
+        "Post"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -385,12 +456,14 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/productoalmacen/update-stock",
-      "UpstreamHttpMethod": [ "Post" ],
+      "UpstreamHttpMethod": [
+        "Post"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -401,12 +474,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/productoalmacen/{productoId}/{almacenId}",
-      "UpstreamHttpMethod": [ "Delete", "Put" ],
+      "UpstreamHttpMethod": [
+        "Delete",
+        "Put"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -417,12 +493,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/cliente",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -433,12 +512,16 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "ms_venta",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/cliente/{id}",
-      "UpstreamHttpMethod": [ "Delete", "PUT", "Get" ],
+      "UpstreamHttpMethod": [
+        "Delete",
+        "PUT",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -449,12 +532,17 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "ms_compras",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/proveedor",
-      "UpstreamHttpMethod": [ "Post", "Get", "Put", "Delete" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get",
+        "Put",
+        "Delete"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -465,12 +553,16 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "ms_compras",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/proveedor/{id}",
-      "UpstreamHttpMethod": [ "Get", "Delete", "Put" ],
+      "UpstreamHttpMethod": [
+        "Get",
+        "Delete",
+        "Put"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -481,12 +573,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "ms_compras",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/compra",
-      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -497,12 +592,14 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "ms_compras",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/compra/{id}",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -513,12 +610,15 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5004
+          "Host": "ms_produccion",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/receta",
-      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -529,12 +629,16 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5004
+          "Host": "ms_produccion",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/receta/{id}",
-      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ],
+      "UpstreamHttpMethod": [
+        "Get",
+        "Put",
+        "Delete"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -545,12 +649,14 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5004
+          "Host": "ms_produccion",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/produccion",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -561,12 +667,14 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5004
+          "Host": "ms_produccion",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/produccion/{id}",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -577,12 +685,14 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5004
+          "Host": "ms_produccion",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/produccion/solicitar",
-      "UpstreamHttpMethod": [ "Post" ],
+      "UpstreamHttpMethod": [
+        "Post"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -593,12 +703,14 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5004
+          "Host": "ms_produccion",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/produccion/aprobar/{id}",
-      "UpstreamHttpMethod": [ "Post" ],
+      "UpstreamHttpMethod": [
+        "Post"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -609,12 +721,14 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5004
+          "Host": "ms_produccion",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/produccion/rechazar/{id}",
-      "UpstreamHttpMethod": [ "Post" ],
+      "UpstreamHttpMethod": [
+        "Post"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -625,12 +739,17 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5005
+          "Host": "ms_inventario",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/inventario/{everything}",
-      "UpstreamHttpMethod": [ "Post", "Get", "Put", "Delete" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get",
+        "Put",
+        "Delete"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -641,12 +760,17 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5005
+          "Host": "ms_inventario",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/traspaso/{everything}",
-      "UpstreamHttpMethod": [ "Post", "Get", "Put", "Delete" ],
+      "UpstreamHttpMethod": [
+        "Post",
+        "Get",
+        "Put",
+        "Delete"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",
         "AllowedScopes": []
@@ -657,20 +781,53 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5006
+          "Host": "ms_reportes",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/api/reportes/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/landing/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ms_venta",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/landing/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete",
+        "Options"
+      ]
     }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:5000",
     "Cors": {
-      "AllowedOrigins": [ "http://localhost:4200" ], // Cambia la URL al origen de tu frontend
-      "AllowedMethods": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
-      "AllowedHeaders": [ "*" ]
+      "AllowedOrigins": [
+        "*"
+      ],
+      "AllowedMethods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "OPTIONS"
+      ],
+      "AllowedHeaders": [
+        "*"
+      ]
     }
   }
 }

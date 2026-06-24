@@ -9,6 +9,10 @@ export const routes: Routes = [
       import('./modules/auth/auth.route').then(m => m.auth_routes),
   },
   {
+    path: 'principal',
+    loadComponent: () => import('./modules/landing/landing.component').then(m => m.LandingComponent),
+  },
+  {
     path: 'dashboard',
     component: DashboardLayoutComponent,
     children: [
@@ -235,7 +239,7 @@ export const routes: Routes = [
           icon: 'pi pi-box',
           title: 'Lotes Inventario',
           description: 'Gestión de Lotes y Trazabilidad',
-          permission: 'Lotes Inventario',
+          permission: 'Almacen',
           section: 'Almacén e Inventario'
         },
       },
@@ -247,7 +251,7 @@ export const routes: Routes = [
           icon: 'pi pi-sort-alt',
           title: 'Movimientos',
           description: 'Historial de Movimientos de Inventario',
-          permission: 'Lotes Inventario', // O uno específico si existe
+          permission: 'Almacen',
           section: 'Almacén e Inventario'
         },
       },
@@ -259,7 +263,7 @@ export const routes: Routes = [
           icon: 'pi pi-arrow-right-arrow-left',
           title: 'Traspasos',
           description: 'Traspasos entre Almacenes',
-          permission: 'Traspasos',
+          permission: 'Almacen',
           section: 'Almacén e Inventario'
         },
       },
@@ -271,7 +275,7 @@ export const routes: Routes = [
           icon: 'pi pi-cog',
           title: 'Configuracion Inventario',
           description: 'Configuración de Parámetros de Inventario',
-          permission: 'Configuracion Inventario',
+          permission: 'Almacen',
           section: 'Almacén e Inventario'
         },
       },
@@ -289,8 +293,13 @@ export const routes: Routes = [
     ],
   },
   {
+    path: '',
+    redirectTo: 'principal',
+    pathMatch: 'full'
+  },
+  {
     path: '**',
-    redirectTo: 'auth',
+    redirectTo: 'principal',
     pathMatch: 'full',
   },
 ];

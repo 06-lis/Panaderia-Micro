@@ -3,7 +3,7 @@ import { HttpHeaders, HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Customer } from '../../../interfaces/customer.interface';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 
 const httpOptions = (token: string) => ({
   headers: new HttpHeaders({

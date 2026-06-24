@@ -88,4 +88,8 @@ export class AsignarProductoComponent implements  OnInit{
       // Aquí iría la lógica para guardar los datos en el backend
     }
   }
+
+  goBack() {
+    window.history.back();
+  }
  }

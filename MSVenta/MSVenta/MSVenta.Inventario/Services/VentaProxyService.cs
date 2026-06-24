@@ -23,26 +23,32 @@ namespace MSVenta.Inventario.Services
 
         public async Task<bool> SincronizarStockAgregadoAsync(int itemId, int almacenId, decimal cantidad)
         {
-            try
+            int maxRetries = 3;
+            for (int i = 0; i < maxRetries; i++)
             {
-                string uri = _configuration["proxy:urlVenta"];
-                var url = $"{uri}/update-stock";
-
-                var dto = new { ItemId = itemId, AlmacenId = almacenId, Cantidad = (int)cantidad };
-                Console.WriteLine($"Sincronizando stock agregado en url {url} con ItemId={itemId}, AlmacenId={almacenId}, Cantidad={(int)cantidad}");
-                var response = await _httpClient.PostAsync(url, dto);
-
-                if (!response.IsSuccessStatusCode)
+                try
                 {
-                     Console.WriteLine($"Sincronización falló con StatusCode={response.StatusCode}");
+                    string uri = _configuration["proxy:urlVenta"];
+                    var url = $"{uri}/update-stock";
+
+                    var dto = new { ItemId = itemId, AlmacenId = almacenId, Cantidad = (int)cantidad };
+                    Console.WriteLine($"Sincronizando stock agregado en url {url} con ItemId={itemId}, AlmacenId={almacenId}, Cantidad={(int)cantidad}");
+                    var response = await _httpClient.PostAsync(url, dto);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                         Console.WriteLine($"Sincronización falló con StatusCode={response.StatusCode}");
+                    }
+                    return response.IsSuccessStatusCode;
                 }
-                return response.IsSuccessStatusCode;
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error sincronizando stock con Venta (Attempt {i + 1}/{maxRetries}): {ex.Message}");
+                    if (i == maxRetries - 1) return false;
+                    await Task.Delay(1000); // Esperar 1 segundo antes de reintentar
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error sincronizando stock con Venta: {ex.Message}");
-                return false;
-            }
+            return false;
         }
     }
 }

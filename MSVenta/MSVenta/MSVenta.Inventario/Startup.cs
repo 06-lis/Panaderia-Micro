@@ -37,8 +37,10 @@ namespace MSVenta.Inventario
             services.AddProxyHttp();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, InventarioDbContext context)
         {
+            context.Database.EnsureCreated();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

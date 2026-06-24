@@ -15,4 +15,5 @@ export interface Sale {
   clienteId: number;
   cliente: Customer;
   usuarioId: number;
+  transaccionLibelula?: any;
 }

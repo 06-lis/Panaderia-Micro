@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, of } from 'rxjs';
 import { User } from '../../interfaces/user.interface';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 
 const httpOptions = (token: string) => ({
   headers: new HttpHeaders({

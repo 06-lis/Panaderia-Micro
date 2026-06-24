@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using MSVenta.Venta.Models;
 using MSVenta.Venta.Services;
 using System;
@@ -29,6 +29,7 @@ namespace MSVenta.Venta.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error en GetProductos: {ex.Message} \n {ex.StackTrace}");
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -47,6 +48,7 @@ namespace MSVenta.Venta.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error en GetProducto: {ex.Message} \n {ex.StackTrace}");
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -69,6 +71,7 @@ namespace MSVenta.Venta.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error en CreateProducto: {ex.Message} \n {ex.StackTrace}");
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -87,6 +90,7 @@ namespace MSVenta.Venta.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error en UpdateProducto: {ex.Message} \n {ex.StackTrace}");
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -106,6 +110,7 @@ namespace MSVenta.Venta.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error en DeleteProducto: {ex.Message} \n {ex.StackTrace}");
                 return StatusCode(500, new {   message = ex.Message });
             }
         }

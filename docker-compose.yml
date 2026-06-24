@@ -1,0 +1,191 @@
+version: '3.8'
+
+services:
+  # --------------------
+  # BASES DE DATOS
+  # --------------------
+  mongo_db:
+    image: mongo:5.0
+    container_name: panaderia_mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: "Aforo255#2019"
+      MONGO_INITDB_DATABASE: db_compras
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - panaderia_net
+
+  postgres_db:
+    image: postgres:13
+    container_name: panaderia_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "Aforo255#2019"
+      POSTGRES_DB: db_inventario
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Si el script db_security.sql contiene creación de base de datos se ejecutará al iniciar
+      - ./db_security.sql:/docker-entrypoint-initdb.d/1-db_security.sql
+    networks:
+      - panaderia_net
+
+  mysql_db:
+    image: mysql:8.0.28
+    container_name: panaderia_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "Aforo255#2019"
+      MYSQL_DATABASE: db_ventas
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db_ventas.sql:/docker-entrypoint-initdb.d/1-db_ventas.sql
+    networks:
+      - panaderia_net
+
+  sqlserver_db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: panaderia_sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Aforo255#2019"
+    ports:
+      - "1434:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+      - ./db_produccion.sql:/tmp/db_produccion.sql
+    networks:
+      - panaderia_net
+
+  # --------------------
+  # MICROSERVICIOS BACKEND (.NET 5)
+  # --------------------
+  ms_seguridad:
+    build:
+      context: ./MSVenta/MSVenta
+      args:
+        PROJECT_NAME: MSVenta.Seguridad
+    container_name: panaderia_ms_seguridad
+    environment:
+      postgresql__cn: "Host=postgres_db;Port=5432;Database=db_security;Username=postgres;Password=Aforo255#2019"
+    depends_on:
+      - postgres_db
+    networks:
+      - panaderia_net
+
+  ms_inventario:
+    build:
+      context: ./MSVenta/MSVenta
+      args:
+        PROJECT_NAME: MSVenta.Inventario
+    container_name: panaderia_ms_inventario
+    environment:
+      postgres__connectionString: "Host=postgres_db;Port=5432;Database=db_inventario;Username=postgres;Password=Aforo255#2019"
+      proxy__urlVenta: "http://ms_venta/api/productoalmacen"
+      proxy__urlSeguridad: "http://ms_seguridad/api/usuario"
+    depends_on:
+      - postgres_db
+    networks:
+      - panaderia_net
+
+  ms_compras:
+    build:
+      context: ./MSVenta/MSVenta
+      args:
+        PROJECT_NAME: MSVenta.Compras
+    container_name: panaderia_ms_compras
+    environment:
+      mongo__connectionString: "mongodb://admin:Aforo255#2019@mongo_db:27017/db_compras?authSource=admin"
+      proxy__urlSecurity: "http://ms_seguridad/api/usuario"
+      proxy__urlVenta: "http://ms_inventario/api/inventario"
+    depends_on:
+      - mongo_db
+    networks:
+      - panaderia_net
+
+  ms_venta:
+    build:
+      context: ./MSVenta/MSVenta
+      args:
+        PROJECT_NAME: MSVenta.Venta
+    container_name: panaderia_ms_venta
+    environment:
+      mysql__cn: "server=mysql_db;port=3306;database=db_ventas;user=root;password=Aforo255#2019"
+      proxy__urlSecurity: "http://ms_seguridad/api/usuario"
+      proxy__urlInventario: "http://ms_inventario/api/inventario"
+      Libelula__AppKey: "11bb10ce-68ba-4af1-8eb7-4e6624fed729"
+      Libelula__BaseUrl: "https://api.libelula.bo/rest"
+      Libelula__CallbackUrl: "https://micro.panaderia-otto.shop/api/landing/webhook"
+    depends_on:
+      - mysql_db
+    networks:
+      - panaderia_net
+
+  ms_produccion:
+    build:
+      context: ./MSVenta/MSVenta
+      args:
+        PROJECT_NAME: MSVenta.Produccion
+    container_name: panaderia_ms_produccion
+    environment:
+      sqlserver__cn: "Server=sqlserver_db,1433;Database=db_produccion;User Id=sa;Password=Aforo255#2019;TrustServerCertificate=True;"
+      proxy__urlVenta: "http://ms_venta/api"
+      proxy__urlInventario: "http://ms_inventario/api/inventario"
+      proxy__urlSeguridad: "http://ms_seguridad/api"
+    depends_on:
+      - sqlserver_db
+    networks:
+      - panaderia_net
+
+  ms_reportes:
+    build:
+      context: ./MSVenta/MSVenta
+      args:
+        PROJECT_NAME: MSVenta.Reportes
+    container_name: panaderia_ms_reportes
+    environment:
+      proxy__urlVenta: "http://ms_venta/api"
+      proxy__urlCompra: "http://ms_compras/api"
+      proxy__urlProduccion: "http://ms_produccion/api"
+      proxy__urlInventario: "http://ms_inventario/api"
+      proxy__urlSeguridad: "http://ms_seguridad/api"
+    networks:
+      - panaderia_net
+
+  ms_gateway:
+    build:
+      context: ./MSVenta/MSVenta
+      args:
+        PROJECT_NAME: MSVenta.Gateway
+    container_name: panaderia_ms_gateway
+    ports:
+      - "5000:80"
+    networks:
+      - panaderia_net
+
+  # --------------------
+  # FRONTENDS ANGULAR
+  # --------------------
+  frontend_master:
+    build:
+      context: ./app-master-detail
+    container_name: panaderia_frontend_master
+    ports:
+      - "8081:80"
+    networks:
+      - panaderia_net
+
+networks:
+  panaderia_net:
+    external: true
+
+volumes:
+  mongo_data:
+  postgres_data:
+  mysql_data:
+  sqlserver_data:

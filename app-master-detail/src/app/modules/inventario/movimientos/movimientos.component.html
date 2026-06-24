@@ -42,58 +42,122 @@
             <th class="px-6 py-4 tracking-wider">Tipo</th>
             <th class="px-6 py-4 tracking-wider text-right">Cantidad</th>
             <th class="px-6 py-4 tracking-wider text-right">Costo Total</th>
+            <th class="px-6 py-4 tracking-wider">Item</th>
             <th class="px-6 py-4 tracking-wider">Motivo</th>
             <th class="px-6 py-4 tracking-wider">Responsable</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-amber-100/50 text-amber-950">
-          <tr *ngFor="let m of filteredMovimientos" class="hover:bg-amber-50/30 transition-colors duration-150 group">
-            <td class="px-6 py-4 font-medium text-amber-900">
-              <div class="flex items-center gap-1.5">
-                <i class="pi pi-clock text-xs text-amber-800/50"></i>
-                {{ m.fecha_movimiento | date:'short' }}
-              </div>
-            </td>
-            <td class="px-6 py-4 font-bold text-amber-900">#{{ m.lote_id | number:'3.0-0' }}</td>
-            <td class="px-6 py-4">
-              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold border"
-                    [ngClass]="{
-                      'bg-emerald-50 border-emerald-200 text-emerald-700': m.tipo_movimiento === 'Ingreso',
-                      'bg-red-50 border-red-200 text-red-700': m.tipo_movimiento === 'Salida',
-                      'bg-blue-50 border-blue-200 text-blue-700': m.tipo_movimiento === 'Traspaso'
-                    }">
-                <i class="pi" 
-                   [ngClass]="{
-                     'pi-arrow-down-left': m.tipo_movimiento === 'Ingreso',
-                     'pi-arrow-up-right': m.tipo_movimiento === 'Salida',
-                     'pi-arrow-right-arrow-left': m.tipo_movimiento === 'Traspaso'
-                   }"></i>
-                {{ m.tipo_movimiento }}
-              </span>
-            </td>
-            <td class="px-6 py-4 text-right font-bold"
-                [ngClass]="{
-                  'text-emerald-600': m.tipo_movimiento === 'Ingreso',
-                  'text-red-600': m.tipo_movimiento === 'Salida',
-                  'text-blue-600': m.tipo_movimiento === 'Traspaso'
-                }">
-              {{ m.tipo_movimiento === 'Salida' ? '-' : '+' }}{{ m.cantidad | number:'1.2-2' }}
-            </td>
-            <td class="px-6 py-4 text-right font-medium text-amber-900/80">
-              Bs. {{ m.costo_total | number:'1.2-2' }}
-            </td>
-            <td class="px-6 py-4">
-              <span class="text-sm">{{ m.motivo || 'N/A' }}</span>
-            </td>
-            <td class="px-6 py-4">
-              <div class="flex items-center gap-2">
-                <div class="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center text-amber-700">
-                  <i class="pi pi-user text-[10px]"></i>
+          <ng-container *ngFor="let m of filteredMovimientos">
+            <!-- Master Row -->
+            <tr class="hover:bg-amber-50/30 transition-colors duration-150 group" [ngClass]="{'bg-amber-50': m.expanded, 'cursor-pointer': m.isGroup}" (click)="toggleGroup(m)">
+              <td class="px-6 py-4 font-medium text-amber-900">
+                <div class="flex items-center gap-1.5">
+                  <i *ngIf="m.isGroup" class="pi text-xs text-amber-800/80" [ngClass]="m.expanded ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+                  <i *ngIf="!m.isGroup" class="pi pi-clock text-xs text-amber-800/50"></i>
+                  {{ m.fecha_movimiento | date:'short' }}
                 </div>
-                <span class="font-medium">{{ m.responsable_nombre || m.id_usuario }}</span>
-              </div>
-            </td>
-          </tr>
+              </td>
+              <td class="px-6 py-4 font-bold text-amber-900">
+                <span *ngIf="!m.isGroup">#{{ m.lote_id | number:'3.0-0' }}</span>
+                <span *ngIf="m.isGroup" class="text-amber-700 bg-amber-100 px-2 py-1 rounded">{{ m.title }}</span>
+              </td>
+              <td class="px-6 py-4">
+                <span *ngIf="!m.isGroup" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold border"
+                      [ngClass]="{
+                        'bg-emerald-50 border-emerald-200 text-emerald-700': m.tipo_movimiento === 'Ingreso',
+                        'bg-red-50 border-red-200 text-red-700': m.tipo_movimiento === 'Consumo',
+                        'bg-blue-50 border-blue-200 text-blue-700': m.tipo_movimiento === 'Traspaso'
+                      }">
+                  <i class="pi" 
+                     [ngClass]="{
+                       'pi-arrow-down-left': m.tipo_movimiento === 'Ingreso',
+                       'pi-arrow-up-right': m.tipo_movimiento === 'Consumo',
+                       'pi-arrow-right-arrow-left': m.tipo_movimiento === 'Traspaso'
+                     }"></i>
+                  {{ m.tipo_movimiento }}
+                </span>
+                <span *ngIf="m.isGroup" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold border bg-gray-50 border-gray-200 text-gray-700">
+                  <i class="pi pi-folder"></i>
+                  Agrupado
+                </span>
+              </td>
+              <td class="px-6 py-4 text-right font-bold"
+                  [ngClass]="{
+                    'text-emerald-600': m.tipo_movimiento === 'Ingreso' && !m.isGroup,
+                    'text-red-600': m.tipo_movimiento === 'Consumo' && !m.isGroup,
+                    'text-blue-600': m.tipo_movimiento === 'Traspaso' && !m.isGroup,
+                    'text-gray-700': m.isGroup
+                  }">
+                <span *ngIf="!m.isGroup">
+                  {{ m.tipo_movimiento === 'Consumo' ? '' : '+' }}{{ m.cantidad | number:'1.2-2' }}
+                </span>
+                <span *ngIf="m.isGroup">
+                  {{ m.cantidad | number:'1.2-2' }} <span class="text-xs font-normal text-gray-500">(Neto)</span>
+                </span>
+              </td>
+              <td class="px-6 py-4 text-right font-medium text-amber-900/80">
+                Bs. {{ m.costo_total | number:'1.2-2' }}
+              </td>
+              <td class="px-6 py-4">
+                <span class="text-sm font-semibold" *ngIf="!m.isGroup">{{ m.item_nombre || 'Item ' + m.id_item }}</span>
+                <span class="text-sm italic text-amber-700" *ngIf="m.isGroup">{{ m.detalles.length }} ítems</span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="text-sm text-gray-700" *ngIf="!m.isGroup">{{ m.motivo || 'N/A' }}</span>
+                <span class="text-sm text-gray-500" *ngIf="m.isGroup">{{ m.motivo || 'N/A' }}</span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center text-amber-700">
+                    <i class="pi pi-user text-[10px]"></i>
+                  </div>
+                  <span class="font-medium text-sm">{{ m.responsable_nombre || m.id_usuario }}</span>
+                </div>
+              </td>
+            </tr>
+            
+            <!-- Detail Rows -->
+            <ng-container *ngIf="m.isGroup && m.expanded">
+              <tr *ngFor="let det of m.detalles" class="bg-amber-50/50 hover:bg-amber-100/50 transition-colors duration-150">
+                <td class="px-6 py-3 pl-12 font-medium text-amber-900/70 text-xs border-l-4 border-l-amber-400">
+                  <div class="flex items-center gap-1.5">
+                    <i class="pi pi-clock text-[10px] text-amber-800/40"></i>
+                    {{ det.fecha_movimiento | date:'shortTime' }}
+                  </div>
+                </td>
+                <td class="px-6 py-3 font-bold text-amber-900/70 text-xs">#{{ det.lote_id | number:'3.0-0' }}</td>
+                <td class="px-6 py-3">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold border"
+                        [ngClass]="{
+                          'bg-emerald-50 border-emerald-200 text-emerald-700': det.tipo_movimiento === 'Ingreso',
+                          'bg-red-50 border-red-200 text-red-700': det.tipo_movimiento === 'Consumo'
+                        }">
+                    {{ det.tipo_movimiento }}
+                  </span>
+                </td>
+                <td class="px-6 py-3 text-right font-bold text-xs"
+                    [ngClass]="{
+                      'text-emerald-600': det.tipo_movimiento === 'Ingreso',
+                      'text-red-600': det.tipo_movimiento === 'Consumo'
+                    }">
+                  {{ det.tipo_movimiento === 'Consumo' ? '' : '+' }}{{ det.cantidad | number:'1.2-2' }}
+                </td>
+                <td class="px-6 py-3 text-right font-medium text-amber-900/60 text-xs">
+                  Bs. {{ det.costo_total | number:'1.2-2' }}
+                </td>
+                <td class="px-6 py-3 text-xs">
+                  <span class="font-semibold text-amber-900">{{ det.item_nombre || 'Item ' + det.id_item }}</span>
+                </td>
+                <td class="px-6 py-3 text-xs text-amber-900/50">
+                  {{ det.motivo }}
+                </td>
+                <td class="px-6 py-3 text-xs text-amber-900/50">
+                  {{ det.responsable_nombre }}
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
 
           <!-- Empty State -->
           <tr *ngIf="filteredMovimientos.length === 0">

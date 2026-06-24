@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy,ChangeDetectorRef, Component, OnInit, signal } from '@angular/core';
+import Swal from 'sweetalert2';
 import { Sale } from '../../../interfaces/sale.interface';
 import { SaleService } from '../service/sale.service';
 import { CustomerService } from '../../customer/service/customer.service';
@@ -125,5 +126,42 @@ export class SaleListComponent implements OnInit{
   get totalAmountSelectedSale(): number {
     if (!this.selectedSaleDetail) return 0;
     return this.selectedSaleDetail.reduce((sum, d) => sum + (d.monto || 0), 0);
+  }
+
+  marcarPagoCompletado(saleId: number) {
+    let usuarioId = 1;
+    const userStr = sessionStorage.getItem('user');
+    if (userStr) {
+      const u = JSON.parse(userStr);
+      if (u.userId) {
+        usuarioId = u.userId;
+      } else if (u.id) {
+        usuarioId = u.id;
+      }
+    }
+
+    Swal.fire({
+      title: '¿Confirmar Pago?',
+      text: "El estado del pago pasará a ser Completado.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#1A6B4A',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, Completar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.salesService.completarPagoLibelula(saleId, usuarioId).subscribe({
+          next: (res) => {
+            Swal.fire('Completado', 'El pago ha sido marcado como completado.', 'success');
+            // Refresh list
+            this.ngOnInit();
+          },
+          error: (err) => {
+            console.error(err);
+            Swal.fire('Error', 'Hubo un problema al completar el pago.', 'error');
+          }
+        });
+      }
+    });
   }
 }

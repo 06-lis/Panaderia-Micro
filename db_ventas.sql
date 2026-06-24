@@ -89,3 +89,19 @@ INSERT INTO producto_almacen (item_id, AlmacenId, Stock) VALUES
 (1, 1, 10),
 (2, 2, 50),
 (3, 1, 100);
+
+-- 8. Tabla transacciones_libelula
+CREATE TABLE transacciones_libelula (
+  Id INT AUTO_INCREMENT PRIMARY KEY,
+  VentaId INT NOT NULL,
+  Identificador VARCHAR(255) NOT NULL,
+  IdTransaccionLibelula VARCHAR(255),
+  CodigoRecaudacion VARCHAR(255),
+  Monto DOUBLE NOT NULL,
+  Estado VARCHAR(50) DEFAULT 'pendiente',
+  QrUrl TEXT,
+  UrlPasarela TEXT,
+  RespuestaApi TEXT,
+  FechaRegistro DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (VentaId) REFERENCES ventas(Id)
+);

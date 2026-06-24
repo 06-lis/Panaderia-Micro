@@ -17,6 +17,10 @@ export class DashboardComponent implements OnInit {
   exporting: boolean = false;
   error: string = '';
 
+  showEmailModal: boolean = false;
+  sendingEmail: boolean = false;
+  emailDestinatarios: string = '';
+
   // Chart data
   pieData: any;
   pieOptions: any;
@@ -188,6 +192,49 @@ export class DashboardComponent implements OnInit {
       console.error('Error exportando PDF:', err);
       this.exporting = false;
       this.cdr.detectChanges();
+    });
+  }
+
+  openEmailModal() {
+    this.showEmailModal = true;
+  }
+
+  closeEmailModal() {
+    this.showEmailModal = false;
+    this.emailDestinatarios = '';
+  }
+
+  sendEmailReport() {
+    if (!this.emailDestinatarios.trim()) return;
+
+    const emails = this.emailDestinatarios.split(',')
+      .map(e => e.trim())
+      .filter(e => e.length > 0);
+
+    // Validate that all emails end with @panaderia-otto.shop
+    const invalidEmails = emails.filter(e => !e.endsWith('@panaderia-otto.shop'));
+    if (invalidEmails.length > 0) {
+      alert('Todos los correos deben terminar en @panaderia-otto.shop');
+      return;
+    }
+
+    this.sendingEmail = true;
+    this.http.post('http://localhost:5000/api/reportes/enviar-dashboard', {
+      destinatarios: emails,
+      asunto: 'Reporte del Sistema - Panadería Otto'
+    }).subscribe({
+      next: (res: any) => {
+        this.sendingEmail = false;
+        this.closeEmailModal();
+        alert('Reporte enviado por correo exitosamente.');
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error enviando correo', err);
+        this.sendingEmail = false;
+        alert('Hubo un error al enviar el correo.');
+        this.cdr.detectChanges();
+      }
     });
   }
 }

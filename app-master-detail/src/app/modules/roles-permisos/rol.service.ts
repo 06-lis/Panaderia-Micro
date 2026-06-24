@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { Rol } from '../../interfaces/rol.interface';
 import { catchError, Observable, of } from 'rxjs';
 import { RolPermiso } from '../../interfaces/rol-permiso.interface';

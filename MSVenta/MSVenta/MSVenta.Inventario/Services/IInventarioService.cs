@@ -4,8 +4,8 @@ namespace MSVenta.Inventario.Services
 {
     public interface IInventarioService
     {
-        Task<bool> IngresoStockAsync(int almacenId, int itemId, decimal cantidad, decimal costoUnitario, int empleadoId, System.DateTime? fechaVencimiento = null);
-        Task<bool> ConsumoStockAsync(int almacenId, int itemId, decimal cantidad, int empleadoId);
+        Task<bool> IngresoStockAsync(int almacenId, int itemId, decimal cantidad, decimal costoUnitario, int empleadoId, System.DateTime? fechaVencimiento = null, int? referenciaId = null, string referenciaTipo = null);
+        Task<bool> ConsumoStockAsync(int almacenId, int itemId, decimal cantidad, int empleadoId, int? referenciaId = null, string referenciaTipo = null);
         
         Task<System.Collections.Generic.IEnumerable<object>> GetLotesAsync();
         Task<System.Collections.Generic.IEnumerable<object>> GetMovimientosAsync();

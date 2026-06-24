@@ -6,5 +6,6 @@ export interface Almacen {
   id?: number,
   nombre: string,
 	locacion: string,
+  tipo?: string,
   productos:Product[]
 }

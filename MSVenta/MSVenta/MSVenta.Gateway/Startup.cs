@@ -34,7 +34,7 @@ namespace MSVenta.Gateway
                 options.AddPolicy("AllowAll", builder =>
                 {
                     builder
-                        .WithOrigins("http://localhost:4200")  // Cambia por la URL de tu frontend
+                        .AllowAnyOrigin()  // Cambia por la URL de tu frontend
                         .AllowAnyMethod()                      // Permitir cualquier método HTTP (GET, POST, PUT, DELETE)
                         .AllowAnyHeader();                     // Permitir cualquier encabezad
                 });

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { catchError, Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Permiso } from '../../interfaces/permiso.interface';

@@ -22,27 +22,33 @@ namespace MSVenta.Compras.Services
 
         public async Task<bool> UpdateStockAsync(UpdateStockDto dto)
         {
-            try
+            int maxRetries = 3;
+            for (int i = 0; i < maxRetries; i++)
             {
-                string uri = _configuration["proxy:urlVenta"];
-                var url = $"{uri}/ingreso";
-
-                Console.WriteLine($"Sending stock update to {url} with ItemId={dto.ItemId}, AlmacenId={dto.AlmacenId}, Cantidad={dto.Cantidad}");
-                var response = await _httpClient.PostAsync(url, dto);
-                
-                Console.WriteLine($"Response status: {response.StatusCode}");
-                if (!response.IsSuccessStatusCode)
+                try
                 {
-                    var resStr = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Response body: {resStr}");
+                    string uri = _configuration["proxy:urlVenta"];
+                    var url = $"{uri}/ingreso";
+
+                    Console.WriteLine($"Sending stock update to {url} with ItemId={dto.ItemId}, AlmacenId={dto.AlmacenId}, Cantidad={dto.Cantidad}");
+                    var response = await _httpClient.PostAsync(url, dto);
+                    
+                    Console.WriteLine($"Response status: {response.StatusCode}");
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        var resStr = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine($"Response body: {resStr}");
+                    }
+                    return response.IsSuccessStatusCode;
                 }
-                return response.IsSuccessStatusCode;
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error updating stock (Attempt {i + 1}/{maxRetries}): {ex.Message}");
+                    if (i == maxRetries - 1) return false;
+                    await Task.Delay(1000); // Esperar 1 segundo antes de reintentar
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error updating stock: {ex.Message}");
-                return false;
-            }
+            return false;
         }
     }
 }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Almacen } from '../../../interfaces/almacen.interface';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 
 const httpOptions = (token: string) => ({
   headers: new HttpHeaders({

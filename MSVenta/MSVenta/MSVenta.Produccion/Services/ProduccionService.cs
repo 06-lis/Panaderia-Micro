@@ -168,7 +168,9 @@ namespace MSVenta.Produccion.Services
                     ItemId = egreso.ItemId,
                     AlmacenId = egreso.AlmacenId,
                     Cantidad = -egreso.Cantidad,
-                    EmpleadoId = dto.EmpleadoAutorizaId
+                    EmpleadoId = dto.EmpleadoAutorizaId,
+                    ReferenciaId = produccion.Id,
+                    ReferenciaTipo = "Producción"
                 });
 
                 if (!ok)
@@ -203,7 +205,9 @@ namespace MSVenta.Produccion.Services
                     AlmacenId = detalleIngreso.AlmacenId,
                     Cantidad = detalleIngreso.Cantidad,
                     EmpleadoId = dto.EmpleadoAutorizaId,
-                    FechaVencimiento = fechaVencimiento
+                    FechaVencimiento = fechaVencimiento,
+                    ReferenciaId = produccion.Id,
+                    ReferenciaTipo = "Producción"
                 });
 
                 if (!ok)

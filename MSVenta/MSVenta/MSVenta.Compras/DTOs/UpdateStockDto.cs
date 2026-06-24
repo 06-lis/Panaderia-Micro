@@ -8,5 +8,7 @@ namespace MSVenta.Compras.DTOs
         public decimal CostoUnitario { get; set; }
         public int EmpleadoId { get; set; }
         public System.DateTime? FechaVencimiento { get; set; }
+        public int? ReferenciaId { get; set; }
+        public string ReferenciaTipo { get; set; }
     }
 }

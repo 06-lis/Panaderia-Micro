@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace MSVenta.Venta.Models
 {
@@ -9,5 +9,6 @@ namespace MSVenta.Venta.Models
         public int ClienteId { get; set; }
         public Cliente Cliente { get; set; }
         public int UsuarioId { get; set; }
+        public virtual TransaccionLibelula TransaccionLibelula { get; set; }
     }
 }

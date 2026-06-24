@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { Category } from '../../../interfaces/category.interface';
 
 

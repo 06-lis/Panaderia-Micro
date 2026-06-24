@@ -69,13 +69,26 @@ namespace MSVenta.Compras.Services
                     Cantidad = detalle.Cantidad,
                     CostoUnitario = detalle.Precio,
                     EmpleadoId = compra.IdEmpleado,
-                    FechaVencimiento = detalle.FechaVencimiento
+                    FechaVencimiento = detalle.FechaVencimiento,
+                    ReferenciaId = compra.IdNotaCompra,
+                    ReferenciaTipo = "Compra"
                 };
 
-                bool stockUpdated = await _ventaService.UpdateStockAsync(updateStockDto);
+                bool stockUpdated = false;
+                try
+                {
+                    stockUpdated = await _ventaService.UpdateStockAsync(updateStockDto);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ERROR] Falla de comunicación al actualizar stock: {ex.Message}");
+                }
+
                 if (!stockUpdated)
                 {
-                    Console.WriteLine($"[ADVERTENCIA] No se pudo actualizar el stock del Item {detalle.IdItem} en el Almacén {detalle.IdAlmacen}.");
+                    // ROLLBACK compensatorio simple
+                    await _context.NotasCompra.DeleteOneAsync(c => c.IdNotaCompra == compra.IdNotaCompra);
+                    throw new Exception($"Fallo al actualizar el stock del Item {detalle.IdItem} en el Almacén {detalle.IdAlmacen}. La compra ha sido revertida.");
                 }
             }
 

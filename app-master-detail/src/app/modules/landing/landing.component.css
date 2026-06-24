@@ -1,0 +1,9 @@
+/* Estilos específicos si tailwind no cubre algo, pero usaremos tailwind mayormente */
+.landing-container {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Suavizar el scroll */
+html {
+    scroll-behavior: smooth;
+}

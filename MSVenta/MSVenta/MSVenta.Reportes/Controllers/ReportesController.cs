@@ -17,17 +17,20 @@ namespace MSVenta.Reportes.Controllers
         private readonly ICompraProxyService _compraProxy;
         private readonly IProduccionProxyService _produccionProxy;
         private readonly IInventarioProxyService _inventarioProxy;
+        private readonly IEmailService _emailService;
 
         public ReportesController(
             IVentaProxyService ventaProxy, 
             ICompraProxyService compraProxy, 
             IProduccionProxyService produccionProxy, 
-            IInventarioProxyService inventarioProxy)
+            IInventarioProxyService inventarioProxy,
+            IEmailService emailService)
         {
             _ventaProxy = ventaProxy;
             _compraProxy = compraProxy;
             _produccionProxy = produccionProxy;
             _inventarioProxy = inventarioProxy;
+            _emailService = emailService;
         }
 
         [HttpGet("dashboard")]
@@ -193,6 +196,67 @@ namespace MSVenta.Reportes.Controllers
             }
             
             return Ok(dto);
+        }
+        [HttpPost("enviar-dashboard")]
+        public async Task<IActionResult> EnviarDashboard([FromBody] EmailRequestDto request)
+        {
+            if (request == null || request.Destinatarios == null || !request.Destinatarios.Any())
+                return BadRequest("Se requiere al menos un destinatario.");
+
+            // Filtrar correos válidos para este proyecto
+            var destinatariosValidos = request.Destinatarios
+                .Where(e => e.EndsWith("@panaderia-otto.shop"))
+                .ToList();
+
+            if (!destinatariosValidos.Any())
+                return BadRequest("Ningún correo válido provisto. Deben terminar en @panaderia-otto.shop");
+
+            // Re-utilizar la lógica de Dashboard
+            var result = await GetDashboard();
+            if (result is OkObjectResult okResult && okResult.Value is DashboardDto dto)
+            {
+                // Generar HTML
+                string html = $@"
+                    <h2>Reporte del Sistema Panadería Otto</h2>
+                    <p><strong>Total Ventas (30 días):</strong> {dto.TotalVentas}</p>
+                    <p><strong>Total Compras (30 días):</strong> {dto.TotalCompras}</p>
+                    <p><strong>Producciones Completadas:</strong> {dto.ProduccionesCompletadas}</p>
+                    <p><strong>Insumos Bajo Stock / En Lotes:</strong> {dto.InsumosBajoStock}</p>
+
+                    <h3>Productos Próximos a Vencer</h3>
+                    <table border='1' cellpadding='5' cellspacing='0'>
+                        <tr><th>Lote ID</th><th>Almacén</th><th>Vencimiento</th><th>Cantidad</th><th>Estado</th></tr>";
+                
+                foreach (var p in dto.ProductosPorVencer)
+                {
+                    html += $"<tr><td>{p.IdLote}</td><td>{p.NombreAlmacen}</td><td>{p.FechaVencimiento?.ToShortDateString() ?? "N/A"}</td><td>{p.CantidadDisponible}</td><td>{p.Estado}</td></tr>";
+                }
+                
+                html += @"</table>
+                    <h3>Items Más Vendidos</h3>
+                    <table border='1' cellpadding='5' cellspacing='0'>
+                        <tr><th>Producto</th><th>Cantidad Vendida</th></tr>";
+                
+                foreach (var i in dto.ItemsMasUsados)
+                {
+                    html += $"<tr><td>{i.NombreItem}</td><td>{i.CantidadVendida}</td></tr>";
+                }
+                
+                html += "</table>";
+
+                try
+                {
+                    await _emailService.SendEmailAsync(destinatariosValidos, request.Asunto ?? "Reporte de Sistema", html);
+                    return Ok(new { success = true, message = "Reporte enviado exitosamente." });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error sending email: {ex.Message}");
+                    return StatusCode(500, $"Error enviando correo: {ex.Message}");
+                }
+            }
+
+            return StatusCode(500, "Error generando reporte");
         }
     }
 }

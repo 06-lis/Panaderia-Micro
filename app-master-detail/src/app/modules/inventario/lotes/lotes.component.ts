@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InventarioService } from '../service/inventario.service';
+import { ItemService } from '../../crear-item/service/item.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-lotes',
@@ -19,6 +21,7 @@ export class LotesComponent implements OnInit {
 
   constructor(
     private inventarioService: InventarioService,
+    private itemService: ItemService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -29,15 +32,28 @@ export class LotesComponent implements OnInit {
   loadLotes() {
     this.loading = true;
     this.cdr.markForCheck();
-    this.inventarioService.getLotes().subscribe({
-      next: (data) => {
-        this.lotes = data;
-        this.filteredLotes = [...data];
+    
+    // Fetch items and lotes in parallel
+    forkJoin({
+      lotes: this.inventarioService.getLotes(),
+      items: this.itemService.getItems()
+    }).subscribe({
+      next: ({ lotes, items }) => {
+        // Map item names
+        this.lotes = lotes.map(l => {
+          const item = items.find(i => i.id === l.id_item);
+          if (item) {
+            l.item_nombre = item.nombre;
+          }
+          return l;
+        });
+        
+        this.filteredLotes = [...this.lotes];
         this.loading = false;
         this.cdr.markForCheck();
       },
       error: (err) => {
-        console.error('Error cargando lotes:', err);
+        console.error('Error cargando lotes o ítems:', err);
         this.loading = false;
         this.cdr.markForCheck();
       }

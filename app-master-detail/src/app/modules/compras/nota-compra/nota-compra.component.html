@@ -197,7 +197,7 @@
                 <!-- Almacen dropdown -->
                 <select [(ngModel)]="d.idAlmacen" class="form-select" style="font-size: 0.8rem; padding: 6px;">
                   <option [value]="0">Almacén...</option>
-                  @for (a of almacenes(); track a.id) {
+                  @for (a of almacenesPermitidos; track a.id) {
                     <option [value]="a.id">{{ a.nombre }}</option>
                   }
                 </select>
@@ -205,7 +205,7 @@
                 <!-- Item dropdown -->
                 <select [(ngModel)]="d.idItem" class="form-select" style="font-size: 0.8rem; padding: 6px;">
                   <option [value]="0">Ítem...</option>
-                  @for (i of items(); track i.id) {
+                  @for (i of insumos; track i.id) {
                     <option [value]="i.id">{{ i.nombre }} ({{ i.tipo }})</option>
                   }
                 </select>

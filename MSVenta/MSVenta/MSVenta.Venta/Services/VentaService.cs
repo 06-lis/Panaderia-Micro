@@ -24,6 +24,7 @@ namespace MSVenta.Venta.Services
         {
             return await _context.Ventas
                 .Include(v => v.Cliente)
+                .Include(v => v.TransaccionLibelula)
                 .OrderBy(v => v.Id)
                 .ToListAsync();
         }
@@ -32,6 +33,7 @@ namespace MSVenta.Venta.Services
         {
             return await _context.Ventas
                 .Include(v => v.Cliente)
+                .Include(v => v.TransaccionLibelula)
                 .FirstOrDefaultAsync(v => v.Id == id);
         }
 
@@ -60,6 +62,28 @@ namespace MSVenta.Venta.Services
             var venta = await _context.Ventas.FindAsync(id);
             _context.Ventas.Remove(venta);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task CompletarPagoLibelula(int ventaId, int? usuarioId = null)
+        {
+            var transaccion = await _context.TransaccionesLibelula.Include(t => t.Venta).FirstOrDefaultAsync(t => t.VentaId == ventaId);
+            if (transaccion != null)
+            {
+                transaccion.Estado = "completado";
+                _context.TransaccionesLibelula.Update(transaccion);
+                
+                if (usuarioId.HasValue && transaccion.Venta != null)
+                {
+                    transaccion.Venta.UsuarioId = usuarioId.Value;
+                    _context.Ventas.Update(transaccion.Venta);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new ArgumentException("La venta no tiene una transacción de Libélula pendiente.");
+            }
         }
     }
 }

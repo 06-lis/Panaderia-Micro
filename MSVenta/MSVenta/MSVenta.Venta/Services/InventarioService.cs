@@ -7,7 +7,7 @@ namespace MSVenta.Venta.Services
 {
     public interface IInventarioService
     {
-        Task<bool> ConsumirStockAsync(int itemId, int almacenId, decimal cantidad, int empleadoId);
+        Task<bool> ConsumirStockAsync(int itemId, int almacenId, decimal cantidad, int empleadoId, int? referenciaId = null, string referenciaTipo = null);
     }
 
     public class InventarioService : IInventarioService
@@ -21,7 +21,7 @@ namespace MSVenta.Venta.Services
             _configuration = configuration;
         }
 
-        public async Task<bool> ConsumirStockAsync(int itemId, int almacenId, decimal cantidad, int empleadoId)
+        public async Task<bool> ConsumirStockAsync(int itemId, int almacenId, decimal cantidad, int empleadoId, int? referenciaId = null, string referenciaTipo = null)
         {
             try
             {
@@ -33,7 +33,9 @@ namespace MSVenta.Venta.Services
                     ItemId = itemId,
                     AlmacenId = almacenId,
                     Cantidad = cantidad,
-                    EmpleadoId = empleadoId
+                    EmpleadoId = empleadoId,
+                    ReferenciaId = referenciaId,
+                    ReferenciaTipo = referenciaTipo
                 };
 
                 Console.WriteLine($"[Venta] POST consumo to: {url} with ItemId={itemId}, AlmacenId={almacenId}, Cantidad={cantidad}");

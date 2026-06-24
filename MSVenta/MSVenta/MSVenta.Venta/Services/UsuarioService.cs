@@ -1,4 +1,4 @@
-﻿using Aforo255.Cross.Http.Src;
+using Aforo255.Cross.Http.Src;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
@@ -33,35 +33,41 @@ namespace MSVenta.Venta.Services
 
         public async Task<bool> ValidateUsuario(int usuario_id)
         {
-            try
+            int maxRetries = 3;
+            for (int i = 0; i < maxRetries; i++)
             {
-                string uri = _configuration["proxy:urlSecurity"];
-                var url = $"{uri}/{usuario_id}/validate";
-
-                // Realiza la solicitud GET y obtiene la respuesta
-                var response = await _httpClient.GetStringAsync(url);
-
-                // Verifica si la respuesta no está vacía
-                if (!string.IsNullOrEmpty(response))
+                try
                 {
-                    // Deserializa la respuesta JSON
-                    var jsonResponse = JObject.Parse(response);
+                    string uri = _configuration["proxy:urlSecurity"];
+                    var url = $"{uri}/{usuario_id}/validate";
 
-                    var message = jsonResponse["message"]?.ToString();
-                    if (message != null && message.Contains("Usuario no encontrado."))
+                    // Realiza la solicitud GET y obtiene la respuesta
+                    var response = await _httpClient.GetStringAsync(url);
+
+                    // Verifica si la respuesta no está vacía
+                    if (!string.IsNullOrEmpty(response))
                     {
-                        return false;
-                    }
+                        // Deserializa la respuesta JSON
+                        var jsonResponse = JObject.Parse(response);
 
-                    return true;
+                        var message = jsonResponse["message"]?.ToString();
+                        if (message != null && message.Contains("Usuario no encontrado."))
+                        {
+                            return false;
+                        }
+
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error validating usuario (Attempt {i + 1}/{maxRetries}): {ex.Message}");
+                    if (i == maxRetries - 1) return false;
+                    await Task.Delay(1000); // Esperar 1 segundo antes de reintentar
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error validating usuario: {ex.Message}");
-                return false;
-            }
+            return false;
         }
     }
 }

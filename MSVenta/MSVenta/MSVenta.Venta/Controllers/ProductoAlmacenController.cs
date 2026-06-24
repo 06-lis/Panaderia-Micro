@@ -69,6 +69,7 @@ namespace MSVenta.Venta.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error en AsignarProductoAlmacen: {ex.Message} \n {ex.StackTrace}");
                 return StatusCode(500, new { mensaje = "Error interno del servidor.", detalle = ex.Message });
             }
         }
@@ -126,6 +127,7 @@ namespace MSVenta.Venta.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error en QuitarProductoDeAlmacen: {ex.Message} \n {ex.StackTrace}");
                 return StatusCode(500, new { message = "Ocurrió un error inesperado: " + ex.Message }); // Mensaje de error inesperado
             }
         }
@@ -144,6 +146,7 @@ namespace MSVenta.Venta.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error en UpdateStock: {ex.Message} \n {ex.StackTrace}");
                 return StatusCode(500, new { mensaje = "Ocurrió un error inesperado: " + ex.Message });
             }
         }
@@ -171,6 +174,7 @@ namespace MSVenta.Venta.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error en AsignarBulk: {ex.Message} \n {ex.StackTrace}");
                 return StatusCode(500, new { mensaje = "Ocurrió un error inesperado: " + ex.Message });
             }
         }

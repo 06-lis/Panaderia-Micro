@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Sale } from '../../../interfaces/sale.interface';
 import { catchError, Observable, of } from 'rxjs';
@@ -61,6 +61,15 @@ export class SaleService {
 
     return this.http.delete(`${this.apiUrl}/${saleId}`, httpOptions(token))
       .pipe(catchError(this.handleError<any>('deleteSale', { error: 'Error al eliminar' })));
+  }
+
+  /** 🔹 Completar Pago Libelula */
+  completarPagoLibelula(saleId: number, usuarioId: number): Observable<any> {
+    const token = sessionStorage.getItem('token');
+    if (!token) return of({ error: 'No token available' });
+
+    return this.http.put(`${this.apiUrl}/${saleId}/completar-pago-libelula`, { usuarioId }, httpOptions(token))
+      .pipe(catchError(this.handleError<any>('completarPagoLibelula', { error: 'Error al completar pago' })));
   }
 
   /** 🔹 Manejo de errores */

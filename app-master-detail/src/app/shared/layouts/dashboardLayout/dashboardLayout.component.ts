@@ -34,7 +34,7 @@ export class DashboardLayoutComponent  implements OnInit {
       console.log('Permisos del usuario:', this.userPermissions);
   }
   
-public routes: any[] = routes[1].children?.filter( (route) => route.data ) || [];
+public routes: any[] = routes.find(r => r.path === 'dashboard')?.children?.filter( (route) => route.data ) || [];
 
   hasPermission(permissionName: string): boolean {
     if (!permissionName) return true;

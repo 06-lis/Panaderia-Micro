@@ -18,7 +18,7 @@ namespace MSVenta.Inventario.Controllers
         [HttpPost("ingreso")]
         public async Task<IActionResult> IngresoStock([FromBody] IngresoRequest request)
         {
-            var result = await _inventarioService.IngresoStockAsync(request.AlmacenId, request.ItemId, request.Cantidad, request.CostoUnitario, request.EmpleadoId, request.FechaVencimiento);
+            var result = await _inventarioService.IngresoStockAsync(request.AlmacenId, request.ItemId, request.Cantidad, request.CostoUnitario, request.EmpleadoId, request.FechaVencimiento, request.ReferenciaId, request.ReferenciaTipo);
             if (result) return Ok(new { success = true });
             return BadRequest(new { success = false, message = "No se pudo registrar el ingreso." });
         }
@@ -26,7 +26,7 @@ namespace MSVenta.Inventario.Controllers
         [HttpPost("consumo")]
         public async Task<IActionResult> ConsumoStock([FromBody] ConsumoRequest request)
         {
-            var result = await _inventarioService.ConsumoStockAsync(request.AlmacenId, request.ItemId, request.Cantidad, request.EmpleadoId);
+            var result = await _inventarioService.ConsumoStockAsync(request.AlmacenId, request.ItemId, request.Cantidad, request.EmpleadoId, request.ReferenciaId, request.ReferenciaTipo);
             if (result) return Ok(new { success = true });
             return BadRequest(new { success = false, message = "No hay stock suficiente para realizar el consumo." });
         }
@@ -91,6 +91,8 @@ namespace MSVenta.Inventario.Controllers
         public decimal CostoUnitario { get; set; }
         public int EmpleadoId { get; set; }
         public System.DateTime? FechaVencimiento { get; set; }
+        public int? ReferenciaId { get; set; }
+        public string ReferenciaTipo { get; set; }
     }
 
     public class ConsumoRequest
@@ -99,6 +101,8 @@ namespace MSVenta.Inventario.Controllers
         public int ItemId { get; set; }
         public decimal Cantidad { get; set; }
         public int EmpleadoId { get; set; }
+        public int? ReferenciaId { get; set; }
+        public string ReferenciaTipo { get; set; }
     }
     public class RegistrarTraspasoRequest
     {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { Product } from '../../../interfaces/poduct.interface';
 
 const httpOptions = (token: string) => ({

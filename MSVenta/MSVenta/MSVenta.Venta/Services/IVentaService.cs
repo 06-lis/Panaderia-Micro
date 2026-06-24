@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MSVenta.Venta.Services
@@ -10,5 +10,6 @@ namespace MSVenta.Venta.Services
         Task CreateVenta(Models.Venta venta);
         Task UpdateVenta(Models.Venta venta);
         Task DeleteVenta(int id);
+        Task CompletarPagoLibelula(int ventaId, int? usuarioId = null);
     }
 }

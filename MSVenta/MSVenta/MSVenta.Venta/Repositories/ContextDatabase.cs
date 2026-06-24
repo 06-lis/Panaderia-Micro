@@ -16,6 +16,7 @@ namespace MSVenta.Venta.Repositories
         public DbSet<ProductoAlmacen> ProductosAlmacenes { get; set; }
         public DbSet<DetalleVenta> DetallesVenta { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
+        public DbSet<TransaccionLibelula> TransaccionesLibelula { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,6 +25,7 @@ namespace MSVenta.Venta.Repositories
             modelBuilder.Entity<DetalleVenta>().ToTable("detalle_venta");
             modelBuilder.Entity<Categoria>().ToTable("categoria");
             modelBuilder.Entity<Almacen>().ToTable("almacen");
+            modelBuilder.Entity<TransaccionLibelula>().ToTable("transacciones_libelula");
 
             modelBuilder.Entity<Item>().ToTable("item");
             modelBuilder.Entity<Producto>().ToTable("item");
@@ -76,6 +78,11 @@ namespace MSVenta.Venta.Repositories
                 .HasOne(v => v.Cliente)
                 .WithMany()
                 .HasForeignKey(v => v.ClienteId);
+
+            modelBuilder.Entity<Models.Venta>()
+                .HasOne(v => v.TransaccionLibelula)
+                .WithOne(t => t.Venta)
+                .HasForeignKey<TransaccionLibelula>(t => t.VentaId);
         }
     }
 }

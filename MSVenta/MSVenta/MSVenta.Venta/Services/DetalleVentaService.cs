@@ -68,7 +68,7 @@ namespace MSVenta.Venta.Services
             await _context.SaveChangesAsync();
 
             // Consumir el stock de cada detalle en el microservicio Inventario
-            bool consumoResult = await _inventarioService.ConsumirStockAsync(productoAlmacen.ItemId, productoAlmacen.AlmacenId, detalle.Cantidad, venta.UsuarioId);
+            bool consumoResult = await _inventarioService.ConsumirStockAsync(productoAlmacen.ItemId, productoAlmacen.AlmacenId, detalle.Cantidad, venta.UsuarioId, venta.Id, "Venta");
             if (!consumoResult)
             {
                 // Si falla el consumo, se podría lanzar una excepción y revertir la transacción.

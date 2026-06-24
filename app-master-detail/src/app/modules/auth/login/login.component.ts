@@ -22,6 +22,10 @@ export default class LoginComponent implements OnInit {
   constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
+    if (sessionStorage.getItem('token')) {
+      this.router.navigate(['/dashboard']);
+      return;
+    }
     this.user = {
       username: '',
       password: '',

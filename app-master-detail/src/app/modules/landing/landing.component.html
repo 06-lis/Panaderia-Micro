@@ -1,0 +1,180 @@
+<div class="landing-container min-h-screen bg-[#fdf8f5] font-sans text-[#4a3b32]">
+  <!-- Header -->
+  <header class="bg-[#8b5a2b] text-white p-6 shadow-md flex justify-between items-center sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+      <i class="pi pi-shop text-3xl"></i>
+      <h1 class="text-2xl font-bold font-serif tracking-wide">Panadería Otto</h1>
+    </div>
+    <div class="flex items-center gap-6">
+      <button *ngIf="!isLoggedIn" (click)="goToLogin()" class="font-semibold text-[#f0e6d2] hover:text-white transition-colors flex items-center gap-2">
+        <i class="pi pi-user"></i> Login Personal
+      </button>
+      <button *ngIf="isLoggedIn" (click)="goToLogin()" class="font-semibold text-[#f0e6d2] hover:text-white transition-colors flex items-center gap-2">
+        <i class="pi pi-home"></i> Ir al Dashboard
+      </button>
+
+      <div class="relative cursor-pointer" (click)="abrirCheckout()">
+        <i class="pi pi-shopping-cart text-3xl"></i>
+        <span *ngIf="carrito.length > 0" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full border-2 border-[#8b5a2b]">
+          {{ carrito.length }}
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-6 max-w-6xl">
+    
+    <!-- Hero Section -->
+    <div *ngIf="!checkoutProcess" class="text-center py-10 mb-8 bg-[#e8d5c4] rounded-2xl shadow-sm border border-[#d2b48c]">
+      <h2 class="text-4xl font-serif font-bold text-[#5c3a21] mb-3">Recién salido del horno</h2>
+      <p class="text-lg text-[#6d4c41]">Disfruta de nuestros mejores panes y postres artesanales.</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center py-20">
+      <i class="pi pi-spin pi-spinner text-4xl text-[#8b5a2b]"></i>
+    </div>
+
+    <!-- Product Grid -->
+    <div *ngIf="!loading && !checkoutProcess" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div *ngFor="let prod of productos" class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow border border-[#f0e6d2] flex flex-col">
+        <div class="h-48 bg-[#f5ebe0] flex items-center justify-center overflow-hidden relative">
+          <img *ngIf="prod.imagen" [src]="prod.imagen" [alt]="prod.nombre" class="object-cover w-full h-full" onerror="this.src='assets/default-bakery.jpg'">
+          <div *ngIf="!prod.imagen" class="text-[#c1a58d]">
+            <i class="pi pi-image text-5xl"></i>
+          </div>
+          <!-- Stock Badge -->
+          <div class="absolute top-2 right-2 bg-[#5c3a21] text-white text-xs font-bold px-2 py-1 rounded">
+            Stock: {{prod.stock}}
+          </div>
+        </div>
+        
+        <div class="p-4 flex flex-col flex-grow">
+          <h3 class="text-lg font-bold text-[#5c3a21] mb-1">{{ prod.nombre }}</h3>
+          <p class="text-xl font-semibold text-[#8b5a2b] mb-4">Bs. {{ prod.precio | number:'1.2-2' }}</p>
+          
+          <div class="mt-auto flex gap-2">
+            <button (click)="agregarAlCarrito(prod)" class="w-full bg-[#d2b48c] hover:bg-[#c1a58d] text-[#5c3a21] font-bold py-2 rounded transition-colors flex justify-center items-center gap-2">
+              <i class="pi pi-plus"></i> Añadir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !checkoutProcess && productos.length === 0" class="text-center py-20">
+      <i class="pi pi-box text-6xl text-[#d2b48c] mb-4"></i>
+      <p class="text-xl text-[#8b5a2b]">No hay productos disponibles por el momento.</p>
+    </div>
+
+    <!-- Checkout Process -->
+    <div *ngIf="checkoutProcess" class="max-w-4xl mx-auto">
+      <button (click)="volverAProductos()" class="mb-6 text-[#8b5a2b] hover:text-[#5c3a21] font-semibold flex items-center gap-2 transition-colors">
+        <i class="pi pi-arrow-left"></i> Volver a la tienda
+      </button>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        
+        <!-- Cart Summary -->
+        <div class="bg-white p-6 rounded-2xl shadow-md border border-[#f0e6d2]">
+          <h3 class="text-2xl font-serif font-bold text-[#5c3a21] mb-4 border-b border-[#e8d5c4] pb-2">Tu Pedido</h3>
+          
+          <div class="space-y-4 mb-6">
+            <div *ngFor="let item of carrito" class="flex justify-between items-center bg-[#fdf8f5] p-3 rounded-lg border border-[#f0e6d2]">
+              <div class="flex-1">
+                <h4 class="font-bold text-[#4a3b32]">{{item.nombre}}</h4>
+                <p class="text-sm text-[#8b5a2b]">Bs. {{item.precio | number:'1.2-2'}}</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <button (click)="quitarDelCarrito(item.productoAlmacenId)" class="w-8 h-8 rounded-full bg-[#e8d5c4] text-[#5c3a21] hover:bg-[#d2b48c] transition-colors flex items-center justify-center">
+                  <i class="pi pi-minus text-xs"></i>
+                </button>
+                <span class="font-bold w-4 text-center">{{item.cantidad}}</span>
+                <button (click)="agregarAlCarrito(item)" class="w-8 h-8 rounded-full bg-[#e8d5c4] text-[#5c3a21] hover:bg-[#d2b48c] transition-colors flex items-center justify-center">
+                  <i class="pi pi-plus text-xs"></i>
+                </button>
+              </div>
+              <div class="w-20 text-right font-bold text-[#5c3a21]">
+                Bs. {{(item.precio * item.cantidad) | number:'1.2-2'}}
+              </div>
+            </div>
+            
+            <div *ngIf="carrito.length === 0" class="text-center py-6 text-[#8b5a2b]">
+              Tu carrito está vacío
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center text-xl font-bold text-[#5c3a21] pt-4 border-t border-[#e8d5c4]">
+            <span>Total:</span>
+            <span>Bs. {{ totalCarrito | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <!-- Checkout Form & QR -->
+        <div class="bg-white p-6 rounded-2xl shadow-md border border-[#f0e6d2]">
+          
+          <ng-container *ngIf="!qrUrl">
+            <h3 class="text-2xl font-serif font-bold text-[#5c3a21] mb-4 border-b border-[#e8d5c4] pb-2">Datos de Facturación</h3>
+            <form (ngSubmit)="procesarPago()" class="space-y-4">
+              
+              <ng-container *ngIf="!isLoggedIn">
+                <div>
+                  <label class="block text-sm font-semibold text-[#6d4c41] mb-1">Nombre</label>
+                  <input type="text" [(ngModel)]="cliente.nombre" name="nombre" required class="w-full p-3 border border-[#d2b48c] rounded focus:ring-2 focus:ring-[#8b5a2b] focus:border-[#8b5a2b] outline-none transition-all" placeholder="Juan">
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-[#6d4c41] mb-1">Apellido</label>
+                  <input type="text" [(ngModel)]="cliente.apellido" name="apellido" required class="w-full p-3 border border-[#d2b48c] rounded focus:ring-2 focus:ring-[#8b5a2b] focus:border-[#8b5a2b] outline-none transition-all" placeholder="Pérez">
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-[#6d4c41] mb-1">Correo Electrónico</label>
+                  <input type="email" [(ngModel)]="cliente.email" name="email" required class="w-full p-3 border border-[#d2b48c] rounded focus:ring-2 focus:ring-[#8b5a2b] focus:border-[#8b5a2b] outline-none transition-all" placeholder="juan@correo.com">
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-[#6d4c41] mb-1">Celular (Opcional)</label>
+                  <input type="text" [(ngModel)]="cliente.celular" name="celular" class="w-full p-3 border border-[#d2b48c] rounded focus:ring-2 focus:ring-[#8b5a2b] focus:border-[#8b5a2b] outline-none transition-all" placeholder="77712345">
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="isLoggedIn">
+                <div class="bg-[#f5ebe0] p-4 rounded-xl border border-[#d2b48c] text-[#5c3a21] mb-4">
+                  <p class="font-bold text-lg mb-1 flex items-center gap-2">
+                    <i class="pi pi-user"></i> Pagando como:
+                  </p>
+                  <p class="font-semibold">{{cliente.nombre}} {{cliente.apellido !== '-' ? cliente.apellido : ''}}</p>
+                  <p class="text-sm opacity-80">{{cliente.email}}</p>
+                </div>
+              </ng-container>
+              
+              <button type="submit" [disabled]="carrito.length === 0" class="w-full bg-[#5c3a21] hover:bg-[#4a2e1b] text-white font-bold py-3 rounded-lg mt-6 transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
+                Pagar Bs. {{ totalCarrito | number:'1.2-2' }} con Libélula
+              </button>
+            </form>
+          </ng-container>
+
+          <ng-container *ngIf="qrUrl">
+            <div class="text-center py-4 flex flex-col items-center">
+              <h3 class="text-2xl font-serif font-bold text-[#2d6a4f] mb-2">¡Pedido Generado!</h3>
+              <p class="text-[#6d4c41] mb-6">Escanea el código QR desde tu aplicación bancaria para completar el pago.</p>
+              
+              <div class="p-4 bg-white border-2 border-[#d2b48c] rounded-xl inline-block shadow-sm">
+                <img [src]="qrUrl" alt="Código QR de Libélula" class="w-64 h-64 object-contain">
+              </div>
+              
+              <p class="mt-4 text-sm text-[#8b5a2b] font-semibold flex items-center gap-2">
+                <i class="pi pi-info-circle"></i>
+                Usa la pasarela de Libélula de forma segura.
+              </p>
+              
+              <button (click)="finalizarCompra()" class="mt-6 w-full bg-[#1A6B4A] hover:bg-[#15543A] text-white font-bold py-3 rounded-lg transition-colors shadow-md">
+                ¡Ya pagué! Finalizar Pedido
+              </button>
+            </div>
+          </ng-container>
+
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

@@ -52,6 +52,7 @@ namespace MSVenta.Compras.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error en Create NotaCompra: {ex.Message} \n {ex.StackTrace}");
                 return StatusCode(500, new { mensaje = "Ocurrió un error interno al procesar la compra.", detalle = ex.Message });
             }
         }

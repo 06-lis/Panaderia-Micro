@@ -18,7 +18,7 @@ namespace MSVenta.Inventario.Services
             _ventaProxy = ventaProxy;
         }
 
-        public async Task<bool> IngresoStockAsync(int almacenId, int itemId, decimal cantidad, decimal costoUnitario, int empleadoId, System.DateTime? fechaVencimiento = null)
+        public async Task<bool> IngresoStockAsync(int almacenId, int itemId, decimal cantidad, decimal costoUnitario, int empleadoId, System.DateTime? fechaVencimiento = null, int? referenciaId = null, string referenciaTipo = null)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -49,7 +49,9 @@ namespace MSVenta.Inventario.Services
                     CostoUnitario = costoUnitario,
                     CostoTotal = cantidad * costoUnitario,
                     FechaMovimiento = DateTime.UtcNow,
-                    IdEmpleado = empleadoId
+                    IdEmpleado = empleadoId,
+                    ReferenciaId = referenciaId,
+                    ReferenciaTipo = referenciaTipo
                 };
 
                 _context.MovimientosInventario.Add(movimiento);
@@ -71,7 +73,7 @@ namespace MSVenta.Inventario.Services
             }
         }
 
-        public async Task<bool> ConsumoStockAsync(int almacenId, int itemId, decimal cantidad, int empleadoId)
+        public async Task<bool> ConsumoStockAsync(int almacenId, int itemId, decimal cantidad, int empleadoId, int? referenciaId = null, string referenciaTipo = null)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -109,7 +111,9 @@ namespace MSVenta.Inventario.Services
                         CostoUnitario = lote.PrecioUnitario,
                         CostoTotal = -cantidadAComsumir * lote.PrecioUnitario,
                         FechaMovimiento = DateTime.UtcNow,
-                        IdEmpleado = empleadoId
+                        IdEmpleado = empleadoId,
+                        ReferenciaId = referenciaId,
+                        ReferenciaTipo = referenciaTipo
                     };
 
                     _context.MovimientosInventario.Add(movimiento);
@@ -173,7 +177,10 @@ namespace MSVenta.Inventario.Services
                     costo_total = m.CostoTotal,
                     motivo = "Movimiento Sistema",
                     responsable_nombre = "Emp " + m.IdEmpleado,
-                    fecha_movimiento = m.FechaMovimiento
+                    fecha_movimiento = m.FechaMovimiento,
+                    id_item = m.IdItem,
+                    referencia_id = m.ReferenciaId,
+                    referencia_tipo = m.ReferenciaTipo
                 }).ToListAsync();
         }
 
