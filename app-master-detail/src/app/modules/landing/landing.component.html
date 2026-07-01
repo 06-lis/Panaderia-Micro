@@ -39,7 +39,7 @@
     <div *ngIf="!loading && !checkoutProcess" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <div *ngFor="let prod of productos" class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow border border-[#f0e6d2] flex flex-col">
         <div class="h-48 bg-[#f5ebe0] flex items-center justify-center overflow-hidden relative">
-          <img *ngIf="prod.imagen" [src]="prod.imagen" [alt]="prod.nombre" class="object-cover w-full h-full" onerror="this.src='assets/default-bakery.jpg'">
+          <img *ngIf="prod.imagen" [src]="prod.imagen" [alt]="prod.nombre" class="object-cover w-full h-full" onerror="this.src='assets/default-bakery.jpg?v=1'">
           <div *ngIf="!prod.imagen" class="text-[#c1a58d]">
             <i class="pi pi-image text-5xl"></i>
           </div>
