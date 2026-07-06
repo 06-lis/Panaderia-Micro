@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Almacen } from '../../../interfaces/almacen.interface';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlmacenService } from '../service/almacen.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 
@@ -11,7 +11,8 @@ import { CommonModule } from '@angular/common';
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    RouterLink
   ],
   templateUrl: './almacen-add.component.html',
   styleUrl: './almacen-add.component.css',
@@ -29,12 +30,11 @@ export class AlmacenAddComponent {
     ){}
     ngOnInit(): void {
       this.almacenForm = this.fb.group({
-        nombre: ['', [Validators.required, Validators.maxLength(30)]],
-        locacion: ['', [Validators.required, Validators.min(0.01)]],
-    });
-      // throw new Error('Method not implemented.');
-
-
+        nombre: ['', [Validators.required, Validators.maxLength(50)]],
+        tipo: ['Mixto', [Validators.required]],
+        locacion: [''],
+        capacidadMaxima: [null, [Validators.min(0)]]
+      });
     }
 
     createAlmacen(): void {

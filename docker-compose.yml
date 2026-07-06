@@ -41,7 +41,7 @@ services:
       MYSQL_ROOT_PASSWORD: "Aforo255#2019"
       MYSQL_DATABASE: db_ventas
     ports:
-      - "3307:3306"
+      - "3308:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./db_ventas.sql:/docker-entrypoint-initdb.d/1-db_ventas.sql

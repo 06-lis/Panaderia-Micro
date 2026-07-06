@@ -8,6 +8,7 @@ namespace MSVenta.Venta.DTOs
         public string Nombre { get; set; }
         public string Locacion { get; set; }
         public string Tipo { get; set; }
+        public double? CapacidadMaxima { get; set; }
 
         public List<ProductoAlmacenDTO> Productos { get; set; } = new List<ProductoAlmacenDTO>();
     }

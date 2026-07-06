@@ -79,6 +79,47 @@ namespace MSVenta.Venta.Controllers
                 return StatusCode(500, new { message = "Ocurrió un error interno: " + ex.Message });
             }
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] CreateItemDto dto)
+        {
+            try
+            {
+                var existingItem = await _itemService.GetById(id);
+                if (existingItem == null) return NotFound(new { message = "Item no encontrado." });
+
+                existingItem.Nombre = dto.Nombre;
+                existingItem.Precio = dto.Precio;
+                existingItem.UnidadMedida = dto.UnidadMedida;
+                existingItem.CategoriaId = dto.CategoriaId;
+                
+                if (existingItem is Producto producto)
+                {
+                    producto.Imagen = dto.Imagen;
+                }
+
+                await _itemService.UpdateItem(existingItem);
+                return Ok(new { message = "Item actualizado exitosamente.", data = existingItem });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Ocurrió un error interno: " + ex.Message });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _itemService.DeleteItem(id);
+                return Ok(new { message = "Item eliminado exitosamente." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Ocurrió un error interno: " + ex.Message });
+            }
+        }
     }
 
     public class CreateItemDto

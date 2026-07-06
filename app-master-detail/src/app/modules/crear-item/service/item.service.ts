@@ -48,4 +48,34 @@ export class ItemService {
       return of([]);
     }
   }
+
+  public updateItem(id: number, item: any): Observable<any> {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      return this.http.put<any>(`${this.apiUrl}/${id}`, item, httpOptions(token)).pipe(
+        catchError((err) => {
+          console.error('Error al actualizar el item:', err);
+          throw err;
+        })
+      );
+    } else {
+      console.error('No hay token disponible');
+      return of(null);
+    }
+  }
+
+  public deleteItem(id: number): Observable<any> {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      return this.http.delete<any>(`${this.apiUrl}/${id}`, httpOptions(token)).pipe(
+        catchError((err) => {
+          console.error('Error al eliminar el item:', err);
+          throw err;
+        })
+      );
+    } else {
+      console.error('No hay token disponible');
+      return of(null);
+    }
+  }
 }

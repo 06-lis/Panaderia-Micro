@@ -42,44 +42,54 @@ namespace MSVenta.Venta.Services
         }
 
 
-        public async Task<ProductoAlmacen> AddAsync(ProductoAlmacen productoAlmacen)
+                public async Task<ProductoAlmacen> AddAsync(ProductoAlmacen productoAlmacen)
         {
-            // ðŸ”¹ Validar que ItemId y AlmacenId no sean nulos ni negativos
+            // Validar que ItemId y AlmacenId no sean nulos ni negativos
             if (productoAlmacen.ItemId <= 0 || productoAlmacen.AlmacenId <= 0)
             {
                 throw new ArgumentException("El ItemId y el AlmacenId deben ser mayores que cero.");
             }
 
-            // ðŸ”¹ Validar que el Stock no sea negativo o nulo
+            // Validar que el Stock no sea negativo o nulo
             if (productoAlmacen.Stock <= 0)
             {
                 throw new ArgumentException("El stock debe ser mayor que cero.");
             }
 
-            // ðŸ”¹ Verificar si el ItemId y el AlmacenId existen en la base de datos
-            var productoExiste = await _context.Items.AnyAsync(i => i.Id == productoAlmacen.ItemId);
-            var almacenExiste = await _context.Almacenes.AnyAsync(a => a.Id == productoAlmacen.AlmacenId);
+            // Validar existencia de Item y Almacen
+            var item = await _context.Items.FirstOrDefaultAsync(i => i.Id == productoAlmacen.ItemId);
+            var almacen = await _context.Almacenes.FirstOrDefaultAsync(a => a.Id == productoAlmacen.AlmacenId);
 
-            if (!productoExiste)
+            if (item == null)
             {
-                throw new KeyNotFoundException($"No se encontrÃ³ un producto con ID {productoAlmacen.ItemId}.");
+                throw new KeyNotFoundException($"No se encontró un producto/insumo con ID {productoAlmacen.ItemId}.");
             }
 
-            if (!almacenExiste)
+            if (almacen == null)
             {
-                throw new KeyNotFoundException($"No se encontrÃ³ un almacÃ©n con ID {productoAlmacen.AlmacenId}.");
+                throw new KeyNotFoundException($"No se encontró un almacén con ID {productoAlmacen.AlmacenId}.");
             }
 
-            // ðŸ”¹ Verificar si la combinaciÃ³n ItemId - AlmacenId ya existe
+            // Validar compatibilidad de tipos
+            if (almacen.Tipo == "Productos" && item.Tipo != "Producto")
+            {
+                throw new InvalidOperationException("Este almacén solo admite productos terminados.");
+            }
+            if (almacen.Tipo == "Insumos" && item.Tipo != "Insumo")
+            {
+                throw new InvalidOperationException("Este almacén solo admite insumos (materia prima).");
+            }
+
+            // Verificar si la combinación ItemId - AlmacenId ya existe
             var existe = await _context.ProductosAlmacenes
                 .AnyAsync(pa => pa.ItemId == productoAlmacen.ItemId && pa.AlmacenId == productoAlmacen.AlmacenId);
 
             if (existe)
             {
-                throw new InvalidOperationException("El producto ya estÃ¡ asignado a este almacÃ©n.");
+                throw new InvalidOperationException("El producto/insumo ya está asignado a este almacén.");
             }
 
-            // âœ… Si todas las validaciones se cumplen, guardar en la base de datos
+            // Si todas las validaciones se cumplen, guardar en la base de datos
             _context.ProductosAlmacenes.Add(productoAlmacen);
             await _context.SaveChangesAsync();
             return productoAlmacen;
@@ -266,12 +276,12 @@ namespace MSVenta.Venta.Services
             return productoAlmacen;
         }
 
-        public async Task<List<ProductoAlmacen>> AddBulkAsync(int almacenId, List<ItemStockDto> itemsDto)
+                public async Task<List<ProductoAlmacen>> AddBulkAsync(int almacenId, List<ItemStockDto> itemsDto)
         {
-            var almacenExiste = await _context.Almacenes.AnyAsync(a => a.Id == almacenId);
-            if (!almacenExiste)
+            var almacen = await _context.Almacenes.FirstOrDefaultAsync(a => a.Id == almacenId);
+            if (almacen == null)
             {
-                throw new KeyNotFoundException($"No se encontrÃ³ un almacÃ©n con ID {almacenId}.");
+                throw new KeyNotFoundException($"No se encontró un almacén con ID {almacenId}.");
             }
 
             var resultados = new List<ProductoAlmacen>();
@@ -283,10 +293,20 @@ namespace MSVenta.Venta.Services
                     throw new ArgumentException("El ItemId y el Stock deben ser mayores que cero.");
                 }
 
-                var itemExiste = await _context.Items.AnyAsync(i => i.Id == itemDto.ItemId);
-                if (!itemExiste)
+                var item = await _context.Items.FirstOrDefaultAsync(i => i.Id == itemDto.ItemId);
+                if (item == null)
                 {
-                    throw new KeyNotFoundException($"No se encontrÃ³ un item con ID {itemDto.ItemId}.");
+                    throw new KeyNotFoundException($"No se encontró un item con ID {itemDto.ItemId}.");
+                }
+
+                // Validar compatibilidad de tipos
+                if (almacen.Tipo == "Productos" && item.Tipo != "Producto")
+                {
+                    throw new InvalidOperationException($"El item '{item.Nombre}' no se puede asignar. Este almacén solo admite productos terminados.");
+                }
+                if (almacen.Tipo == "Insumos" && item.Tipo != "Insumo")
+                {
+                    throw new InvalidOperationException($"El item '{item.Nombre}' no se puede asignar. Este almacén solo admite insumos (materia prima).");
                 }
 
                 var existing = await _context.ProductosAlmacenes

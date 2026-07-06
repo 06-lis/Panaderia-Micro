@@ -9,6 +9,7 @@ namespace MSVenta.Venta.Models
         public string Nombre { get; set; }
         public string Locacion { get; set; }
         public string Tipo { get; set; } = "Mixto";
+        public double? CapacidadMaxima { get; set; }
         // Relación con ProductoAlmacen
         [JsonIgnore]
         public List<ProductoAlmacen> ProductosAlmacenes { get; set; } = new List<ProductoAlmacen>();

@@ -1,47 +1,94 @@
 <div class="max-w-lg mx-auto mt-10 p-8 bg-white text-amber-950 rounded-2xl shadow-md border border-amber-100/70 border-t-4 border-t-[#5C3E21]">
-  <h2 class="text-3xl font-extrabold text-left mb-6 text-[#3E261A]">
-    🚀 Crear Almacén
+  <h2 class="text-3xl font-extrabold text-left mb-6 text-[#3E261A] flex items-center gap-2">
+    📦 Crear Almacén
   </h2>
 
-  <form [formGroup]="almacenForm" (ngSubmit)="createAlmacen()" class="space-y-6">
+  <form [formGroup]="almacenForm" (ngSubmit)="createAlmacen()" class="space-y-5">
+    
+    <!-- Instrucciones -->
+    <div class="p-3.5 bg-[#FAF6EE] border-l-4 border-[#8E4E2A] rounded-r-lg text-xs text-[#5C3E21] space-y-1">
+      <p class="font-bold flex items-center gap-1">ℹ️ Instrucciones:</p>
+      <p>Crea un nuevo almacén para organizar tu inventario de insumos o productos terminados.</p>
+    </div>
+
     <!-- Nombre del almacén -->
     <div>
-      <label for="nombre" class="text-amber-950 font-semibold mb-2 block text-sm">📌 Nombre del almacén</label>
+      <label for="nombre" class="text-amber-950 font-semibold mb-1 block text-sm">🏷️ Nombre del Almacén <span class="text-red-500">*</span></label>
       <input
         type="text"
         id="nombre"
         formControlName="nombre"
-        placeholder="Ejemplo: Central de Suministros"
-        class="w-full p-3 bg-[#FAF6EE] text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none placeholder-amber-800/40 rounded-lg shadow-sm transition-all"
+        placeholder="Ej: Almacén Central, Bodega Norte..."
+        class="w-full p-2.5 bg-white text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none placeholder-amber-800/40 rounded-lg shadow-sm transition-all"
       />
+      <p class="text-[11px] text-amber-800/70 mt-1">Nombre único para identificar el almacén.</p>
       <div *ngIf="almacenForm.get('nombre')?.invalid && almacenForm.get('nombre')?.touched"
-        class="mt-1 text-red-400 text-sm flex items-center">
-        ⚠️ El nombre es requerido (máx. 30 caracteres).
+        class="mt-1 text-red-500 text-xs flex items-center gap-1 font-semibold">
+        ⚠️ El nombre es requerido (máx. 50 caracteres).
       </div>
+    </div>
+
+    <!-- Tipo de almacén -->
+    <div>
+      <label for="tipo" class="text-amber-950 font-semibold mb-1 block text-sm">🪵 Tipo de Almacén <span class="text-red-500">*</span></label>
+      <select
+        id="tipo"
+        formControlName="tipo"
+        class="w-full p-2.5 bg-white text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none rounded-lg shadow-sm transition-all"
+      >
+        <option value="Mixto">Mixto (Insumos y Productos)</option>
+        <option value="Insumos">Insumos (Solo Materia Prima)</option>
+        <option value="Productos">Productos (Solo Producto Terminado)</option>
+      </select>
+      <p class="text-[11px] text-amber-800/70 mt-1">Define qué tipo de items podrás almacenar aquí.</p>
     </div>
 
     <!-- Localización del almacén -->
     <div>
-      <label for="locacion" class="text-amber-950 font-semibold mb-2 block text-sm">📍 Ubicación</label>
+      <label for="locacion" class="text-amber-950 font-semibold mb-1 block text-sm">📍 Ubicación</label>
       <input
         type="text"
         id="locacion"
         formControlName="locacion"
-        placeholder="Ejemplo: Av. Principal #123"
-        class="w-full p-3 bg-[#FAF6EE] text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none placeholder-amber-800/40 rounded-lg shadow-sm transition-all"
+        placeholder="Ej: Calle Principal #123, Planta Baja..."
+        class="w-full p-2.5 bg-white text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none placeholder-amber-800/40 rounded-lg shadow-sm transition-all"
       />
-      <div *ngIf="almacenForm.get('locacion')?.invalid && almacenForm.get('locacion')?.touched"
-        class="mt-1 text-red-400 text-sm flex items-center">
-        ⚠️ La ubicación es requerida (máx. 30 caracteres).
+      <p class="text-[11px] text-amber-800/70 mt-1">Dirección física o referencia del almacén.</p>
+    </div>
+
+    <!-- Capacidad Máxima -->
+    <div>
+      <label for="capacidadMaxima" class="text-amber-950 font-semibold mb-1 block text-sm">📦 Capacidad Máxima</label>
+      <input
+        type="number"
+        id="capacidadMaxima"
+        formControlName="capacidadMaxima"
+        placeholder="Ej: 1000.00"
+        class="w-full p-2.5 bg-white text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none placeholder-amber-800/40 rounded-lg shadow-sm transition-all"
+      />
+      <p class="text-[11px] text-amber-800/70 mt-1">Capacidad total en unidades (opcional).</p>
+      <div *ngIf="almacenForm.get('capacidadMaxima')?.invalid && almacenForm.get('capacidadMaxima')?.touched"
+        class="mt-1 text-red-500 text-xs flex items-center gap-1 font-semibold">
+        ⚠️ La capacidad máxima debe ser mayor o igual a 0.
       </div>
     </div>
 
-    <!-- Botón -->
-    <button
-      type="submit"
-      class="w-full py-3 bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 text-white font-bold rounded-lg hover:scale-105 hover:shadow-lg transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-      [disabled]="almacenForm.invalid">
-      ➕ Agregar Almacén
-    </button>
+    <!-- Botones -->
+    <div class="pt-4 flex gap-3">
+      <button
+        type="button"
+        routerLink="/dashboard/almacen"
+        class="w-1/3 py-2.5 bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold rounded-lg transition-all duration-200 text-center"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="w-2/3 py-2.5 bg-[#8E4E2A] hover:bg-[#7D411F] text-white font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="almacenForm.invalid"
+      >
+        💾 Crear Almacén
+      </button>
+    </div>
   </form>
 </div>

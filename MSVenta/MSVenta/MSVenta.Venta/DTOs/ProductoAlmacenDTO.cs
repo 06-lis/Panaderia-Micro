@@ -1,4 +1,4 @@
-﻿namespace MSVenta.Venta.DTOs
+namespace MSVenta.Venta.DTOs
 {
     public class ProductoAlmacenDTO
     {
@@ -7,5 +7,6 @@
         public double Precio { get; set; }  // Incluye el precio si lo necesitas
 
         public int Stock { get; set; }
+        public string Tipo { get; set; }
     }
 }

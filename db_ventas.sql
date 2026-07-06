@@ -32,7 +32,9 @@ CREATE TABLE item (
 CREATE TABLE almacen (
   Id INT AUTO_INCREMENT PRIMARY KEY,
   Nombre VARCHAR(255) NOT NULL,
-  Locacion VARCHAR(255) NOT NULL
+  Locacion VARCHAR(255) NOT NULL,
+  Tipo VARCHAR(50) DEFAULT 'Mixto',
+  CapacidadMaxima DOUBLE DEFAULT NULL
 );
 
 -- 5. Tabla producto_almacen

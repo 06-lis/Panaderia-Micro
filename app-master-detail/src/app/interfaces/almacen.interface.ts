@@ -7,5 +7,6 @@ export interface Almacen {
   nombre: string,
 	locacion: string,
   tipo?: string,
+  capacidadMaxima?: number,
   productos:Product[]
 }

@@ -43,12 +43,15 @@ namespace MSVenta.Venta.Services
                     Id = a.Id,
                     Nombre = a.Nombre,
                     Locacion = a.Locacion,
+                    Tipo = a.Tipo,
+                    CapacidadMaxima = a.CapacidadMaxima,
                     Productos = a.ProductosAlmacenes.Select(pa => new ProductoAlmacenDTO
                     {
                         ProductoId = pa.Item.Id,
                         NombreProducto = pa.Item.Nombre,
                         Precio = pa.Item.Precio,  // Incluye el precio si lo necesitas
-                        Stock = pa.Stock
+                        Stock = pa.Stock,
+                        Tipo = pa.Item.Tipo
                     }).ToList()
                 }).ToListAsync();
         }
@@ -72,6 +75,8 @@ namespace MSVenta.Venta.Services
                 Id = almacen.Id,
                 Nombre = almacen.Nombre,
                 Locacion = almacen.Locacion,
+                Tipo = almacen.Tipo,
+                CapacidadMaxima = almacen.CapacidadMaxima,
                 Productos = almacen.ProductosAlmacenes.Select(pa => new ProductoAlmacenDTO
                 {
                     ProductoId = pa.Item.Id,
