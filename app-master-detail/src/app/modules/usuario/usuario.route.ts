@@ -18,6 +18,10 @@ export const usuario_routes: Routes = [
     component: UsuarioAddComponent
   },
   {
+    path: 'edit/:id',
+    loadComponent: () => import('./usuario-edit/usuario-edit.component').then(m => m.UsuarioEditComponent)
+  },
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full',

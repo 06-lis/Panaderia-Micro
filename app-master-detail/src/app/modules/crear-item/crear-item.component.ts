@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { CategoryService } from '../category/service/category.service';
 import { ItemService } from './service/item.service';
+import { ProductService } from '../product/service/product.service';
 import { Category } from '../../interfaces/category.interface';
 
 @Component({
@@ -22,10 +23,16 @@ export class CrearItemComponent implements OnInit {
   errorMessage: string | null = null;
   categoryErrorMessage: string | null = null;
 
+  // Variables para la imagen
+  isUploading = false;
+  imagePreview: string | null = null;
+  isImageValid = true;
+
   constructor(
     private fb: FormBuilder,
     private categoryService: CategoryService,
     private itemService: ItemService,
+    private productService: ProductService, // Importar ProductService para subir imagen
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
@@ -61,6 +68,18 @@ export class CrearItemComponent implements OnInit {
       this.cdr.markForCheck();
     });
 
+    // Validar imagen cuando cambia la URL manualmente
+    this.itemForm.get('imagen')?.valueChanges.subscribe(url => {
+      if (this.itemForm.get('tipo')?.value === 'Producto') {
+        if (url && typeof url === 'string') {
+          this.validateImageUrl(url);
+        } else {
+          this.imagePreview = null;
+          this.isImageValid = true;
+        }
+      }
+    });
+
     // Establecer validación de imagen inicial puesto que por defecto es 'Producto'
     this.itemForm.get('imagen')?.setValidators([Validators.required]);
     this.itemForm.get('imagen')?.updateValueAndValidity();
@@ -79,8 +98,105 @@ export class CrearItemComponent implements OnInit {
     });
   }
 
+  // --- LÓGICA DE IMÁGENES ---
+
+  validateImageUrl(url: string) {
+    if (!url) return;
+    const img = new Image();
+    const finalUrl = url.startsWith('/') || url.startsWith('http') ? url : '/' + url;
+    img.src = finalUrl;
+    img.onload = () => {
+      this.isImageValid = true;
+      this.imagePreview = finalUrl;
+      this.cdr.markForCheck();
+    };
+    img.onerror = () => {
+      this.isImageValid = false;
+      this.imagePreview = null;
+      this.cdr.markForCheck();
+    };
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.isUploading = true;
+      this.cdr.markForCheck();
+      
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = () => {
+          this.compressImage(img, file.name);
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  compressImage(img: HTMLImageElement, filename: string) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Max width / height
+    const MAX_WIDTH = 800;
+    const MAX_HEIGHT = 800;
+    let width = img.width;
+    let height = img.height;
+
+    if (width > height) {
+      if (width > MAX_WIDTH) {
+        height *= MAX_WIDTH / width;
+        width = MAX_WIDTH;
+      }
+    } else {
+      if (height > MAX_HEIGHT) {
+        width *= MAX_HEIGHT / height;
+        height = MAX_HEIGHT;
+      }
+    }
+
+    canvas.width = width;
+    canvas.height = height;
+    ctx?.drawImage(img, 0, 0, width, height);
+
+    // Convertir a blob con calidad del 80%
+    canvas.toBlob((blob) => {
+      if (blob) {
+        this.uploadImage(blob, filename);
+      }
+    }, 'image/jpeg', 0.8);
+  }
+
+  uploadImage(blob: Blob, filename: string) {
+    this.productService.uploadImage(blob, filename).subscribe({
+      next: (res) => {
+        if (res && res.url) {
+          this.itemForm.get('imagen')?.setValue(res.url);
+          this.isUploading = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Imagen subida',
+            text: 'La imagen se ha subido y comprimido correctamente.',
+            timer: 2000,
+            showConfirmButton: false
+          });
+          this.cdr.markForCheck();
+        }
+      },
+      error: (err) => {
+        this.isUploading = false;
+        this.cdr.markForCheck();
+        Swal.fire('Error', 'No se pudo subir la imagen.', 'error');
+      }
+    });
+  }
+
+  // --- FIN LÓGICA DE IMÁGENES ---
+
   onSubmitItem(): void {
-    if (this.itemForm.invalid) {
+    if (this.itemForm.invalid || (this.itemForm.get('tipo')?.value === 'Producto' && !this.isImageValid)) {
       this.itemForm.markAllAsTouched();
       return;
     }

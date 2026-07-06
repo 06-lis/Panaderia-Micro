@@ -70,7 +70,13 @@ export class RolService {
 
 
     updateRol(id: number, rol: Rol): Observable<Rol> {
-      return this.http.put<Rol>(`${this.apiUrl}/${id}`,rol);
+      const token = sessionStorage.getItem('token');
+      if (token) {
+        return this.http.put<Rol>(`${this.apiUrl}/${id}`, rol, httpOptions(token));
+      } else {
+        console.error('No hay token disponible');
+        return of({} as Rol);
+      }
     }
 
 

@@ -59,6 +59,51 @@ export class ProductService {
       }
     }
 
+    public getProduct(id: number): Observable<any> {
+      const token = sessionStorage.getItem('token');
+      if (token) {
+        return this.http.get<any>(`${this.apiUrl}/${id}`, httpOptions(token)).pipe(
+          catchError(this.handleError('getProduct', null))
+        );
+      } else {
+        return of(null);
+      }
+    }
+
+    public updateProduct(id: number, product: Product): Observable<any> {
+      const token = sessionStorage.getItem('token');
+      if (token) {
+        return this.http.put<any>(`${this.apiUrl}/${id}`, product, httpOptions(token)).pipe(
+          catchError((error) => {
+            return throwError(() => new Error(error.error?.message || 'Error desconocido al actualizar'));
+          })
+        );
+      } else {
+        return throwError(() => new Error('No hay token disponible'));
+      }
+    }
+
+    public uploadImage(file: Blob, filename: string): Observable<any> {
+      const token = sessionStorage.getItem('token');
+      if (token) {
+        const formData = new FormData();
+        formData.append('file', file, filename);
+        
+        // No enviamos Content-Type para que el navegador configure el multipart boundary automáticamente
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post<any>(`${this.apiUrl}/upload`, formData, { headers }).pipe(
+          catchError((error) => {
+            return throwError(() => new Error(error.error?.message || 'Error desconocido al subir imagen'));
+          })
+        );
+      } else {
+        return throwError(() => new Error('No hay token disponible'));
+      }
+    }
+
     public deleteProduct(product_id: number):Observable<any> {
         const token = sessionStorage.getItem('token');  // Obtener el token del localStorage
         // console.erro

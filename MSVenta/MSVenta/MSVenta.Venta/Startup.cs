@@ -61,6 +61,8 @@ namespace MSVenta.Venta
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles(); // Habilitar servir archivos estáticos desde wwwroot
+
             app.UseRouting();
 
             app.UseAuthorization();

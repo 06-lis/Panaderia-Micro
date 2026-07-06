@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomerService } from '../service/customer.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Customer } from '../../../interfaces/customer.interface';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -15,57 +16,82 @@ import { CommonModule } from '@angular/common';
   styleUrl: './customer-edit.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomerEditComponent { 
+export class CustomerEditComponent implements OnInit{
 
-  customerForm: FormGroup;
+  customerForm!: FormGroup;
+  errorMessage: string = '';
   customerId!: number;
 
   constructor(
     private fb: FormBuilder,
-    private route: ActivatedRoute,
     private customerService: CustomerService,
-    private router: Router // Inyectar Router
-  ) {
-    this.customerForm = this.fb.group({
-      customerId: [null, Validators.required],
-      firstName: ['', Validators.required],
-      pSurname: ['', Validators.required],
-      mSurname: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      company: [''],
-      phone: ['', Validators.required],
-      address: [''],
-      type: ['', Validators.required],
-    });
-  }
+    private route: ActivatedRoute,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    // Obtener el ID del cliente de la URL
-    this.customerId = +this.route.snapshot.paramMap.get('id')!;
+    this.customerForm = this.fb.group({
+      nombre: ['', Validators.required],
+      apellidos: ['', Validators.required],
+      celular: ['', Validators.required],
+    });
 
-    // Cargar los datos del cliente
-    this.customerService.getCustomerById(this.customerId).subscribe((data) => {
-      this.customerForm.patchValue(data); // Rellena el formulario con los datos del cliente
+    this.route.paramMap.subscribe(params => {
+      const idParam = params.get('id');
+      if (idParam) {
+        this.customerId = +idParam;
+        this.loadCustomer();
+      }
     });
   }
 
-  onSubmit() {
-    if (this.customerForm.valid) {
-      const customerId = this.customerForm.value.customerId;
-      const customerData = { ...this.customerForm.value };
-      //customerData.customerId; // Elimina `customerId` del cuerpo si no es requerido.
+  loadCustomer(): void {
+    this.customerService.getCustomerById(this.customerId).subscribe({
+      next: (customer) => {
+        if (customer && !Array.isArray(customer)) {
+          this.customerForm.patchValue({
+            nombre: customer.nombre,
+            apellidos: customer.apellidos,
+            celular: customer.celular
+          });
+          this.cdr.markForCheck();
+        }
+      },
+      error: (err) => {
+        console.error('Error cargando cliente', err);
+        this.errorMessage = 'Hubo un error al cargar los datos del cliente.';
+        this.cdr.markForCheck();
+      }
+    });
+  }
 
-      this.customerService.updateCustomer(customerData).subscribe({
-        next: (response: any) => {
-          console.log('Cliente actualizado:', response);
-          alert('Cliente actualizado exitosamente.');
-          this.router.navigate(['/dashboard/customer/list']); // Redirigir a la lista de clientes
+  onSubmit(): void {
+    if (this.customerForm.valid) {
+      const customer: Customer = {
+        id: this.customerId,
+        customerId: this.customerId,
+        ...this.customerForm.value
+      };
+      
+      this.customerService.updateCustomer(customer).subscribe(
+        (response) => {
+          console.log('Cliente actualizado exitosamente', response);
+          this.router.navigate(['/dashboard/customer/list']);
         },
-        error: (err: any) => {
-          console.error('Error al actualizar cliente:', err);
-          alert('Error al actualizar el cliente.');
-        },
-      });
+        (error) => {
+          this.errorMessage = 'Hubo un error al actualizar el cliente';
+          console.error(error);
+          this.cdr.markForCheck();
+        }
+      );
+    } else {
+      this.errorMessage = 'Por favor, complete todos los campos correctamente';
+      this.cdr.markForCheck();
     }
+  }
+
+  goBack(): void {
+    this.router.navigate(['/dashboard/customer/list']);
   }
 }

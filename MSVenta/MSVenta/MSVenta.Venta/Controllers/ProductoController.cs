@@ -5,6 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+
 namespace MSVenta.Venta.Controllers
 {
     [Route("api/[controller]")]
@@ -12,10 +16,12 @@ namespace MSVenta.Venta.Controllers
     public class ProductoController : ControllerBase
     {
         private readonly IProductoService _productoService;
+        private readonly IWebHostEnvironment _env;
 
-        public ProductoController(IProductoService productoService)
+        public ProductoController(IProductoService productoService, IWebHostEnvironment env)
         {
             _productoService = productoService;
+            _env = env;
         }
 
         // 🔹 Obtener todos los productos
@@ -112,6 +118,41 @@ namespace MSVenta.Venta.Controllers
             {
                 Console.WriteLine($"Error en DeleteProducto: {ex.Message} \n {ex.StackTrace}");
                 return StatusCode(500, new {   message = ex.Message });
+            }
+        }
+
+        // 🔹 Subir Imagen de Producto
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest(new { message = "No se proporcionó ningún archivo." });
+
+            try
+            {
+                var webRootPath = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                var uploadsFolder = Path.Combine(webRootPath, "uploads");
+
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                var url = $"/api/uploads/{uniqueFileName}";
+                return Ok(new { url = url, message = "Imagen subida exitosamente" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al subir imagen: {ex.Message}");
+                return StatusCode(500, new { message = "Error interno del servidor al procesar la imagen." });
             }
         }
     }

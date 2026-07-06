@@ -67,8 +67,20 @@
           <!-- Unidad de Medida -->
           <div class="form-group">
             <label for="unidadMedida" class="block text-sm font-semibold text-[#3E261A] mb-1">Unidad de Medida</label>
-            <input id="unidadMedida" formControlName="unidadMedida" type="text" placeholder="Ej: Kilogramos, Unidades, Litros"
+            <input id="unidadMedida" formControlName="unidadMedida" type="text" list="unidadesDefault" placeholder="Ej: Kilogramos, Unidades, Litros"
                    class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition placeholder-amber-800/40 shadow-sm" />
+            <datalist id="unidadesDefault">
+              <!-- Unidades comunes para Panadería -->
+              <option value="Unidades"></option>
+              <option value="Kilogramos (kg)"></option>
+              <option value="Gramos (g)"></option>
+              <option value="Litros (L)"></option>
+              <option value="Mililitros (ml)"></option>
+              <option value="Libras (lb)"></option>
+              <option value="Onzas (oz)"></option>
+              <option value="Docenas"></option>
+              <option value="Cajas"></option>
+            </datalist>
             <div *ngIf="itemForm.get('unidadMedida')?.invalid && itemForm.get('unidadMedida')?.touched" class="text-xs text-red-500 mt-1">
               La unidad de medida es obligatoria (máx. 20 caracteres).
             </div>
@@ -89,11 +101,50 @@
 
           <!-- Imagen (Solo visible si Tipo == Producto) -->
           <div *ngIf="itemForm.get('tipo')?.value === 'Producto'" class="form-group col-span-1 md:col-span-2">
-            <label for="imagen" class="block text-sm font-semibold text-[#3E261A] mb-1">URL de la Imagen del Producto</label>
-            <input id="imagen" formControlName="imagen" type="text" placeholder="https://ejemplo.com/imagen.jpg"
-                   class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition placeholder-amber-800/40 shadow-sm" />
-            <div *ngIf="itemForm.get('imagen')?.invalid && itemForm.get('imagen')?.touched" class="text-xs text-red-500 mt-1">
-              La URL de la imagen es obligatoria para los productos.
+            <label class="block text-sm font-semibold text-[#3E261A] mb-1">Imagen del Producto</label>
+            
+            <div class="flex flex-col md:flex-row gap-6 bg-amber-50/30 p-4 rounded-xl border border-amber-100">
+              <!-- Vista previa de imagen -->
+              <div class="w-32 h-32 rounded-lg border-2 border-dashed border-amber-300 flex items-center justify-center overflow-hidden bg-white flex-shrink-0 relative group">
+                <img *ngIf="imagePreview" [src]="imagePreview" alt="Vista previa" class="w-full h-full object-cover">
+                <div *ngIf="!imagePreview && !isUploading" class="text-amber-800/40 flex flex-col items-center">
+                  <i class="pi pi-image text-3xl mb-1"></i>
+                  <span class="text-xs font-semibold">Sin Imagen</span>
+                </div>
+                <div *ngIf="isUploading" class="absolute inset-0 bg-white/80 flex items-center justify-center">
+                  <i class="pi pi-spin pi-spinner text-2xl text-[#8E4E2A]"></i>
+                </div>
+              </div>
+
+              <div class="flex-1 flex flex-col justify-center space-y-4">
+                <!-- Subir archivo local -->
+                <div>
+                  <label for="fileUploadCreate" class="inline-flex items-center gap-2 px-4 py-2 bg-[#8E4E2A] hover:bg-[#7D411F] text-white text-sm font-semibold rounded-lg cursor-pointer transition shadow-sm">
+                    <i class="pi pi-upload"></i> Subir imagen local
+                  </label>
+                  <input id="fileUploadCreate" type="file" accept="image/*" class="hidden" (change)="onFileSelected($event)">
+                  <p class="text-xs text-amber-800/60 mt-1">Se comprimirá automáticamente antes de subir.</p>
+                </div>
+
+                <div class="flex items-center">
+                  <div class="h-px bg-amber-200 flex-1"></div>
+                  <span class="px-3 text-xs text-amber-800/60 font-semibold uppercase">O usa una URL</span>
+                  <div class="h-px bg-amber-200 flex-1"></div>
+                </div>
+
+                <!-- Input URL manual -->
+                <div class="relative">
+                  <input id="imagen" formControlName="imagen" type="text" placeholder="https://..."
+                         class="w-full p-2.5 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm text-sm" 
+                         [ngClass]="{'border-red-400 focus:ring-red-400': !isImageValid && itemForm.get('imagen')?.value}" />
+                  <div *ngIf="!isImageValid && itemForm.get('imagen')?.value" class="text-xs text-red-500 mt-1 flex items-center gap-1">
+                    <i class="pi pi-exclamation-circle"></i> La URL no es una imagen válida o está caída.
+                  </div>
+                  <div *ngIf="itemForm.get('imagen')?.invalid && itemForm.get('imagen')?.touched" class="text-xs text-red-500 mt-1">
+                    La URL de la imagen es obligatoria para los productos.
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 

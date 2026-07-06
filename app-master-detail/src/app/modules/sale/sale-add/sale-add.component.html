@@ -49,23 +49,33 @@
           *ngFor="let pa of filteredProductoAlmacen"
           class="group bg-[#FDFBF7] hover:bg-[#F9F6F0] border border-[#FAF0E0] rounded-xl p-4 transition-all duration-200 flex flex-col justify-between shadow-sm hover:shadow-md"
         >
-          <div class="space-y-2">
-            <div class="flex justify-between items-start">
-              <span class="text-[10px] font-bold tracking-wider uppercase bg-[#EBF5FF] text-[#1A56A0] px-2 py-0.5 rounded">
-                {{ pa.almacen?.nombre }}
-              </span>
-              <span 
-                [class]="pa.stock > 0 ? 'text-xs font-semibold text-[#1A6B4A]' : 'text-xs font-semibold text-red-600'"
-              >
-                Stock: {{ pa.stock }}
-              </span>
+          <div class="space-y-3">
+            <!-- Imagen del Producto -->
+            <div class="relative w-full h-32 bg-gray-100 rounded-lg overflow-hidden mb-2">
+              <img *ngIf="pa.producto?.imagen" [src]="pa.producto?.imagen" [alt]="pa.producto?.nombre" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300" onerror="this.src='assets/default-bakery.jpg?v=1'">
+              <div *ngIf="!pa.producto?.imagen" class="flex items-center justify-center w-full h-full text-gray-400 bg-[#F0E6D8]">
+                <i class="pi pi-box text-3xl"></i>
+              </div>
+              <!-- Badges sobre la imagen -->
+              <div class="absolute top-2 left-2">
+                <span class="text-[10px] font-bold tracking-wider uppercase bg-white/90 backdrop-blur-sm text-[#1A56A0] px-2 py-0.5 rounded shadow-sm border border-[#EBF5FF]">
+                  {{ pa.almacen?.nombre }}
+                </span>
+              </div>
+              <div class="absolute top-2 right-2">
+                <span 
+                  [class]="pa.stock > 0 ? 'text-[10px] font-bold px-2 py-0.5 rounded shadow-sm bg-white/90 backdrop-blur-sm text-[#1A6B4A] border border-[#E6F4EA]' : 'text-[10px] font-bold px-2 py-0.5 rounded shadow-sm bg-white/90 backdrop-blur-sm text-red-600 border border-red-100'"
+                >
+                  Stock: {{ pa.stock }}
+                </span>
+              </div>
             </div>
             
-            <h3 class="font-bold text-[#3E261A] text-base group-hover:text-[#8E4E2A] transition-colors">
+            <h3 class="font-bold text-[#3E261A] text-base group-hover:text-[#8E4E2A] transition-colors truncate">
               {{ pa.producto?.nombre }}
             </h3>
             
-            <p class="text-xs text-[#8E7968] line-clamp-1">
+            <p class="text-xs text-[#8E7968] line-clamp-1 -mt-1">
               Categoría: {{ pa.producto?.categoria?.nombre || 'General' }}
             </p>
           </div>

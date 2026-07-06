@@ -83,6 +83,9 @@ export class SaleAddComponent implements OnInit {
           if (x.item && !x.producto) {
             x.producto = x.item;
           }
+          if (x.producto && x.producto.imagen && !x.producto.imagen.startsWith('/') && !x.producto.imagen.startsWith('http')) {
+            x.producto.imagen = '/' + x.producto.imagen;
+          }
         });
 
         // Filtrado: vender únicamente items de tipo 'Producto'

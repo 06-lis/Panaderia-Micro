@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using MSVenta.Seguridad.Models;
 using MSVenta.Seguridad.Services;
 using System.Collections.Generic;
@@ -37,6 +37,19 @@ namespace MSVenta.Seguridad.Controllers
             var createdRol = await _rolService.CreateRol(rol);
             return CreatedAtAction(nameof(GetRol), new { id = createdRol.ID_Rol }, createdRol);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateRol(int id, Rol rol)
+        {
+            if (id != rol.ID_Rol)
+            {
+                return BadRequest();
+            }
+
+            await _rolService.UpdateRol(rol);
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

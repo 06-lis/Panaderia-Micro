@@ -1,0 +1,184 @@
+<div class="flex items-center justify-center min-h-full pt-10 pb-10 bg-[#FAF6EE] rounded-lg">
+  <div class="w-full max-w-md p-6 rounded-2xl bg-white text-amber-950 border border-amber-100/70 shadow-md relative">
+    <h2 class="text-3xl font-extrabold mb-6 text-left text-[#3E261A]">
+      Editar Usuario
+    </h2>
+
+    <form [formGroup]="userForm" (ngSubmit)="updateUser()" class="space-y-6">
+
+      <!-- Nombre -->
+      <div class="mb-5">
+        <label for="username" class="text-amber-950 font-semibold mb-2 block text-sm">Nombre</label>
+        <input
+          type="text"
+          id="username"
+          class="w-full p-3 bg-[#FAF6EE] text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none placeholder-amber-800/40 rounded-lg shadow-sm transition-all"
+          formControlName="username"
+          placeholder="Nombre del usuario"
+        />
+        <div *ngIf="userForm.get('username')?.invalid && userForm.get('username')?.touched" class="text-red-400 text-sm mt-1">
+          El nombre es requerido (máximo 30 caracteres).
+        </div>
+      </div>
+
+      <!-- Apellidos -->
+      <div class="mb-5">
+        <label for="fullname" class="text-amber-950 font-semibold mb-2 block text-sm">Apellidos</label>
+        <input
+          type="text"
+          id="fullname"
+          class="w-full p-3 bg-[#FAF6EE] text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none placeholder-amber-800/40 rounded-lg shadow-sm transition-all"
+          formControlName="fullname"
+          placeholder="Apellidos del usuario"
+        />
+        <div *ngIf="userForm.get('fullname')?.invalid && userForm.get('fullname')?.touched" class="text-red-400 text-sm mt-1">
+          El apellido es requerido (máximo 30 caracteres).
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-5">
+        <label for="password" class="text-amber-950 font-semibold mb-2 block text-sm">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          class="w-full p-3 bg-[#FAF6EE] text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none placeholder-amber-800/40 rounded-lg shadow-sm transition-all"
+          formControlName="password"
+          placeholder="Contraseña"
+        />
+        <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="text-red-400 text-sm mt-1">
+          La contraseña es requerida (máximo 30 caracteres).
+        </div>
+      </div>
+
+      <!-- Tipo Relación -->
+      <div class="mb-5">
+        <label class="text-amber-950 font-semibold mb-2 block text-sm">Tipo de Usuario</label>
+        <select
+          class="w-full p-3 bg-[#FAF6EE] text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none rounded-lg shadow-sm transition-all"
+          formControlName="tipoRelacion"
+        >
+          <option value="Ninguno">Ninguno</option>
+          <option value="Empleado">Empleado</option>
+          <option value="Cliente">Cliente</option>
+        </select>
+      </div>
+
+      <!-- Empleado (Opcional) -->
+      <div class="mb-5" *ngIf="userForm.get('tipoRelacion')?.value === 'Empleado'">
+        <label for="idEmpleado" class="text-amber-950 font-semibold mb-2 block text-sm">Seleccione Empleado</label>
+        <div class="flex gap-2">
+          <select
+            id="idEmpleado"
+            class="flex-1 p-3 bg-[#FAF6EE] text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none rounded-lg shadow-sm transition-all"
+            formControlName="idEmpleado"
+          >
+            <option [ngValue]="null">-- Seleccione un Empleado (Disponibles) --</option>
+            @for (emp of empleados; track emp.idEmpleado) {
+              <option [value]="emp.idEmpleado">{{ emp.nombre }} {{ emp.apellido }}</option>
+            }
+          </select>
+          <button type="button" (click)="openEmpleadoModal()" class="px-4 py-2 bg-amber-600 text-white rounded-lg shadow hover:bg-amber-700 transition">
+            <i class="pi pi-plus"></i> Nuevo
+          </button>
+        </div>
+      </div>
+
+      <!-- Cliente (Opcional) -->
+      <div class="mb-5" *ngIf="userForm.get('tipoRelacion')?.value === 'Cliente'">
+        <label for="idCliente" class="text-amber-950 font-semibold mb-2 block text-sm">Seleccione Cliente</label>
+        <div class="flex gap-2">
+          <select
+            id="idCliente"
+            class="flex-1 p-3 bg-[#FAF6EE] text-[#3E261A] border border-amber-200 focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none rounded-lg shadow-sm transition-all"
+            formControlName="idCliente"
+          >
+            <option [ngValue]="null">-- Seleccione un Cliente (Disponibles) --</option>
+            @for (cli of clientes; track cli.id || cli.customerId) {
+              <option [value]="cli.id || cli.customerId">{{ cli.nombre || cli.firstName }} {{ cli.apellidos || cli.pSurname }}</option>
+            }
+          </select>
+          <button type="button" (click)="openClienteModal()" class="px-4 py-2 bg-amber-600 text-white rounded-lg shadow hover:bg-amber-700 transition">
+            <i class="pi pi-plus"></i> Nuevo
+          </button>
+        </div>
+      </div>
+
+      <!-- Botón para Editar Usuario -->
+      <button
+        type="submit"
+        class="w-full py-3 px-6 bg-[#5C3E21] text-white font-semibold rounded-lg shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 transition-all duration-300"
+        [disabled]="userForm.invalid"
+      >
+        Guardar Cambios
+      </button>
+      <!-- Botón Volver -->
+      <button
+      class="w-full py-2 px-4 bg-[#E6DCD3] hover:bg-[#D8C9B9] text-[#3E261A] font-bold rounded-lg shadow-md transition-all"
+      type="button"
+      (click)="goBack()"
+    >
+      ⬅ Volver
+    </button>
+    </form>
+    
+    <!-- Modal Crear Empleado -->
+    <div *ngIf="showEmpleadoModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+      <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+        <h3 class="text-2xl font-bold text-[#3E261A] mb-4">Crear Nuevo Empleado</h3>
+        <form [formGroup]="empleadoForm" (ngSubmit)="createEmpleado()">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-amber-950 mb-1">Nombre</label>
+              <input type="text" formControlName="nombre" class="w-full p-2 border border-amber-200 rounded-lg focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-amber-950 mb-1">Apellido</label>
+              <input type="text" formControlName="apellido" class="w-full p-2 border border-amber-200 rounded-lg focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-amber-950 mb-1">Teléfono</label>
+              <input type="text" formControlName="telefono" class="w-full p-2 border border-amber-200 rounded-lg focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-amber-950 mb-1">Sueldo</label>
+              <input type="number" formControlName="sueldo" class="w-full p-2 border border-amber-200 rounded-lg focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none">
+            </div>
+          </div>
+          <div class="mt-6 flex justify-end gap-3">
+            <button type="button" (click)="closeEmpleadoModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-bold hover:bg-gray-300 transition">Cancelar</button>
+            <button type="submit" [disabled]="empleadoForm.invalid" class="px-4 py-2 bg-amber-600 text-white rounded-lg font-bold hover:bg-amber-700 transition">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Crear Cliente -->
+    <div *ngIf="showClienteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+      <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+        <h3 class="text-2xl font-bold text-[#3E261A] mb-4">Crear Nuevo Cliente</h3>
+        <form [formGroup]="clienteForm" (ngSubmit)="createCliente()">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-amber-950 mb-1">Nombre</label>
+              <input type="text" formControlName="nombre" class="w-full p-2 border border-amber-200 rounded-lg focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-amber-950 mb-1">Apellidos</label>
+              <input type="text" formControlName="apellidos" class="w-full p-2 border border-amber-200 rounded-lg focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-amber-950 mb-1">Celular</label>
+              <input type="number" formControlName="celular" class="w-full p-2 border border-amber-200 rounded-lg focus:ring-2 focus:ring-[#8E4E2A] focus:outline-none">
+            </div>
+          </div>
+          <div class="mt-6 flex justify-end gap-3">
+            <button type="button" (click)="closeClienteModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-bold hover:bg-gray-300 transition">Cancelar</button>
+            <button type="submit" [disabled]="clienteForm.invalid" class="px-4 py-2 bg-amber-600 text-white rounded-lg font-bold hover:bg-amber-700 transition">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>

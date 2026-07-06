@@ -107,7 +107,13 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.http.get<Producto[]>(`${environment.URL_SERVICIOS}/landing/productos`)
       .subscribe({
         next: (res) => {
-          this.productos = res.map(p => ({ ...p, imagen: p.imagen ? p.imagen + '?v=' + new Date().getTime() : p.imagen }));
+          this.productos = res.map(p => {
+            let imgPath = p.imagen;
+            if (imgPath && !imgPath.startsWith('/') && !imgPath.startsWith('http')) {
+              imgPath = '/' + imgPath;
+            }
+            return { ...p, imagen: imgPath ? imgPath + '?v=' + new Date().getTime() : imgPath };
+          });
           this.loading = false;
         },
         error: (err) => {
