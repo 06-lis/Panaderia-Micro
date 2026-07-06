@@ -15,4 +15,5 @@ export interface Product {
   productoId?:number;
   nombreProducto?:string;
   tipo?: string;
+  unidadMedida?: string;
 }

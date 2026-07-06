@@ -7,6 +7,8 @@ using MSVenta.Venta.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Aforo255.Cross.Http.Src;
+using Microsoft.Extensions.Configuration;
 
 namespace MSVenta.Venta.Controllers
 {
@@ -17,12 +19,20 @@ namespace MSVenta.Venta.Controllers
         private readonly ContextDatabase _context;
         private readonly ILibelulaService _libelulaService;
         private readonly IInventarioService _inventarioService;
+        private readonly IHttpClient _httpClient;
+        private readonly IConfiguration _configuration;
 
-        public LandingController(ContextDatabase context, ILibelulaService libelulaService, IInventarioService inventarioService)
+        public LandingController(ContextDatabase context, 
+            ILibelulaService libelulaService, 
+            IInventarioService inventarioService,
+            IHttpClient httpClient,
+            IConfiguration configuration)
         {
             _context = context;
             _libelulaService = libelulaService;
             _inventarioService = inventarioService;
+            _httpClient = httpClient;
+            _configuration = configuration;
         }
 
         [HttpGet("productos")]
@@ -185,5 +195,65 @@ namespace MSVenta.Venta.Controllers
             }
             return Ok(new { estado = transaccion.Estado });
         }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegistroClienteDto request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.Nombre) || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
+            {
+                return BadRequest(new { message = "Datos de registro inválidos o incompletos." });
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // 1. Crear el cliente en db_ventas
+                var cliente = new Cliente
+                {
+                    Nombre = request.Nombre,
+                    Apellidos = request.Apellido ?? "",
+                    Celular = int.TryParse(request.Celular, out var cel) ? cel : 0
+                };
+                _context.Clientes.Add(cliente);
+                await _context.SaveChangesAsync();
+
+                // 2. Comunicarse con la base de datos de Seguridad para crear el Usuario
+                string securityUrl = _configuration["proxy:urlSecurity"];
+                var usuarioPayload = new
+                {
+                    Fullname = $"{request.Nombre} {request.Apellido}".Trim(),
+                    Username = request.Email,
+                    Password = request.Password,
+                    IdCliente = cliente.Id
+                };
+
+                Console.WriteLine($"[Venta] POST to security: {securityUrl} for email {request.Email}");
+                var response = await _httpClient.PostAsync(securityUrl, usuarioPayload);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorMsg = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Error al registrar el usuario en el servicio de seguridad: {errorMsg}");
+                }
+
+                await transaction.CommitAsync();
+                return Ok(new { success = true, message = "Cliente registrado exitosamente.", idCliente = cliente.Id });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine($"[Venta] Error en Register: {ex.Message}");
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+    }
+
+    public class RegistroClienteDto
+    {
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string Celular { get; set; }
     }
 }

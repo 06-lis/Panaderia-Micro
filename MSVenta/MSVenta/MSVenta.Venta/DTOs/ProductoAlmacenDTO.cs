@@ -8,5 +8,6 @@ namespace MSVenta.Venta.DTOs
 
         public int Stock { get; set; }
         public string Tipo { get; set; }
+        public string UnidadMedida { get; set; }
     }
 }

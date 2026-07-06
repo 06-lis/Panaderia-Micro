@@ -32,3 +32,6 @@ yarn-error.log
 # Local Env files
 .env
 .env.local
+
+# Ocelot Environment Configs
+ocelot.*.json

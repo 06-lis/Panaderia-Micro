@@ -43,11 +43,16 @@ export class LandingComponent implements OnInit, OnDestroy {
   loading = false;
   checkoutProcess = false;
   isLoggedIn = false;
+  isEmployee = false;
 
   constructor(private http: HttpClient, private router: Router) {}
 
   goToLogin() {
     this.router.navigate(['/auth/login']);
+  }
+
+  goToRegister() {
+    this.router.navigate(['/auth/register']);
   }
 
   ngOnInit(): void {
@@ -57,6 +62,8 @@ export class LandingComponent implements OnInit, OnDestroy {
       this.isLoggedIn = true;
       try {
         const user = JSON.parse(userJson);
+        this.isEmployee = user.idEmpleado > 0;
+        
         if (user.fullname) {
           const parts = user.fullname.trim().split(' ');
           this.cliente.nombre = parts[0] || '';
@@ -65,11 +72,34 @@ export class LandingComponent implements OnInit, OnDestroy {
           this.cliente.nombre = user.username || '';
           this.cliente.apellido = '-';
         }
-        this.cliente.email = user.username + (user.username.includes('@') ? '' : '@empresa.com');
+        this.cliente.email = user.username;
+        this.cliente.celular = user.celular || '';
       } catch (e) {
         console.error('Error parseando usuario de la sesión', e);
       }
     }
+  }
+
+  logout() {
+    sessionStorage.clear();
+    this.isLoggedIn = false;
+    this.isEmployee = false;
+    this.cliente = {
+      nombre: '',
+      apellido: '',
+      email: '',
+      celular: ''
+    };
+    this.carrito = [];
+    Swal.fire({
+      icon: 'success',
+      title: 'Sesión Cerrada',
+      text: 'Has cerrado sesión correctamente.',
+      timer: 1500,
+      showConfirmButton: false
+    }).then(() => {
+      this.router.navigate(['/principal']);
+    });
   }
 
   cargarProductos() {

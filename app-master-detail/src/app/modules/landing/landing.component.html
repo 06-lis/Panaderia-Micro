@@ -6,12 +6,28 @@
       <h1 class="text-2xl font-bold font-serif tracking-wide">Panadería Otto</h1>
     </div>
     <div class="flex items-center gap-6">
-      <button *ngIf="!isLoggedIn" (click)="goToLogin()" class="font-semibold text-[#f0e6d2] hover:text-white transition-colors flex items-center gap-2">
-        <i class="pi pi-user"></i> Login Personal
-      </button>
-      <button *ngIf="isLoggedIn" (click)="goToLogin()" class="font-semibold text-[#f0e6d2] hover:text-white transition-colors flex items-center gap-2">
-        <i class="pi pi-home"></i> Ir al Dashboard
-      </button>
+      <!-- Si no está logueado -->
+      <ng-container *ngIf="!isLoggedIn">
+        <button (click)="goToLogin()" class="font-semibold text-[#f0e6d2] hover:text-white transition-colors flex items-center gap-2">
+          <i class="pi pi-sign-in"></i> Iniciar Sesión
+        </button>
+        <button (click)="goToRegister()" class="font-semibold text-[#f0e6d2] hover:text-white transition-colors flex items-center gap-2">
+          <i class="pi pi-user-plus"></i> Crear Cuenta
+        </button>
+      </ng-container>
+
+      <!-- Si está logueado -->
+      <ng-container *ngIf="isLoggedIn">
+        <span class="text-[#f0e6d2] font-semibold flex items-center gap-2 bg-[#704214]/40 px-3 py-1.5 rounded-lg border border-[#f0e6d2]/20">
+          👤 Hola, {{ cliente.nombre }}
+        </span>
+        <button *ngIf="isEmployee" (click)="goToLogin()" class="font-semibold text-[#f0e6d2] hover:text-white transition-colors flex items-center gap-2">
+          <i class="pi pi-home"></i> Ir al Dashboard
+        </button>
+        <button (click)="logout()" class="font-semibold text-[#f0e6d2] hover:text-red-400 transition-colors flex items-center gap-2">
+          <i class="pi pi-power-off"></i> Cerrar Sesión
+        </button>
+      </ng-container>
 
       <div class="relative cursor-pointer" (click)="abrirCheckout()">
         <i class="pi pi-shopping-cart text-3xl"></i>

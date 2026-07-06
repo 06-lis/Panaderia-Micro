@@ -6,10 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 
+import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-login',
   imports: [
     FormsModule,
+    RouterLink
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -39,7 +42,13 @@ export default class LoginComponent implements OnInit {
         sessionStorage.setItem("token", response.token || '');
         sessionStorage.setItem('user', JSON.stringify(response)); // Guardar los datos del usuario en sessionStorage
         sessionStorage.setItem('roles', JSON.stringify(response.roles)); // Guardar roles
-        this.redirectToDashboard();
+        
+        // Si es cliente (no tiene idEmpleado pero sí idCliente), redirigir a principal
+        if (response.idCliente && !response.idEmpleado) {
+          this.router.navigate(['/principal']);
+        } else {
+          this.redirectToDashboard();
+        }
       },
       (error) => {
         this.errorMessage = error.message;

@@ -51,7 +51,8 @@ namespace MSVenta.Venta.Services
                         NombreProducto = pa.Item.Nombre,
                         Precio = pa.Item.Precio,  // Incluye el precio si lo necesitas
                         Stock = pa.Stock,
-                        Tipo = pa.Item.Tipo
+                        Tipo = pa.Item.Tipo,
+                        UnidadMedida = pa.Item.UnidadMedida
                     }).ToList()
                 }).ToListAsync();
         }
@@ -82,7 +83,9 @@ namespace MSVenta.Venta.Services
                     ProductoId = pa.Item.Id,
                     NombreProducto = pa.Item.Nombre,
                     Precio = pa.Item.Precio,  // Incluye el precio si lo necesitas
-                    Stock = pa.Stock
+                    Stock = pa.Stock,
+                    Tipo = pa.Item.Tipo,
+                    UnidadMedida = pa.Item.UnidadMedida
                 }).ToList()
             };
         }
