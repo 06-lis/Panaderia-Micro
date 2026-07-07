@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace MSVenta.Venta.Models
 {
@@ -6,6 +6,7 @@ namespace MSVenta.Venta.Models
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
+        public string Tipo { get; set; }
         //public ICollection<Producto> Productos { get; set; } // Relación uno a muchos
     }
 }

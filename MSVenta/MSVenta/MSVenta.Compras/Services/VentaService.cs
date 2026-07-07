@@ -38,8 +38,22 @@ namespace MSVenta.Compras.Services
                     {
                         var resStr = await response.Content.ReadAsStringAsync();
                         Console.WriteLine($"Response body: {resStr}");
+                        
+                        string msg = "No se pudo registrar el ingreso.";
+                        try
+                        {
+                            using (var doc = JsonDocument.Parse(resStr))
+                            {
+                                if (doc.RootElement.TryGetProperty("message", out var p))
+                                {
+                                    msg = p.GetString();
+                                }
+                            }
+                        }
+                        catch {}
+                        throw new InvalidOperationException(msg);
                     }
-                    return response.IsSuccessStatusCode;
+                    return true;
                 }
                 catch (Exception ex)
                 {

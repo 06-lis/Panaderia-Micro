@@ -37,9 +37,22 @@ namespace MSVenta.Inventario.Services
 
                     if (!response.IsSuccessStatusCode)
                     {
-                         Console.WriteLine($"Sincronización falló con StatusCode={response.StatusCode}");
+                         var resStr = await response.Content.ReadAsStringAsync();
+                         string msg = $"Error al actualizar stock del Item {itemId} en Almacén {almacenId}.";
+                         try
+                         {
+                             using (var doc = System.Text.Json.JsonDocument.Parse(resStr))
+                             {
+                                 if (doc.RootElement.TryGetProperty("mensaje", out var p))
+                                 {
+                                     msg = p.GetString();
+                                 }
+                             }
+                         }
+                         catch {}
+                         throw new InvalidOperationException(msg);
                     }
-                    return response.IsSuccessStatusCode;
+                    return true;
                 }
                 catch (Exception ex)
                 {

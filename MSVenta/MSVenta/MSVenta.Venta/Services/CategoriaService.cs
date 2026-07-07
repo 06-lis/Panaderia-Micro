@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MSVenta.Venta.Models;
 using MSVenta.Venta.Repositories;
 using System.Collections.Generic;
@@ -44,6 +44,7 @@ namespace MSVenta.Venta.Services
                 return false;
 
             existingCategoria.Nombre = categoria.Nombre;
+            existingCategoria.Tipo = categoria.Tipo;
             await _context.SaveChangesAsync();
             return true;
         }

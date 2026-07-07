@@ -10,7 +10,7 @@ import {
 import { Almacen } from '../../../interfaces/almacen.interface';
 import { AlmacenService } from '../service/almacen.service';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AsignarProductoAlmacenService } from '../../AsignarProducto/asignar-producto-almacen.service';
 
 @Component({
@@ -29,18 +29,38 @@ export class AlmacenListComponent implements OnChanges {
 
   selectedAlmacen?: Almacen;
   mensaje: string = '';
+  selectedIdFromQuery?: number;
 
   constructor(
     private almacenService: AlmacenService,
     private asignarProductoAlmacen: AsignarProductoAlmacenService,
     private cdr: ChangeDetectorRef,
-    private router: Router
-  ) {}
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.route.queryParams.subscribe(params => {
+      if (params['selectedId']) {
+        this.selectedIdFromQuery = Number(params['selectedId']);
+        this.checkAndSelectFromQuery();
+      }
+    });
+  }
+
+  checkAndSelectFromQuery(): void {
+    if (this.selectedIdFromQuery && this.almacenes.length > 0) {
+      const warehouse = this.almacenes.find(a => a.id === this.selectedIdFromQuery);
+      if (warehouse) {
+        this.selectAlmacen(warehouse);
+      }
+    }
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['almacenes'] && this.almacenes) {
       if (this.almacenes.length > 0) {
-        if (!this.selectedAlmacen || !this.almacenes.some(a => a.id === this.selectedAlmacen?.id)) {
+        if (this.selectedIdFromQuery) {
+          this.checkAndSelectFromQuery();
+        } else if (!this.selectedAlmacen || !this.almacenes.some(a => a.id === this.selectedAlmacen?.id)) {
           this.selectAlmacen(this.almacenes[0]);
         } else {
           const updated = this.almacenes.find(a => a.id === this.selectedAlmacen?.id);

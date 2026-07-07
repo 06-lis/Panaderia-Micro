@@ -54,7 +54,7 @@ export class CategoryListComponent implements OnInit{
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        this.categoriaService.updateCategory(id, { nombre: result.value }).subscribe({
+        this.categoriaService.updateCategory(id, { id, nombre: result.value }).subscribe({
           next: () => {
             Swal.fire('¡Actualizado!', 'La categoría ha sido actualizada.', 'success');
             this.loadCategoira();

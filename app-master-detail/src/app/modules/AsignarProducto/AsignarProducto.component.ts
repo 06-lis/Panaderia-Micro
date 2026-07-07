@@ -6,6 +6,7 @@ import { AsignarProductoAlmacenService } from './asignar-producto-almacen.servic
 import { ItemService } from '../crear-item/service/item.service';
 import { AlmacenService } from '../almacen/service/almacen.service';
 import { Almacen } from '../../interfaces/almacen.interface';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -30,7 +31,8 @@ export class AsignarProductoComponent implements OnInit {
     private itemService: ItemService,
     private almacenService: AlmacenService,
     private cdr: ChangeDetectorRef,
-    private location: Location
+    private location: Location,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -40,6 +42,13 @@ export class AsignarProductoComponent implements OnInit {
     });
 
     this.agregarFila();
+
+    // Reset items form array when warehouse changes to maintain item type safety
+    this.asignarForm.get('AlmacenId')?.valueChanges.subscribe(() => {
+      this.itemsFormArray.clear();
+      this.agregarFila();
+      this.cdr.markForCheck();
+    });
 
     // Cargar Items (Productos e Insumos)
     this.itemService.getItems().subscribe({
@@ -97,8 +106,25 @@ export class AsignarProductoComponent implements OnInit {
     return selectedItems.some((val, idx) => val.ItemId && Number(val.ItemId) === Number(itemId) && idx !== currentIndex);
   }
 
+  getFilteredItems(): any[] {
+    const selectedAlmacenId = this.asignarForm.get('AlmacenId')?.value;
+    if (!selectedAlmacenId) {
+      return []; // No items display if no warehouse is selected
+    }
+    const almacen = this.almacenes.find(a => a.id === Number(selectedAlmacenId));
+    if (!almacen) return this.itemsList;
+    
+    const tipoAlmacen = (almacen.tipo || '').toLowerCase();
+    if (tipoAlmacen.includes('producto')) {
+      return this.itemsList.filter(item => (item.tipo || '').toLowerCase().includes('producto'));
+    } else if (tipoAlmacen.includes('insumo')) {
+      return this.itemsList.filter(item => (item.tipo || '').toLowerCase().includes('insumo'));
+    }
+    return this.itemsList; // Mixto o no especificado
+  }
+
   goBack(): void {
-    this.location.back();
+    this.router.navigate(['/dashboard/almacen']);
   }
 
   onSubmit() {
@@ -146,10 +172,7 @@ export class AsignarProductoComponent implements OnInit {
               icon: 'success',
               confirmButtonColor: '#8E4E2A'
             }).then(() => {
-              this.itemsFormArray.clear();
-              this.agregarFila();
-              this.asignarForm.get('AlmacenId')?.reset();
-              this.cdr.markForCheck();
+              this.router.navigate(['/dashboard/almacen'], { queryParams: { selectedId: bulkPayload.AlmacenId } });
             });
           },
           error: (error) => {

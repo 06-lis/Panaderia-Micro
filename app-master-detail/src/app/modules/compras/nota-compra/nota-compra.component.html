@@ -108,7 +108,7 @@
                 <span class="items-badge">{{ nota.detalles.length }} ítem(s)</span>
               </td>
               <td>
-                <span class="total-amount">S/ {{ nota.montoTotal | number:'1.2-2' }}</span>
+                <span class="total-amount">Bs. {{ nota.montoTotal | number:'1.2-2' }}</span>
               </td>
               <td>
                 <span class="badge" [class]="getEstadoClass(nota.estado)">
@@ -220,12 +220,14 @@
                 <input type="date" [(ngModel)]="d.fechaVencimiento" class="detail-input" style="text-align: center; padding: 6px; font-size: 0.8rem;" />
 
                 <!-- Subtotal -->
-                <span class="detail-subtotal">S/ {{ (d.cantidad * d.precio) | number:'1.2-2' }}</span>
+                <span class="detail-subtotal">Bs. {{ (d.cantidad * d.precio) | number:'1.2-2' }}</span>
 
                 <!-- Delete button -->
-                <button type="button" class="btn-remove-detail" (click)="removeDetail($index)">
-                  <i class="pi pi-trash"></i>
-                </button>
+                @if ($index > 0) {
+                  <button type="button" class="btn-remove-detail" (click)="removeDetail($index)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                }
               </div>
             }
           }
@@ -234,7 +236,7 @@
         <!-- Total de Compra -->
         <div class="total-summary-row">
           <span style="color: #9B7B6A; font-size: 0.85rem; font-weight: 600; margin-right: 12px;">Total Compra:</span>
-          <span>S/ {{ calculatedTotal | number:'1.2-2' }}</span>
+          <span>Bs. {{ calculatedTotal | number:'1.2-2' }}</span>
         </div>
       </div>
     </div>

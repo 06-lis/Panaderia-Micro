@@ -5,14 +5,14 @@
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
     <div>
       <h2 class="text-3xl font-extrabold text-[#3E261A] tracking-tight">
-        📦 Gestión de Almacenes
+        Gestión de Almacenes
       </h2>
       <p class="text-sm text-amber-900/60 mt-1">Inspecciona el inventario detallado de cada almacén</p>
     </div>
     <div>
       <button (click)="crearAlmacen()"
         class="w-full sm:w-auto px-5 py-2.5 bg-[#8E4E2A] hover:bg-[#7D411F] text-white font-semibold rounded-xl shadow-md transition-all hover:scale-105 flex items-center justify-center gap-2">
-        ➕ Crear Almacén
+        Crear Almacén
       </button>
     </div>
   </div>
@@ -42,8 +42,11 @@
           class="p-4 rounded-xl border cursor-pointer hover:bg-amber-50/50 hover:shadow-sm transition-all flex items-center justify-between gap-3"
         >
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-[#FAF6EE] flex items-center justify-center text-xl text-[#8E4E2A]">
-              🏬
+            <!-- Icono profesional SVG para representar el almacén -->
+            <div class="w-10 h-10 rounded-lg bg-[#FAF6EE] flex items-center justify-center border border-amber-100 shrink-0">
+              <svg class="w-5 h-5 text-[#8E4E2A]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+              </svg>
             </div>
             <div>
               <h4 class="font-bold text-[#3E261A] text-sm md:text-base">{{ almacen.nombre }}</h4>
@@ -61,13 +64,13 @@
           </div>
           
           <!-- Contador de Items -->
-          <div class="bg-blue-600 text-white text-xs font-extrabold w-7 h-7 flex items-center justify-center rounded-full border border-blue-700 shadow-sm shrink-0">
+          <div class="bg-amber-800 text-white text-xs font-extrabold w-7 h-7 flex items-center justify-center rounded-full border border-amber-900 shadow-sm shrink-0">
             {{ almacen.productos.length }}
           </div>
         </div>
 
         <div *ngIf="almacenes.length === 0" class="text-center py-8 text-amber-800/80 italic text-sm">
-          🚫 No hay almacenes registrados.
+          No hay almacenes registrados.
         </div>
       </div>
     </div>
@@ -87,8 +90,8 @@
                 Capacidad: {{ selectedAlmacen.capacidadMaxima ? (selectedAlmacen.capacidadMaxima + ' uds') : 'Sin Límite' }}
               </span>
             </div>
-            <p class="text-sm text-amber-900/70 mt-1 flex items-center gap-1.5">
-              📍 <strong>Ubicación:</strong> {{ selectedAlmacen.locacion }}
+            <p class="text-sm text-amber-900/70 mt-2.5 flex items-center gap-1.5">
+              <strong>Ubicación:</strong> {{ selectedAlmacen.locacion }}
             </p>
           </div>
 
@@ -122,7 +125,7 @@
                 </tr>
                 <tr *ngIf="!selectedAlmacen.productos || selectedAlmacen.productos.length === 0">
                   <td colspan="4" class="px-6 py-12 text-amber-800/80 italic">
-                    📭 Este almacén se encuentra vacío por el momento.
+                    Este almacén se encuentra vacío por el momento.
                   </td>
                 </tr>
               </tbody>
@@ -134,7 +137,11 @@
 
       <ng-template #noSelection>
         <div class="bg-[#FAF6EE]/10 rounded-2xl border-2 border-dashed border-amber-200/60 p-12 text-center flex flex-col items-center justify-center min-h-[400px]">
-          <span class="text-5xl mb-4">🏬</span>
+          <div class="w-16 h-16 rounded-full bg-amber-50 flex items-center justify-center mb-4 border border-amber-100">
+            <svg class="w-8 h-8 text-[#8E4E2A]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
           <h3 class="text-lg font-bold text-amber-900">Ningún Almacén Seleccionado</h3>
           <p class="text-sm text-amber-800/60 mt-1">Por favor selecciona un almacén de la lista de la izquierda para ver su inventario.</p>
         </div>

@@ -50,7 +50,8 @@ export class CrearItemComponent implements OnInit {
 
     // Formulario para crear una Categoría rápida
     this.categoryForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.maxLength(50)]]
+      nombre: ['', [Validators.required, Validators.maxLength(50)]],
+      tipo: ['Producto', [Validators.required]]
     });
 
     // Cargar las categorías existentes
@@ -58,6 +59,7 @@ export class CrearItemComponent implements OnInit {
 
     // Cambiar la validación del campo de imagen dinámicamente según el tipo de item
     this.itemForm.get('tipo')?.valueChanges.subscribe(value => {
+      this.itemForm.get('categoriaId')?.setValue(null);
       const imagenControl = this.itemForm.get('imagen');
       if (value === 'Producto') {
         imagenControl?.setValidators([Validators.required]);
@@ -83,6 +85,12 @@ export class CrearItemComponent implements OnInit {
     // Establecer validación de imagen inicial puesto que por defecto es 'Producto'
     this.itemForm.get('imagen')?.setValidators([Validators.required]);
     this.itemForm.get('imagen')?.updateValueAndValidity();
+  }
+
+  getFilteredCategories(): Category[] {
+    const selectedItemTipo = this.itemForm.get('tipo')?.value;
+    if (!selectedItemTipo) return this.categories;
+    return this.categories.filter(c => !c.tipo || c.tipo.toLowerCase() === selectedItemTipo.toLowerCase());
   }
 
   loadCategories(): void {
@@ -250,7 +258,7 @@ export class CrearItemComponent implements OnInit {
           text: `La categoría "${categoryData.nombre}" se creó correctamente.`,
           confirmButtonColor: '#8E4E2A'
         });
-        this.categoryForm.reset();
+        this.categoryForm.reset({ nombre: '', tipo: 'Producto' });
         // Recargar categorías y seleccionar la nueva categoría automáticamente si es posible
         this.categoryService.getCategoryAll().subscribe({
           next: (data) => {

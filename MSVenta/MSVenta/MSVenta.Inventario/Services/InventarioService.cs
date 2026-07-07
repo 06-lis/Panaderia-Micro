@@ -66,10 +66,10 @@ namespace MSVenta.Inventario.Services
                 await transaction.CommitAsync();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                return false;
+                throw;
             }
         }
 

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using MSVenta.Inventario.Services;
 
@@ -18,9 +19,16 @@ namespace MSVenta.Inventario.Controllers
         [HttpPost("ingreso")]
         public async Task<IActionResult> IngresoStock([FromBody] IngresoRequest request)
         {
-            var result = await _inventarioService.IngresoStockAsync(request.AlmacenId, request.ItemId, request.Cantidad, request.CostoUnitario, request.EmpleadoId, request.FechaVencimiento, request.ReferenciaId, request.ReferenciaTipo);
-            if (result) return Ok(new { success = true });
-            return BadRequest(new { success = false, message = "No se pudo registrar el ingreso." });
+            try
+            {
+                var result = await _inventarioService.IngresoStockAsync(request.AlmacenId, request.ItemId, request.Cantidad, request.CostoUnitario, request.EmpleadoId, request.FechaVencimiento, request.ReferenciaId, request.ReferenciaTipo);
+                if (result) return Ok(new { success = true });
+                return BadRequest(new { success = false, message = "No se pudo registrar el ingreso." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
         }
 
         [HttpPost("consumo")]

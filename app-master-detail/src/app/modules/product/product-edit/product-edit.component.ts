@@ -96,7 +96,7 @@ export class ProductEditComponent implements OnInit {
         this.isLoading = false;
         this.cdr.markForCheck();
         Swal.fire('Error', 'No se pudo cargar la información del producto.', 'error');
-        this.router.navigate(['/dashboard/product/list']);
+        this.router.navigate(['/dashboard/items']);
       }
     });
   }
@@ -206,7 +206,8 @@ export class ProductEditComponent implements OnInit {
 
     const productData: Product = {
       ...this.productForm.value,
-      categoriaId: Number(this.productForm.value.categoriaId)
+      categoriaId: Number(this.productForm.value.categoriaId),
+      tipo: 'Producto'
     };
 
     this.productService.updateProduct(this.productId, productData).subscribe({
@@ -217,7 +218,7 @@ export class ProductEditComponent implements OnInit {
           text: 'El producto se ha actualizado exitosamente.',
           confirmButtonColor: '#8E4E2A'
         }).then(() => {
-          this.router.navigate(['/dashboard/product/list']);
+          this.router.navigate(['/dashboard/items']);
         });
       },
       error: (err) => {
@@ -232,6 +233,6 @@ export class ProductEditComponent implements OnInit {
   }
 
   cancelar(): void {
-    this.router.navigate(['/dashboard/product/list']);
+    this.router.navigate(['/dashboard/items']);
   }
 }

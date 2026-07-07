@@ -95,7 +95,7 @@
           <div class="summary-divider"></div>
           <div class="summary-row total-row">
             <span class="sum-label">TOTAL</span>
-            <span class="sum-total">S/ {{ nota()!.montoTotal | number:'1.2-2' }}</span>
+            <span class="sum-total">Bs. {{ nota()!.montoTotal | number:'1.2-2' }}</span>
           </div>
         </div>
       </div>
@@ -129,8 +129,8 @@
                 <span class="almacen-badge">Almacén #{{ d.idAlmacen }}</span>
               </td>
               <td class="text-right">{{ d.cantidad }}</td>
-              <td class="text-right">S/ {{ d.precio | number:'1.2-2' }}</td>
-              <td class="text-right subtotal">S/ {{ (d.cantidad * d.precio) | number:'1.2-2' }}</td>
+              <td class="text-right">Bs. {{ d.precio | number:'1.2-2' }}</td>
+              <td class="text-right subtotal">Bs. {{ (d.cantidad * d.precio) | number:'1.2-2' }}</td>
             </tr>
           } @empty {
             <tr>
@@ -144,7 +144,7 @@
         <tfoot>
           <tr class="total-footer">
             <td colspan="5" class="total-label">TOTAL</td>
-            <td class="total-amount">S/ {{ nota()!.montoTotal | number:'1.2-2' }}</td>
+            <td class="total-amount">Bs. {{ nota()!.montoTotal | number:'1.2-2' }}</td>
           </tr>
         </tfoot>
       </table>

@@ -60,36 +60,56 @@ namespace MSVenta.Compras.Services
             await _context.NotasCompra.InsertOneAsync(compra);
 
             // 6. Actualizar el stock de cada insumo/item en el microservicio de Ventas
-            foreach (var detalle in compra.Detalles)
+            var updatedDetails = new List<DetalleCompra>();
+            try
             {
-                var updateStockDto = new UpdateStockDto
+                foreach (var detalle in compra.Detalles)
                 {
-                    ItemId = detalle.IdItem,
-                    AlmacenId = detalle.IdAlmacen,
-                    Cantidad = detalle.Cantidad,
-                    CostoUnitario = detalle.Precio,
-                    EmpleadoId = compra.IdEmpleado,
-                    FechaVencimiento = detalle.FechaVencimiento,
-                    ReferenciaId = compra.IdNotaCompra,
-                    ReferenciaTipo = "Compra"
-                };
+                    var updateStockDto = new UpdateStockDto
+                    {
+                        ItemId = detalle.IdItem,
+                        AlmacenId = detalle.IdAlmacen,
+                        Cantidad = detalle.Cantidad,
+                        CostoUnitario = detalle.Precio,
+                        EmpleadoId = compra.IdEmpleado,
+                        FechaVencimiento = detalle.FechaVencimiento,
+                        ReferenciaId = compra.IdNotaCompra,
+                        ReferenciaTipo = "Compra"
+                    };
 
-                bool stockUpdated = false;
-                try
-                {
-                    stockUpdated = await _ventaService.UpdateStockAsync(updateStockDto);
+                    await _ventaService.UpdateStockAsync(updateStockDto);
+                    updatedDetails.Add(detalle);
                 }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                // Compensar (revertir) los stocks incrementados
+                foreach (var updated in updatedDetails)
                 {
-                    Console.WriteLine($"[ERROR] Falla de comunicación al actualizar stock: {ex.Message}");
+                    try
+                    {
+                        var rollbackDto = new UpdateStockDto
+                        {
+                            ItemId = updated.IdItem,
+                            AlmacenId = updated.IdAlmacen,
+                            Cantidad = -updated.Cantidad, // Restar lo sumado
+                            CostoUnitario = updated.Precio,
+                            EmpleadoId = compra.IdEmpleado,
+                            FechaVencimiento = updated.FechaVencimiento,
+                            ReferenciaId = compra.IdNotaCompra,
+                            ReferenciaTipo = "Compra Rollback"
+                        };
+                        await _ventaService.UpdateStockAsync(rollbackDto);
+                    }
+                    catch (Exception rollEx)
+                    {
+                        Console.WriteLine($"[CRITICAL] Falló la compensación de stock para Item {updated.IdItem} en Almacén {updated.IdAlmacen}: {rollEx.Message}");
+                    }
                 }
 
-                if (!stockUpdated)
-                {
-                    // ROLLBACK compensatorio simple
-                    await _context.NotasCompra.DeleteOneAsync(c => c.IdNotaCompra == compra.IdNotaCompra);
-                    throw new Exception($"Fallo al actualizar el stock del Item {detalle.IdItem} en el Almacén {detalle.IdAlmacen}. La compra ha sido revertida.");
-                }
+                // Eliminar de MongoDB la Nota de Compra
+                await _context.NotasCompra.DeleteOneAsync(c => c.IdNotaCompra == compra.IdNotaCompra);
+                throw new Exception($"Fallo al procesar la compra: {ex.Message}");
             }
 
             return compra;

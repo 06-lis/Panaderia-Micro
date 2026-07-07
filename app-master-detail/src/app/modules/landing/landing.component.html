@@ -195,5 +195,130 @@
         </div>
       </div>
     </div>
+
+    <!-- Sección Quiénes Somos / Nuestra Tradición -->
+    <div *ngIf="!checkoutProcess" class="mt-20 py-12 px-6 bg-white rounded-3xl border border-amber-100 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+      <!-- Columna Izquierda: Imagen del Pan -->
+      <div class="rounded-2xl overflow-hidden shadow-md h-80 bg-amber-50">
+        <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=600&auto=format&fit=crop" 
+             alt="Pan artesanal de tradición" 
+             class="object-cover w-full h-full hover:scale-105 transition-transform duration-500">
+      </div>
+      <!-- Columna Derecha: Texto explicativo -->
+      <div class="space-y-6">
+        <h3 class="text-3xl font-extrabold text-[#3E261A] tracking-tight">
+          Más de 20 años de tradición
+        </h3>
+        <p class="text-base text-amber-900/80 leading-relaxed">
+          En Panadería Otto nos dedicamos a elaborar productos de panadería y repostería con ingredientes de la más alta calidad. Nuestra tradición familiar y el amor por lo que hacemos nos permiten ofrecerte el mejor sabor en cada bocado.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+          <!-- Item 1 -->
+          <div class="flex items-start gap-3">
+            <div class="text-[#8E4E2A] text-xl shrink-0 mt-0.5">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-[#3E261A] text-sm">100% Artesanal</h4>
+              <p class="text-xs text-amber-900/60 mt-0.5">Elaboración tradicional</p>
+            </div>
+          </div>
+          <!-- Item 2 -->
+          <div class="flex items-start gap-3">
+            <div class="text-[#8E4E2A] text-xl shrink-0 mt-0.5">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-[#3E261A] text-sm">Ingredientes Naturales</h4>
+              <p class="text-xs text-amber-900/60 mt-0.5">Sin conservadores</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#3E261A] text-white py-12 px-6 mt-16 shadow-inner">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
+      
+      <!-- Columna 1: Panadería Otto -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-2">
+          <svg class="w-6 h-6 text-[#D2B48C]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+          <span class="font-serif font-bold text-xl tracking-wide">Panadería Otto</span>
+        </div>
+        <p class="text-sm text-amber-100/70 leading-relaxed">
+          Pan artesanal hecho con amor y tradición familiar.
+        </p>
+        <!-- Redes Sociales -->
+        <div class="flex gap-4 pt-2">
+          <!-- Facebook Link -->
+          <a href="#" class="w-8 h-8 rounded-full bg-[#5C3E21] hover:bg-[#8E4E2A] transition-colors flex items-center justify-center text-white" aria-label="Facebook">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z"></path>
+            </svg>
+          </a>
+          <!-- Instagram Link -->
+          <a href="#" class="w-8 h-8 rounded-full bg-[#5C3E21] hover:bg-[#8E4E2A] transition-colors flex items-center justify-center text-white" aria-label="Instagram">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"></path>
+            </svg>
+          </a>
+          <!-- WhatsApp Link -->
+          <a href="#" class="w-8 h-8 rounded-full bg-[#5C3E21] hover:bg-[#8E4E2A] transition-colors flex items-center justify-center text-white" aria-label="WhatsApp">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.504-5.714-1.466L0 24zm6.59-4.846c1.6.95 3.197 1.451 4.825 1.452 5.523 0 10.025-4.505 10.028-10.034.002-2.678-1.04-5.196-2.937-7.097C16.666 1.574 14.156.531 11.49.531 5.964.531 1.462 5.032 1.459 10.564c-.001 1.707.457 3.376 1.328 4.821l-1.021 3.727 3.881-1.018zM18.06 14.8c-.33-.165-1.952-.963-2.251-1.072-.3-.11-.518-.165-.736.165-.218.33-.842 1.072-1.033 1.293-.19.22-.38.247-.71.082-.33-.165-1.393-.513-2.654-1.638-.98-.874-1.642-1.953-1.834-2.282-.19-.33-.02-.508.145-.672.148-.148.33-.385.495-.578.165-.192.22-.33.33-.55.11-.22.055-.413-.028-.578-.083-.165-.736-1.771-1.008-2.43-.267-.641-.56-.55-.736-.56-.19-.01-.408-.01-.626-.01-.218 0-.573.082-.872.413-.3.33-1.145 1.118-1.145 2.724 0 1.607 1.172 3.16 1.335 3.38.164.22 2.307 3.523 5.59 4.94.78.337 1.39.538 1.86.687.784.249 1.498.214 2.062.13.629-.094 1.952-.798 2.225-1.57.272-.77.272-1.43.19-1.569-.083-.138-.3-.22-.63-.385z"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Columna 2: Horario -->
+      <div class="space-y-4">
+        <h4 class="font-bold text-lg text-[#D2B48C]">Horario</h4>
+        <ul class="space-y-3 text-sm text-amber-100/70">
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-[#D2B48C]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Lun-Sáb: 7AM - 9PM</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-[#D2B48C]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Dom: 8AM - 2PM</span>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Columna 3: Contacto -->
+      <div class="space-y-4">
+        <h4 class="font-bold text-lg text-[#D2B48C]">Contacto</h4>
+        <ul class="space-y-3 text-sm text-amber-100/70">
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-[#D2B48C]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            <span>Av. Principal #123</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-[#D2B48C]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+            <span>contacto&#64;panaderiaotto.com</span>
+          </li>
+        </ul>
+      </div>
+      
+    </div>
+  </footer>
 </div>

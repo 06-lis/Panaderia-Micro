@@ -24,6 +24,9 @@ namespace MSVenta.Venta.Repositories
             modelBuilder.Entity<Models.Venta>().ToTable("ventas");
             modelBuilder.Entity<DetalleVenta>().ToTable("detalle_venta");
             modelBuilder.Entity<Categoria>().ToTable("categoria");
+            modelBuilder.Entity<Categoria>()
+                .Property(c => c.Tipo)
+                .HasColumnName("tipo");
             modelBuilder.Entity<Almacen>().ToTable("almacen");
             modelBuilder.Entity<TransaccionLibelula>().ToTable("transacciones_libelula");
 
