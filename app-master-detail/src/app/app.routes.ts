@@ -84,6 +84,18 @@ export const routes: Routes = [
       // 🏬 ALMACÉN E INVENTARIO
       // ==========================================
       {
+        path: 'items',
+        loadComponent: () =>
+          import('./modules/items/items.component').then(m => m.ItemsComponent),
+        data: {
+          icon: 'pi pi-box',
+          title: 'Gestión de Items',
+          description: 'Gestión de Productos, Insumos y Categorías',
+          permission: 'Producto', // Required permission, assuming Producto is appropriate
+          section: 'Almacén e Inventario'
+        },
+      },
+      {
         path: 'almacen',
         loadChildren: () =>
           import('./modules/almacen/almacen.route').then(m => m.almacen_routes),
@@ -99,37 +111,16 @@ export const routes: Routes = [
         path: 'category',
         loadChildren: () =>
           import('./modules/category/category.route').then(m => m.category_routes),
-        data: {
-          icon: 'pi pi-tags',
-          title: 'Categoría',
-          description: 'Gestión de Categorías',
-          permission: 'Categoria',
-          section: 'Almacén e Inventario'
-        },
       },
       {
         path: 'product',
         loadChildren: () =>
           import('./modules/product/product.route').then(m => m.product_routes),
-        data: {
-          icon: 'pi pi-shopping-cart',
-          title: 'Producto',
-          description: 'Gestión de Productos',
-          permission: 'Producto',
-          section: 'Almacén e Inventario'
-        },
       },
       {
         path: 'insumo',
         loadChildren: () =>
           import('./modules/insumo/insumo.route').then(m => m.insumo_routes),
-        data: {
-          icon: 'pi pi-box',
-          title: 'Insumo',
-          description: 'Gestión de Insumos',
-          permission: 'Insumo',
-          section: 'Almacén e Inventario'
-        },
       },
       {
         path: 'crear-item',
@@ -203,13 +194,6 @@ export const routes: Routes = [
         path: 'detalle-compra',
         loadChildren: () =>
           import('./modules/compras/detalle-compra/detalle-compra.route').then(m => m.detalle_compra_routes),
-        data: {
-          icon: 'pi pi-list',
-          title: 'Detalle de Compra',
-          description: 'Detalle de Notas de Compra',
-          permission: 'Detalle Compra',
-          section: 'Compras'
-        },
       },
 
       // ==========================================

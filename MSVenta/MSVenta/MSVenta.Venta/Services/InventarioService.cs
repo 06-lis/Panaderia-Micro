@@ -8,6 +8,8 @@ namespace MSVenta.Venta.Services
     public interface IInventarioService
     {
         Task<bool> ConsumirStockAsync(int itemId, int almacenId, decimal cantidad, int empleadoId, int? referenciaId = null, string referenciaTipo = null);
+        Task<string> GetLotesAsync();
+        Task<string> GetConfiguracionAsync();
     }
 
     public class InventarioService : IInventarioService
@@ -19,6 +21,38 @@ namespace MSVenta.Venta.Services
         {
             _httpClient = httpClient;
             _configuration = configuration;
+        }
+
+        public async Task<string> GetLotesAsync()
+        {
+            try
+            {
+                string baseUrl = _configuration["proxy:urlInventario"];
+                using var client = new System.Net.Http.HttpClient();
+                var response = await client.GetStringAsync($"{baseUrl}/lotes");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Venta] Error fetching lotes: {ex.Message}");
+                return "[]";
+            }
+        }
+
+        public async Task<string> GetConfiguracionAsync()
+        {
+            try
+            {
+                string baseUrl = _configuration["proxy:urlInventario"];
+                using var client = new System.Net.Http.HttpClient();
+                var response = await client.GetStringAsync($"{baseUrl}/configuracion");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Venta] Error fetching configuracion: {ex.Message}");
+                return "{}";
+            }
         }
 
         public async Task<bool> ConsumirStockAsync(int itemId, int almacenId, decimal cantidad, int empleadoId, int? referenciaId = null, string referenciaTipo = null)

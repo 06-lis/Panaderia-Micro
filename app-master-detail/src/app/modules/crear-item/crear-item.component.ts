@@ -220,12 +220,8 @@ export class CrearItemComponent implements OnInit {
           text: `El ${itemData.tipo.toLowerCase()} se ha registrado exitosamente.`,
           confirmButtonColor: '#8E4E2A'
         }).then(() => {
-          // Redirigir a la lista adecuada según el tipo creado
-          if (itemData.tipo === 'Producto') {
-            this.router.navigate(['/dashboard/product/list']);
-          } else {
-            this.router.navigate(['/dashboard/insumo']);
-          }
+          // Redirigir a la nueva vista unificada de Gestión de Items
+          this.router.navigate(['/dashboard/items']);
         });
       },
       error: (err) => {

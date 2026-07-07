@@ -9,6 +9,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Aforo255.Cross.Http.Src;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json;
+using System.Collections.Generic;
 
 namespace MSVenta.Venta.Controllers
 {
@@ -46,6 +48,7 @@ namespace MSVenta.Venta.Controllers
                 {
                     ProductoAlmacenId = pa.Id,
                     ItemId = pa.ItemId,
+                    AlmacenId = pa.AlmacenId,
                     Nombre = pa.Item.Nombre,
                     Precio = pa.Item.Precio,
                     Stock = pa.Stock,
@@ -53,7 +56,92 @@ namespace MSVenta.Venta.Controllers
                 })
                 .ToListAsync();
 
-            return Ok(productos);
+            // Fetch lotes and config
+            string lotesJson = await _inventarioService.GetLotesAsync();
+            string configJson = await _inventarioService.GetConfiguracionAsync();
+
+            string metodo = "PEPS"; // Default
+            try
+            {
+                using var configDoc = JsonDocument.Parse(configJson);
+                if (configDoc.RootElement.ValueKind == JsonValueKind.Object && configDoc.RootElement.TryGetProperty("metodo_valuacion", out var val))
+                {
+                    metodo = val.GetString()?.ToUpper() ?? "PEPS";
+                }
+            }
+            catch {}
+
+            var lotesList = new List<dynamic>();
+            try
+            {
+                using var lotesDoc = JsonDocument.Parse(lotesJson);
+                if (lotesDoc.RootElement.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var l in lotesDoc.RootElement.EnumerateArray())
+                    {
+                        var id_item = l.GetProperty("id_item").GetInt32();
+                        var id_almacen = l.GetProperty("id_almacen").GetInt32();
+                        var fecha_entrada = l.GetProperty("fecha_entrada").GetDateTime();
+                        var cantidad_disponible = l.GetProperty("cantidad_disponible").GetDecimal();
+                        lotesList.Add(new { id_item, id_almacen, fecha_entrada, cantidad_disponible });
+                    }
+                }
+            }
+            catch {}
+
+            // Now deduplicate productos
+            var grouped = productos.GroupBy(p => p.ItemId);
+            var finalProducts = new List<object>();
+
+            foreach(var g in grouped)
+            {
+                if (g.Count() == 1)
+                {
+                    finalProducts.Add(new
+                    {
+                        ProductoAlmacenId = g.First().ProductoAlmacenId,
+                        ItemId = g.First().ItemId,
+                        Nombre = g.First().Nombre,
+                        Precio = g.First().Precio,
+                        Stock = g.Sum(x => x.Stock),
+                        Imagen = g.First().Imagen
+                    });
+                }
+                else
+                {
+                    // Find the best almacen for this item
+                    var matchingLotes = lotesList.Where(l => l.id_item == g.Key && l.cantidad_disponible > 0).ToList();
+                    
+                    if (metodo == "UEPS")
+                    {
+                        matchingLotes = matchingLotes.OrderByDescending(l => l.fecha_entrada).ToList();
+                    }
+                    else // PEPS
+                    {
+                        matchingLotes = matchingLotes.OrderBy(l => l.fecha_entrada).ToList();
+                    }
+
+                    int selectedAlmacenId = -1;
+                    if (matchingLotes.Any())
+                    {
+                        selectedAlmacenId = matchingLotes.First().id_almacen;
+                    }
+                    
+                    var selectedPa = g.FirstOrDefault(pa => pa.AlmacenId == selectedAlmacenId) ?? g.First();
+                    
+                    finalProducts.Add(new
+                    {
+                        ProductoAlmacenId = selectedPa.ProductoAlmacenId,
+                        ItemId = selectedPa.ItemId,
+                        Nombre = selectedPa.Nombre,
+                        Precio = selectedPa.Precio,
+                        Stock = g.Sum(x => x.Stock),
+                        Imagen = selectedPa.Imagen
+                    });
+                }
+            }
+
+            return Ok(finalProducts);
         }
 
         [HttpPost("checkout")]

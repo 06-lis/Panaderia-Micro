@@ -385,7 +385,26 @@
       "UpstreamPathTemplate": "/api/venta/{id}",
       "UpstreamHttpMethod": [
         "Delete",
-        "Get"
+        "Get",
+        "Put"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "SECURITY-TOKEN",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/venta/{id}/completar-pago-libelula",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ms_venta",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/venta/{id}/completar-pago-libelula",
+      "UpstreamHttpMethod": [
+        "Put"
       ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "SECURITY-TOKEN",

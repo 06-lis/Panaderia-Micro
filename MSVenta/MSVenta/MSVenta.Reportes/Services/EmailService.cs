@@ -17,7 +17,7 @@ namespace MSVenta.Reportes.Services
             _config = config.Value;
         }
 
-        public async Task SendEmailAsync(List<string> toAddresses, string subject, string htmlBody)
+        public async Task SendEmailAsync(List<string> toAddresses, string subject, string htmlBody, byte[] attachmentBytes = null, string attachmentName = null)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(_config.FromName ?? "Panaderia Otto", _config.FromAddress));
@@ -30,6 +30,12 @@ namespace MSVenta.Reportes.Services
             message.Subject = subject;
 
             var bodyBuilder = new BodyBuilder { HtmlBody = htmlBody };
+            
+            if (attachmentBytes != null && attachmentBytes.Length > 0 && !string.IsNullOrEmpty(attachmentName))
+            {
+                bodyBuilder.Attachments.Add(attachmentName, attachmentBytes);
+            }
+
             message.Body = bodyBuilder.ToMessageBody();
 
             using var client = new SmtpClient();

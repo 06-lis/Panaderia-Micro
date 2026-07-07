@@ -3,3 +3,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* PrimeNG Overrides para Panaderia-Micro */
+.p-tablist, .p-tabpanels {
+    background: transparent !important;
+}
+
+.p-tabpanel {
+    background: transparent !important;
+}
+
+.p-tab {
+    background: transparent !important;
+    color: #3E261A !important;
+    border-color: transparent !important;
+    font-weight: bold;
+}
+
+.p-tab-active {
+    background: #FAF6EE !important;
+    color: #8E4E2A !important;
+    border-bottom: 3px solid #8E4E2A !important;
+}
+
+.p-tabs {
+    background: transparent !important;
+}
