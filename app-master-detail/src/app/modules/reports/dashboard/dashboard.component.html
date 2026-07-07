@@ -222,8 +222,19 @@
         </button>
       </div>
       <div class="p-4">
-        <p class="text-sm text-gray-600 mb-4">Ingresa los correos destino (separados por coma). Deben terminar en &#64;panaderia-otto.shop</p>
-        <textarea [(ngModel)]="emailDestinatarios" rows="3" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500" placeholder="ejemplo1@panaderia-otto.shop, ejemplo2@panaderia-otto.shop"></textarea>
+        <h4 class="text-sm font-medium text-gray-700 mb-2">Destinatarios Rápidos</h4>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <button *ngFor="let q of quickEmails"
+            (click)="toggleQuickEmail(q)"
+            class="px-3 py-1 text-xs rounded-full border transition-colors"
+            [ngClass]="q.selected ? 'bg-blue-600 text-white border-blue-600' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200'">
+            {{ q.email }}
+          </button>
+        </div>
+
+        <h4 class="text-sm font-medium text-gray-700 mb-2">Otros Destinatarios</h4>
+        <p class="text-xs text-gray-500 mb-2">Ingresa correos adicionales separados por coma (deben terminar en &#64;panaderia-otto.shop).</p>
+        <textarea [(ngModel)]="emailDestinatarios" rows="2" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500" placeholder="ejemplo1&#64;panaderia-otto.shop"></textarea>
       </div>
       <div class="flex justify-end p-4 border-t space-x-3">
         <button (click)="closeEmailModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors">Cancelar</button>

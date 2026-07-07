@@ -4,7 +4,6 @@ import { Product } from '../../interfaces/poduct.interface';
 import { Category } from '../../interfaces/category.interface';
 import { ProductService } from './service/product.service';
 import { CategoryService } from '../category/service/category.service';
-import { ProductAddComponent } from "./product-add/product-add.component";
 import { ProductListComponent } from "./product-list/product-list.component";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 

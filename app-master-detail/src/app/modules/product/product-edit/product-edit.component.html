@@ -1,1 +1,138 @@
-<p>product-edit works!</p>,
+<div class="container mx-auto p-4 max-w-4xl">
+  <!-- Title and Header -->
+  <div class="mb-8 border-b border-amber-100 pb-4">
+    <h2 class="text-4xl font-extrabold text-[#3E261A] flex items-center gap-2">
+      <i class="pi pi-pencil text-3xl text-[#8E4E2A]"></i>
+      Editar Producto
+    </h2>
+    <p class="text-sm text-amber-800/70 mt-1 font-medium">
+      Modifica los detalles del producto final para la venta.
+    </p>
+  </div>
+
+  <div *ngIf="isLoading" class="flex justify-center p-12">
+    <i class="pi pi-spin pi-spinner text-4xl text-[#8E4E2A]"></i>
+  </div>
+
+  <div *ngIf="!isLoading" class="bg-white rounded-2xl shadow-xl border border-amber-100/50 p-8 hover:shadow-2xl transition duration-300">
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Nombre -->
+        <div class="form-group col-span-1 md:col-span-2">
+          <label for="nombre" class="block text-sm font-semibold text-[#3E261A] mb-1">Nombre del Producto</label>
+          <input id="nombre" formControlName="nombre" type="text" placeholder="Ej: Croissant de Mantequilla"
+                 class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition placeholder-amber-800/40 shadow-sm" />
+          <div *ngIf="productForm.get('nombre')?.invalid && productForm.get('nombre')?.touched" class="text-xs text-red-500 mt-1">
+            El nombre es obligatorio (máx. 50 caracteres).
+          </div>
+        </div>
+
+        <!-- Precio -->
+        <div class="form-group">
+          <label for="precio" class="block text-sm font-semibold text-[#3E261A] mb-1">Precio Unitario ($)</label>
+          <input id="precio" formControlName="precio" type="number" step="0.01" placeholder="0.00"
+                 class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition placeholder-amber-800/40 shadow-sm" />
+          <div *ngIf="productForm.get('precio')?.invalid && productForm.get('precio')?.touched" class="text-xs text-red-500 mt-1">
+            El precio es obligatorio y debe ser mayor o igual a 0.
+          </div>
+        </div>
+
+        <!-- Unidad de Medida -->
+        <div class="form-group">
+          <label for="unidadMedida" class="block text-sm font-semibold text-[#3E261A] mb-1">Unidad de Medida</label>
+          <input id="unidadMedida" formControlName="unidadMedida" type="text" list="unidadesDefault" placeholder="Ej: Unidades, Kilogramos"
+                 class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition placeholder-amber-800/40 shadow-sm" />
+          <datalist id="unidadesDefault">
+            <option value="Unidades"></option>
+            <option value="Kilogramos (kg)"></option>
+            <option value="Gramos (g)"></option>
+            <option value="Litros (L)"></option>
+            <option value="Mililitros (ml)"></option>
+            <option value="Libras (lb)"></option>
+            <option value="Onzas (oz)"></option>
+            <option value="Docenas"></option>
+            <option value="Cajas"></option>
+          </datalist>
+          <div *ngIf="productForm.get('unidadMedida')?.invalid && productForm.get('unidadMedida')?.touched" class="text-xs text-red-500 mt-1">
+            La unidad de medida es obligatoria.
+          </div>
+        </div>
+
+        <!-- Categoría -->
+        <div class="form-group">
+          <label for="categoriaId" class="block text-sm font-semibold text-[#3E261A] mb-1">Categoría</label>
+          <select id="categoriaId" formControlName="categoriaId"
+                  class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm">
+            <option [value]="null" disabled selected>Seleccione una categoría</option>
+            <option *ngFor="let cat of categories" [value]="cat.id || cat.idCategoria">{{ cat.nombre }}</option>
+          </select>
+          <div *ngIf="productForm.get('categoriaId')?.invalid && productForm.get('categoriaId')?.touched" class="text-xs text-red-500 mt-1">
+            Seleccione una categoría válida.
+          </div>
+        </div>
+
+        <!-- Imagen -->
+        <div class="form-group col-span-1 md:col-span-2">
+          <label class="block text-sm font-semibold text-[#3E261A] mb-1">Imagen del Producto</label>
+          
+          <div class="flex flex-col md:flex-row gap-6 bg-amber-50/30 p-4 rounded-xl border border-amber-100">
+            <!-- Vista previa de imagen -->
+            <div class="w-32 h-32 rounded-lg border-2 border-dashed border-amber-300 flex items-center justify-center overflow-hidden bg-white flex-shrink-0 relative group">
+              <img *ngIf="imagePreview" [src]="imagePreview" alt="Vista previa" class="w-full h-full object-cover">
+              <div *ngIf="!imagePreview && !isUploading" class="text-amber-800/40 flex flex-col items-center">
+                <i class="pi pi-image text-3xl mb-1"></i>
+                <span class="text-xs font-semibold">Sin Imagen</span>
+              </div>
+              <div *ngIf="isUploading" class="absolute inset-0 bg-white/80 flex items-center justify-center">
+                <i class="pi pi-spin pi-spinner text-2xl text-[#8E4E2A]"></i>
+              </div>
+            </div>
+
+            <div class="flex-1 flex flex-col justify-center space-y-4">
+              <!-- Subir archivo local -->
+              <div>
+                <label for="fileUpload" class="inline-flex items-center gap-2 px-4 py-2 bg-[#8E4E2A] hover:bg-[#7D411F] text-white text-sm font-semibold rounded-lg cursor-pointer transition shadow-sm">
+                  <i class="pi pi-upload"></i> Subir imagen local
+                </label>
+                <input id="fileUpload" type="file" accept="image/*" class="hidden" (change)="onFileSelected($event)">
+                <p class="text-xs text-amber-800/60 mt-1">Se comprimirá automáticamente antes de subir.</p>
+              </div>
+
+              <div class="flex items-center">
+                <div class="h-px bg-amber-200 flex-1"></div>
+                <span class="px-3 text-xs text-amber-800/60 font-semibold uppercase">O usa una URL</span>
+                <div class="h-px bg-amber-200 flex-1"></div>
+              </div>
+
+              <!-- Input URL manual -->
+              <div class="relative">
+                <input id="imagen" formControlName="imagen" type="text" placeholder="https://..."
+                       class="w-full p-2.5 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm text-sm" 
+                       [ngClass]="{'border-red-400 focus:ring-red-400': !isImageValid && productForm.get('imagen')?.value}" />
+                <div *ngIf="!isImageValid && productForm.get('imagen')?.value" class="text-xs text-red-500 mt-1 flex items-center gap-1">
+                  <i class="pi pi-exclamation-circle"></i> La URL no es una imagen válida o está caída.
+                </div>
+                <div *ngIf="productForm.get('imagen')?.invalid && productForm.get('imagen')?.touched" class="text-xs text-red-500 mt-1">
+                  La imagen es obligatoria.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="flex justify-end gap-4 border-t border-amber-100 pt-6">
+        <button type="button" (click)="cancelar()"
+                class="px-6 py-3 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded-lg shadow-lg hover:scale-102 transition duration-200">
+          <i class="pi pi-times mr-2"></i> Cancelar
+        </button>
+        <button type="submit" [disabled]="productForm.invalid"
+                class="px-6 py-3 bg-[#5C3E21] hover:bg-[#4E3426] text-white font-bold rounded-lg shadow-lg hover:scale-102 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+          <i class="pi pi-check mr-2"></i> Actualizar Producto
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -75,7 +75,13 @@ export class UsuarioService {
 
   // Actualizar un usuario
   updateUsuario(id: number, usuario: User): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${id}`, usuario);
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      return this.http.put<User>(`${this.apiUrl}/${id}`, usuario, httpOptions(token));
+    } else {
+      console.error('No hay token disponible');
+      return of({} as User);
+    }
   }
 
   // Eliminar un usuario

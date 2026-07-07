@@ -67,4 +67,8 @@ export class RolListComponent {
   createRole():void{
     this.router.navigate(['/dashboard/roles/add']);
   }
+
+  editRole(rol_id: number): void {
+    this.router.navigate(['/dashboard/roles/edit', rol_id]);
+  }
 }

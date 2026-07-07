@@ -19,6 +19,10 @@ export const rol_routes: Routes = [
     path: 'add',
     component: RolAddComponent
   },
+  {
+    path: 'edit/:id',
+    loadComponent: () => import('./rol-edit/rol-edit.component').then(m => m.RolEditComponent)
+  },
   { path: 'rolpermiso/:id', component: RolPermisosComponent },
   { path: 'rolpermisousuario/:id', component: RolPermisoUsuarioComponent },
   {

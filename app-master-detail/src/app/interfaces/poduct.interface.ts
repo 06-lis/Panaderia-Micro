@@ -15,5 +15,6 @@ export interface Product {
   productoId?:number;
   nombreProducto?:string;
   tipo?: string;
+  imagen?: string;
   unidadMedida?: string;
 }

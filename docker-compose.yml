@@ -123,6 +123,8 @@ services:
       Libelula__CallbackUrl: "https://micro.panaderia-otto.shop/api/landing/webhook"
     depends_on:
       - mysql_db
+    volumes:
+      - ms_venta_uploads:/app/wwwroot/uploads
     networks:
       - panaderia_net
 
@@ -189,3 +191,4 @@ volumes:
   postgres_data:
   mysql_data:
   sqlserver_data:
+  ms_venta_uploads:

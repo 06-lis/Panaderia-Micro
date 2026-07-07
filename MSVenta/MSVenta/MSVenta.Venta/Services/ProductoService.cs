@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MSVenta.Venta.Models;
 using MSVenta.Venta.Repositories;
 using System;
@@ -56,7 +56,7 @@ namespace MSVenta.Venta.Services
             if (productoExistente == null)
                 throw new KeyNotFoundException("No se puede actualizar porque el producto no existe.");
 
-            _context.Entry(producto).State = EntityState.Modified;
+            _context.Entry(productoExistente).CurrentValues.SetValues(producto);
             await _context.SaveChangesAsync();
         }
 

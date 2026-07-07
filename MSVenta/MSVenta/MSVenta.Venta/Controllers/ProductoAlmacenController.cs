@@ -4,6 +4,7 @@ using MSVenta.Venta.Services;
 using MSVenta.Venta.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSVenta.Venta.Controllers
@@ -20,9 +21,29 @@ namespace MSVenta.Venta.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductoAlmacen>>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(await _productoAlmacenService.GetAllAsync());
+            var data = await _productoAlmacenService.GetAllAsync();
+            var result = data.Select(pa => new
+            {
+                id = pa.Id,
+                itemId = pa.ItemId,
+                almacenId = pa.AlmacenId,
+                stock = pa.Stock,
+                item = new
+                {
+                    id = pa.Item.Id,
+                    nombre = pa.Item.Nombre,
+                    precio = pa.Item.Precio,
+                    tipo = pa.Item.Tipo,
+                    unidadMedida = pa.Item.UnidadMedida,
+                    categoriaId = pa.Item.CategoriaId,
+                    categoria = pa.Item.Categoria,
+                    imagen = pa.Item is Producto p ? p.Imagen : null
+                },
+                almacen = pa.Almacen
+            });
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

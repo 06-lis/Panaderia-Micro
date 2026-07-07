@@ -71,4 +71,8 @@ export class UsuarioListComponent {
   createUser(){
     this.router.navigate(['/dashboard/user/add']);
   }
+
+  editUser(id: number) {
+    this.router.navigate(['/dashboard/user/edit', id]);
+  }
 }

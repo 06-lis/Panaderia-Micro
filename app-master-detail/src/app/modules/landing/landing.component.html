@@ -29,7 +29,7 @@
         </button>
       </ng-container>
 
-      <div class="relative cursor-pointer" (click)="abrirCheckout()">
+      <div *ngIf="isLoggedIn" class="relative cursor-pointer" (click)="abrirCheckout()">
         <i class="pi pi-shopping-cart text-3xl"></i>
         <span *ngIf="carrito.length > 0" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full border-2 border-[#8b5a2b]">
           {{ carrito.length }}
@@ -70,9 +70,12 @@
           <p class="text-xl font-semibold text-[#8b5a2b] mb-4">Bs. {{ prod.precio | number:'1.2-2' }}</p>
           
           <div class="mt-auto flex gap-2">
-            <button (click)="agregarAlCarrito(prod)" class="w-full bg-[#d2b48c] hover:bg-[#c1a58d] text-[#5c3a21] font-bold py-2 rounded transition-colors flex justify-center items-center gap-2">
+            <button *ngIf="isLoggedIn" (click)="agregarAlCarrito(prod)" class="w-full bg-[#d2b48c] hover:bg-[#c1a58d] text-[#5c3a21] font-bold py-2 rounded transition-colors flex justify-center items-center gap-2">
               <i class="pi pi-plus"></i> Añadir
             </button>
+            <div *ngIf="!isLoggedIn" class="w-full text-center text-sm font-semibold text-[#8b5a2b] py-2 bg-[#fdf8f5] rounded border border-[#f0e6d2]">
+              Inicia sesión para comprar
+            </div>
           </div>
         </div>
       </div>

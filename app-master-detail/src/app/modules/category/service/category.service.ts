@@ -47,7 +47,29 @@ export class CategoryService {
     }
   }
 
+  public updateCategory(id: number, category: Category): Observable<Category> {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      return this.http.put<Category>(`${this.url}/${id}`, category, httpOptions(token)).pipe(
+        catchError(this.handleError<Category>('updateCategory'))
+      );
+    } else {
+      console.error('No token found');
+      return of();
+    }
+  }
 
+  public deleteCategory(id: number): Observable<any> {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      return this.http.delete(`${this.url}/${id}`, httpOptions(token)).pipe(
+        catchError(this.handleError('deleteCategory'))
+      );
+    } else {
+      console.error('No token found');
+      return of();
+    }
+  }
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error); // Loguea el error para depuración

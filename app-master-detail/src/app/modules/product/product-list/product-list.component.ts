@@ -65,7 +65,9 @@ export class ProductListComponent {
     });
   }
 
-  agregarProducto(){
-    this.router.navigate(['/dashboard/product/add']);
+
+
+  editProduct(id: number) {
+    this.router.navigate(['/dashboard/product/edit', id]);
   }
 }

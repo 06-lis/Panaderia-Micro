@@ -246,7 +246,24 @@ namespace MSVenta.Reportes.Controllers
 
                 try
                 {
-                    await _emailService.SendEmailAsync(destinatariosValidos, request.Asunto ?? "Reporte de Sistema", html);
+                    byte[] attachmentBytes = null;
+                    string attachmentName = null;
+                    if (!string.IsNullOrEmpty(request.Base64Pdf))
+                    {
+                        try
+                        {
+                            // Eliminar el prefijo data:image/png;base64, si viene
+                            var base64Data = request.Base64Pdf.Contains(",") ? request.Base64Pdf.Split(',')[1] : request.Base64Pdf;
+                            attachmentBytes = Convert.FromBase64String(base64Data);
+                            attachmentName = $"Reporte_Dashboard_{DateTime.Now:yyyyMMdd}.pdf";
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error decoding Base64 PDF: {ex.Message}");
+                        }
+                    }
+
+                    await _emailService.SendEmailAsync(destinatariosValidos, request.Asunto ?? "Reporte de Sistema", html, attachmentBytes, attachmentName);
                     return Ok(new { success = true, message = "Reporte enviado exitosamente." });
                 }
                 catch (Exception ex)

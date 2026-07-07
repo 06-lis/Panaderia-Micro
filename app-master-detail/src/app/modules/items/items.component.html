@@ -1,0 +1,24 @@
+<div class="p-6">
+  <h2 class="text-3xl font-extrabold text-[#3E261A] mb-6 flex items-center gap-2">
+    📦 Gestión de Items
+  </h2>
+
+  <p-tabs value="0">
+      <p-tablist>
+          <p-tab value="0">Productos</p-tab>
+          <p-tab value="1">Insumos</p-tab>
+          <p-tab value="2">Categorías</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+          <p-tabpanel value="0">
+              <app-product></app-product>
+          </p-tabpanel>
+          <p-tabpanel value="1">
+              <app-insumo></app-insumo>
+          </p-tabpanel>
+          <p-tabpanel value="2">
+              <app-category-list></app-category-list>
+          </p-tabpanel>
+      </p-tabpanels>
+  </p-tabs>
+</div>
