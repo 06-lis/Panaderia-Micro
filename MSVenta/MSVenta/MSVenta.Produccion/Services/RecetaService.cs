@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MSVenta.Produccion.Models;
 using MSVenta.Produccion.Repositories;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSVenta.Produccion.Services
@@ -38,19 +39,41 @@ namespace MSVenta.Produccion.Services
 
         public async Task<bool> UpdateAsync(Receta receta)
         {
-            _context.Entry(receta).State = EntityState.Modified;
+            var existingReceta = await _context.Recetas
+                .Include(r => r.Detalles)
+                .FirstOrDefaultAsync(r => r.Id == receta.Id);
+
+            if (existingReceta == null) return false;
+
+            // Update main recipe properties
+            _context.Entry(existingReceta).CurrentValues.SetValues(receta);
+
+            // Remove deleted details
+            foreach (var existingDetail in existingReceta.Detalles.ToList())
+            {
+                if (!receta.Detalles.Any(d => d.Id == existingDetail.Id))
+                {
+                    _context.DetallesReceta.Remove(existingDetail);
+                }
+            }
+
+            // Update existing details and add new details
             foreach (var detail in receta.Detalles)
             {
-                if (detail.Id == 0)
+                var existingDetail = existingReceta.Detalles.FirstOrDefault(d => d.Id == detail.Id);
+                if (existingDetail != null)
                 {
-                    detail.RecetaId = receta.Id;
-                    await _context.DetallesReceta.AddAsync(detail);
+                    // Update
+                    _context.Entry(existingDetail).CurrentValues.SetValues(detail);
                 }
                 else
                 {
-                    _context.Entry(detail).State = EntityState.Modified;
+                    // Insert
+                    detail.RecetaId = receta.Id;
+                    existingReceta.Detalles.Add(detail);
                 }
             }
+
             try
             {
                 await _context.SaveChangesAsync();

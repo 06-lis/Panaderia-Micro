@@ -19,39 +19,45 @@
         <h3 class="text-lg font-bold text-amber-950 border-b border-amber-100/50 pb-2">Nuevo Traspaso</h3>
 
         <!-- Ítem -->
-        <div>
+        <div class="relative">
           <label class="block text-xs font-bold text-amber-900 mb-1.5 uppercase tracking-wide">Producto / Insumo *</label>
-          <select formControlName="itemId" (change)="onItemChange($event)"
-                  class="w-full px-3 py-2.5 bg-amber-50/30 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-600/50 focus:border-amber-600 transition-all text-sm font-medium">
-            <option [ngValue]="null">Selecciona un ítem...</option>
-            <option *ngFor="let item of itemsConStock" [value]="item.id">
-              {{ item.nombre }} ({{ item.tipo_item }})
-            </option>
-          </select>
+          <input type="text" [formControl]="itemSearchCtrl" placeholder="Escribe ID o nombre..."
+                 class="w-full px-3 py-2.5 bg-amber-50/30 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-600/50 focus:border-amber-600 transition-all text-sm font-medium">
+          
+          <div *ngIf="itemSuggestions.length > 0" class="absolute z-10 w-full mt-1 bg-white border border-amber-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+            <div *ngFor="let item of itemSuggestions" (click)="selectItem(item)" 
+                 class="px-4 py-2 hover:bg-amber-50 cursor-pointer text-sm font-medium text-amber-900 border-b border-amber-50 last:border-0">
+              <span class="font-bold">#{{item.id}}</span> - {{ item.nombre }} ({{ item.tipo || item.tipo_item }})
+            </div>
+          </div>
         </div>
 
         <!-- Lote -->
-        <div>
+        <div class="relative">
           <label class="block text-xs font-bold text-amber-900 mb-1.5 uppercase tracking-wide">Lote Origen *</label>
-          <select formControlName="loteId" (change)="onLoteChange($event)"
-                  class="w-full px-3 py-2.5 bg-amber-50/30 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-600/50 focus:border-amber-600 transition-all text-sm font-medium">
-            <option [ngValue]="null">Selecciona un lote...</option>
-            <option *ngFor="let lote of lotesFiltrados" [value]="lote.id_lote">
+          <input type="text" [formControl]="loteSearchCtrl" placeholder="Escribe ID o almacén..."
+                 class="w-full px-3 py-2.5 bg-amber-50/30 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-600/50 focus:border-amber-600 transition-all text-sm font-medium">
+          
+          <div *ngIf="loteSuggestions.length > 0" class="absolute z-10 w-full mt-1 bg-white border border-amber-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+            <div *ngFor="let lote of loteSuggestions" (click)="selectLote(lote)"
+                 class="px-4 py-2 hover:bg-amber-50 cursor-pointer text-sm font-medium text-amber-900 border-b border-amber-50 last:border-0">
               Lote #{{ lote.id_lote }} - {{ lote.almacen_nombre }} (Disp: {{ lote.cantidad_disponible | number:'1.2-2' }})
-            </option>
-          </select>
+            </div>
+          </div>
         </div>
 
         <!-- Almacén Destino -->
-        <div>
+        <div class="relative">
           <label class="block text-xs font-bold text-amber-900 mb-1.5 uppercase tracking-wide">Almacén Destino *</label>
-          <select formControlName="almacenDestinoId"
-                  class="w-full px-3 py-2.5 bg-amber-50/30 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-600/50 focus:border-amber-600 transition-all text-sm font-medium">
-            <option [ngValue]="null">Selecciona destino...</option>
-            <option *ngFor="let a of almacenesDestino" [value]="a.id">
-              {{ a.nombre }} ({{ a.tipo || 'General' }})
-            </option>
-          </select>
+          <input type="text" [formControl]="almacenDestinoSearchCtrl" placeholder="Escribe ID o nombre..."
+                 class="w-full px-3 py-2.5 bg-amber-50/30 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-600/50 focus:border-amber-600 transition-all text-sm font-medium">
+          
+          <div *ngIf="almacenDestinoSuggestions.length > 0" class="absolute z-10 w-full mt-1 bg-white border border-amber-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+            <div *ngFor="let a of almacenDestinoSuggestions" (click)="selectAlmacen(a)"
+                 class="px-4 py-2 hover:bg-amber-50 cursor-pointer text-sm font-medium text-amber-900 border-b border-amber-50 last:border-0">
+              <span class="font-bold">#{{a.id}}</span> - {{ a.nombre }} ({{ a.tipo || 'General' }})
+            </div>
+          </div>
           
           <!-- Capacidad Info -->
           <div *ngIf="getDestinoCapacityInfo() as info" class="mt-2 p-3 bg-amber-50/40 rounded-xl border border-amber-100/50 text-xs space-y-1">
@@ -76,7 +82,17 @@
           <label class="block text-xs font-bold text-amber-900 mb-1.5 uppercase tracking-wide">Cantidad a transferir *</label>
           <input type="number" formControlName="cantidad" step="0.01"
                  class="w-full px-3 py-2.5 bg-amber-50/30 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-600/50 focus:border-amber-600 transition-all text-sm font-medium"
-                 [ngClass]="{'border-rose-500 ring-2 ring-rose-500/20': isOverCapacity()}" />
+                 [ngClass]="{'border-rose-500 ring-2 ring-rose-500/20': isOverCapacity() || isOverLoteQuantity()}" />
+          
+          <div *ngIf="getSelectedLoteInfo() as lote" class="mt-1.5 text-xs font-medium text-amber-800">
+            Stock disponible en lote origen: <span class="font-bold">{{ lote.cantidad_disponible | number:'1.2-2' }}</span> uds.
+          </div>
+          
+          <div *ngIf="isOverLoteQuantity() && getSelectedLoteInfo() as lote" class="mt-1 text-xs text-rose-600 font-bold flex items-center gap-1">
+            <i class="pi pi-exclamation-triangle text-rose-500"></i>
+            <span>La cantidad excede el stock del lote ({{ lote.cantidad_disponible | number:'1.2-2' }} uds).</span>
+          </div>
+
           <div *ngIf="isOverCapacity() && getDestinoCapacityInfo() as info" class="mt-1.5 text-xs text-rose-600 font-bold flex items-center gap-1">
             <i class="pi pi-exclamation-triangle text-rose-500"></i>
             <span>La cantidad excede la capacidad disponible de {{ info.available | number:'1.0-2' }} uds.</span>
@@ -90,7 +106,7 @@
                     class="w-full px-3 py-2 bg-amber-50/30 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-600/50 focus:border-amber-600 transition-all text-sm font-medium resize-none"></textarea>
         </div>
 
-        <button type="submit" [disabled]="traspasoForm.invalid || saving || isOverCapacity()"
+        <button type="submit" [disabled]="traspasoForm.invalid || saving || isOverCapacity() || isOverLoteQuantity()"
                 class="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
           <i *ngIf="!saving" class="pi pi-send"></i>
           <span *ngIf="saving" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>

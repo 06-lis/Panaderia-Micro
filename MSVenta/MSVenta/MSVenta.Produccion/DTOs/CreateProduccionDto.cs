@@ -12,6 +12,7 @@ namespace MSVenta.Produccion.DTOs
     public class AprobarProduccionDto
     {
         public int EmpleadoAutorizaId { get; set; }
-        public int AlmacenId { get; set; }
+        public int AlmacenOrigenId { get; set; }
+        public int AlmacenDestinoId { get; set; }
     }
 }

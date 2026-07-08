@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { InventarioService } from '../service/inventario.service';
 import { ItemService } from '../../crear-item/service/item.service';
 import { AlmacenService } from '../../almacen/service/almacen.service';
@@ -29,6 +29,13 @@ export class TraspasosComponent implements OnInit {
   almacenesDestino: any[] = [];
   rawTraspasos: any[] = [];
 
+  itemSearchCtrl = new FormControl('');
+  almacenDestinoSearchCtrl = new FormControl('');
+  loteSearchCtrl = new FormControl('');
+  itemSuggestions: any[] = [];
+  almacenDestinoSuggestions: any[] = [];
+  loteSuggestions: any[] = [];
+
   constructor(
     private inventarioService: InventarioService,
     private itemService: ItemService,
@@ -53,6 +60,69 @@ export class TraspasosComponent implements OnInit {
 
     this.loadTraspasos();
     this.loadLotes();
+
+    this.itemSearchCtrl.valueChanges.subscribe(val => {
+      this.filterItems(val);
+    });
+    this.almacenDestinoSearchCtrl.valueChanges.subscribe(val => {
+      this.filterAlmacenes(val);
+    });
+    this.loteSearchCtrl.valueChanges.subscribe(val => {
+      this.filterLotes(val);
+    });
+  }
+
+  filterItems(query: string | null) {
+    if (!query) {
+      this.itemSuggestions = [];
+      return;
+    }
+    const q = query.toLowerCase();
+    this.itemSuggestions = this.itemsConStock.filter(i => 
+      i.nombre.toLowerCase().includes(q) || i.id.toString().includes(q)
+    );
+  }
+
+  selectItem(item: any) {
+    this.itemSearchCtrl.setValue(`${item.nombre} (ID: ${item.id})`, { emitEvent: false });
+    this.itemSuggestions = [];
+    this.traspasoForm.patchValue({ itemId: item.id });
+    this.onItemChange(null);
+  }
+
+  filterAlmacenes(query: string | null) {
+    if (!query) {
+      this.almacenDestinoSuggestions = [];
+      return;
+    }
+    const q = query.toLowerCase();
+    this.almacenDestinoSuggestions = this.almacenesDestino.filter(a => 
+      a.nombre.toLowerCase().includes(q) || a.id.toString().includes(q)
+    );
+  }
+
+  selectAlmacen(almacen: any) {
+    this.almacenDestinoSearchCtrl.setValue(`${almacen.nombre} (ID: ${almacen.id})`, { emitEvent: false });
+    this.almacenDestinoSuggestions = [];
+    this.traspasoForm.patchValue({ almacenDestinoId: almacen.id });
+  }
+
+  filterLotes(query: string | null) {
+    if (!query) {
+      this.loteSuggestions = [];
+      return;
+    }
+    const q = query.toLowerCase();
+    this.loteSuggestions = this.lotesFiltrados.filter(l => 
+      l.id_lote.toString().includes(q) || (l.almacen_nombre || '').toLowerCase().includes(q)
+    );
+  }
+
+  selectLote(lote: any) {
+    this.loteSearchCtrl.setValue(`Lote #${lote.id_lote} - ${lote.almacen_nombre} (Disp: ${lote.cantidad_disponible})`, { emitEvent: false });
+    this.loteSuggestions = [];
+    this.traspasoForm.patchValue({ loteId: lote.id_lote });
+    this.onLoteChange(null);
   }
 
   loadTraspasos() {
@@ -88,7 +158,7 @@ export class TraspasosComponent implements OnInit {
           const item = items.find(i => i.id === l.id_item);
           if (item) {
             l.item_nombre = item.nombre;
-            l.tipo_item = item.tipo_item; // needed for validation
+            l.tipo_item = item.tipo || item.tipo_item; // needed for validation
           }
           const almacen = almacenes.find(a => a.id === l.id_almacen);
           if (almacen) {
@@ -118,9 +188,11 @@ export class TraspasosComponent implements OnInit {
       const origen = this.almacenes.find(a => a.id === t.almacen_origen_id || a.id === t.origen_almacen_id);
       const destino = this.almacenes.find(a => a.id === t.almacen_destino_id || a.id === t.destino_almacen_id);
       
+      const item = this.items.find(i => i.id === t.id_item);
+
       return {
         ...t,
-        item_nombre: lote ? lote.item_nombre : null,
+        item_nombre: item ? item.nombre : null,
         origen_nombre: origen ? origen.nombre : null,
         destino_nombre: destino ? destino.nombre : null,
         lote_id_display: loteId
@@ -130,19 +202,37 @@ export class TraspasosComponent implements OnInit {
   }
 
   onItemChange(event: any) {
-    const itemId = event.target.value;
+    const itemId = this.traspasoForm.value.itemId;
     this.lotesFiltrados = this.lotesDisponibles.filter(l => l.id_item == itemId);
     
+    let loteToSelect = null;
+    if (this.lotesFiltrados.length > 0) {
+      const isUEPS = this.lotesFiltrados[0].metodo_valuacion === 'UEPS';
+      const sortedLotes = [...this.lotesFiltrados].sort((a, b) => {
+        const dateA = new Date(a.fecha_entrada).getTime();
+        const dateB = new Date(b.fecha_entrada).getTime();
+        return isUEPS ? (dateB - dateA) : (dateA - dateB);
+      });
+      loteToSelect = sortedLotes[0];
+    }
+    
     this.traspasoForm.patchValue({
-      loteId: null,
+      loteId: loteToSelect ? loteToSelect.id_lote : null,
       almacenOrigenId: null,
       almacenDestinoId: null
     });
+    this.almacenDestinoSearchCtrl.setValue('', { emitEvent: false });
     this.almacenesDestino = [];
+    if (loteToSelect) {
+      this.loteSearchCtrl.setValue(`Lote #${loteToSelect.id_lote} - ${loteToSelect.almacen_nombre} (Disp: ${loteToSelect.cantidad_disponible})`, { emitEvent: false });
+      this.onLoteChange(null);
+    } else {
+      this.loteSearchCtrl.setValue('', { emitEvent: false });
+    }
   }
 
   onLoteChange(event: any) {
-    const loteId = event.target.value;
+    const loteId = this.traspasoForm.value.loteId;
     const lote = this.lotesDisponibles.find(l => l.id_lote == loteId);
     if (lote) {
       this.traspasoForm.patchValue({
@@ -201,6 +291,19 @@ export class TraspasosComponent implements OnInit {
     return cantidad > (info.available || 0);
   }
 
+  getSelectedLoteInfo() {
+    const loteId = this.traspasoForm?.get('loteId')?.value;
+    if (!loteId) return null;
+    return this.lotesDisponibles.find(l => l.id_lote === loteId) || null;
+  }
+
+  isOverLoteQuantity(): boolean {
+    const lote = this.getSelectedLoteInfo();
+    if (!lote) return false;
+    const cantidad = this.traspasoForm.get('cantidad')?.value || 0;
+    return cantidad > lote.cantidad_disponible;
+  }
+
   onSubmit() {
     if (this.traspasoForm.invalid) {
       this.traspasoForm.markAllAsTouched();
@@ -252,6 +355,8 @@ export class TraspasosComponent implements OnInit {
           usuarioSolicitaId: this.traspasoForm.value.usuarioSolicitaId,
           cantidad: 0
         });
+        this.itemSearchCtrl.setValue('', { emitEvent: false });
+        this.almacenDestinoSearchCtrl.setValue('', { emitEvent: false });
         this.saving = false;
         this.loadTraspasos();
         this.loadLotes();

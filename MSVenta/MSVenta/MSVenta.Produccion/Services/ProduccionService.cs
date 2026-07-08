@@ -137,7 +137,14 @@ namespace MSVenta.Produccion.Services
             // Actualizar AlmacenId en todos los detalles
             foreach (var detalle in produccion.Detalles)
             {
-                detalle.AlmacenId = dto.AlmacenId;
+                if (detalle.TipoMovimiento == "Egreso")
+                {
+                    detalle.AlmacenId = dto.AlmacenOrigenId;
+                }
+                else if (detalle.TipoMovimiento == "Ingreso")
+                {
+                    detalle.AlmacenId = dto.AlmacenDestinoId;
+                }
             }
 
             // 3. VERIFICACIÓN DE STOCK DE INSUMOS

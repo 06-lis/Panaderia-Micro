@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ProductionService } from '../service/production.service';
 import { ItemService } from '../../crear-item/service/item.service';
 import { EmpleadoService } from '../../usuario/empleado.service';
@@ -11,7 +12,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-production-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './production-list.component.html',
   styleUrl: './production-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -28,9 +29,16 @@ export class ProductionListComponent implements OnInit {
   showDetailsModal = false;
   
   showApprovalModal = false;
-  selectedAlmacenId: number = 0;
+  selectedAlmacenOrigenId: number = 0;
+  selectedAlmacenDestinoId: number = 0;
+  destinoCapacityInfo: { maxCapacity: number, currentStock: number, available: number, valid: boolean } | null = null;
   approvalLotes: any[] = [];
   productionMovimientos: any[] = []; // Para historial de lotes
+
+  almacenOrigenSearchCtrl = new FormControl('');
+  almacenDestinoSearchCtrl = new FormControl('');
+  almacenOrigenSuggestions: any[] = [];
+  almacenDestinoSuggestions: any[] = [];
 
   constructor(
     private productionService: ProductionService,
@@ -43,6 +51,8 @@ export class ProductionListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    this.almacenOrigenSearchCtrl.valueChanges.subscribe(val => this.filterAlmacenOrigen(val));
+    this.almacenDestinoSearchCtrl.valueChanges.subscribe(val => this.filterAlmacenDestino(val));
   }
 
   loadData(): void {
@@ -155,7 +165,9 @@ export class ProductionListComponent implements OnInit {
 
   openApprovalValidation(prod: Produccion): void {
     this.selectedProduction = prod;
-    this.selectedAlmacenId = 0;
+    this.selectedAlmacenOrigenId = 0;
+    this.selectedAlmacenDestinoId = 0;
+    this.destinoCapacityInfo = null;
     this.approvalLotes = [];
     this.showApprovalModal = true;
     this.cdr.markForCheck();
@@ -165,12 +177,48 @@ export class ProductionListComponent implements OnInit {
     this.selectedProduction = null;
     this.showApprovalModal = false;
     this.approvalLotes = [];
+    this.almacenOrigenSearchCtrl.setValue('', { emitEvent: false });
+    this.almacenDestinoSearchCtrl.setValue('', { emitEvent: false });
+    this.almacenOrigenSuggestions = [];
+    this.almacenDestinoSuggestions = [];
     this.cdr.markForCheck();
   }
 
-  onAlmacenSelected(event: any): void {
-    this.selectedAlmacenId = Number(event.target.value);
-    if (this.selectedAlmacenId > 0 && this.selectedProduction) {
+  filterAlmacenOrigen(query: string | null) {
+    const q = (query || '').toLowerCase();
+    this.almacenOrigenSuggestions = this.almacenes.filter(a => {
+      const aType = (a.tipo || '').toLowerCase();
+      return (aType === 'insumo' || aType === 'mixto') && 
+             (a.nombre.toLowerCase().includes(q) || a.id.toString().includes(q));
+    });
+    this.cdr.markForCheck();
+  }
+
+  selectAlmacenOrigen(almacen: any) {
+    this.almacenOrigenSearchCtrl.setValue(`${almacen.nombre} (${almacen.tipo})`, { emitEvent: false });
+    this.almacenOrigenSuggestions = [];
+    this.onAlmacenOrigenSelected(almacen.id);
+  }
+
+  filterAlmacenDestino(query: string | null) {
+    const q = (query || '').toLowerCase();
+    this.almacenDestinoSuggestions = this.almacenes.filter(a => {
+      const aType = (a.tipo || '').toLowerCase();
+      return (aType === 'producto' || aType === 'mixto') && 
+             (a.nombre.toLowerCase().includes(q) || a.id.toString().includes(q));
+    });
+    this.cdr.markForCheck();
+  }
+
+  selectAlmacenDestino(almacen: any) {
+    this.almacenDestinoSearchCtrl.setValue(`${almacen.nombre} (${almacen.tipo})`, { emitEvent: false });
+    this.almacenDestinoSuggestions = [];
+    this.onAlmacenDestinoSelected(almacen.id);
+  }
+
+  onAlmacenOrigenSelected(almacenId: number): void {
+    this.selectedAlmacenOrigenId = almacenId;
+    if (this.selectedAlmacenOrigenId > 0 && this.selectedProduction) {
       // Fetch lotes for this almacen
       this.inventarioService.getLotes().subscribe({
         next: (lotes) => {
@@ -178,7 +226,7 @@ export class ProductionListComponent implements OnInit {
           const requiredItemIds = this.selectedProduction?.detalles?.filter(d => d.tipoMovimiento === 'Egreso').map(d => d.itemId) || [];
           
           this.approvalLotes = lotes.filter(l => 
-            l.id_almacen === this.selectedAlmacenId && 
+            l.id_almacen === this.selectedAlmacenOrigenId && 
             requiredItemIds.includes(l.id_item) &&
             l.cantidad_disponible > 0
           );
@@ -191,21 +239,80 @@ export class ProductionListComponent implements OnInit {
     }
   }
 
+  onAlmacenDestinoSelected(almacenId: number): void {
+    this.selectedAlmacenDestinoId = almacenId;
+    if (this.selectedAlmacenDestinoId > 0 && this.selectedProduction) {
+      const almacen = this.almacenes.find(a => a.id === this.selectedAlmacenDestinoId);
+      if (almacen && almacen.capacidadMaxima) {
+        const currentStock = (almacen.productos || []).reduce((sum: number, s: any) => sum + (s.stock || 0), 0);
+        const maxCapacity = almacen.capacidadMaxima;
+        const available = maxCapacity - currentStock;
+        const incoming = this.selectedProduction?.cantidadProducida || 0;
+        this.destinoCapacityInfo = {
+          maxCapacity,
+          currentStock,
+          available,
+          valid: incoming <= available
+        };
+        this.cdr.markForCheck();
+      } else {
+        this.destinoCapacityInfo = { maxCapacity: 0, currentStock: 0, available: 999999, valid: true }; // Sin limite
+        this.cdr.markForCheck();
+      }
+    } else {
+      this.destinoCapacityInfo = null;
+      this.cdr.markForCheck();
+    }
+  }
+
   approveProduction(): void {
     if (!this.selectedProduction || !this.selectedProduction.id) return;
-    if (this.selectedAlmacenId === 0) {
-      Swal.fire('Error', 'Debes seleccionar un almacén válido.', 'error');
+    if (this.selectedAlmacenOrigenId === 0 || this.selectedAlmacenDestinoId === 0) {
+      Swal.fire('Error', 'Debes seleccionar un almacén de origen y uno de destino.', 'error');
+      return;
+    }
+
+    // Verify stock from lotes directly before approval
+    const requiredItems = this.selectedProduction?.detalles?.filter(d => d.tipoMovimiento === 'Egreso') || [];
+    let stockValid = true;
+    let stockErrors: string[] = [];
+
+    requiredItems.forEach(reqItem => {
+      const sumLotes = this.approvalLotes
+        .filter(l => l.id_item === reqItem.itemId)
+        .reduce((sum, l) => sum + l.cantidad_disponible, 0);
+        
+      if (sumLotes < reqItem.cantidad) {
+        stockValid = false;
+        const itemName = this.itemsMap.get(reqItem.itemId) || `Item ${reqItem.itemId}`;
+        stockErrors.push(`- ${itemName}: Requerido ${reqItem.cantidad}, Disponible ${sumLotes}`);
+      }
+    });
+
+    if (!stockValid) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Stock Insuficiente',
+        html: `No hay suficientes insumos en el almacén de origen seleccionado:<br><br>${stockErrors.join('<br>')}`,
+        confirmButtonColor: '#3E261A'
+      });
+      return;
+    }
+
+    if (this.destinoCapacityInfo && !this.destinoCapacityInfo.valid) {
+      Swal.fire('Error', 'El almacén destino no tiene capacidad suficiente.', 'error');
       return;
     }
 
     const prodId = this.selectedProduction.id;
-    const almacenId = this.selectedAlmacenId;
+    const almacenOrigenId = this.selectedAlmacenOrigenId;
+    const almacenDestinoId = this.selectedAlmacenDestinoId;
 
     const userSession = JSON.parse(sessionStorage.getItem('user') || '{}');
-    const employeeId = userSession.idEmpleado;
+    const employeeId = userSession.idEmpleado || userSession.IdEmpleado || userSession.id_empleado || null;
 
     if (employeeId) {
-      this.executeApproval(prodId, employeeId, almacenId);
+      this.executeApproval(prodId, employeeId, almacenOrigenId, almacenDestinoId);
     } else {
       // Ask for Employee if missing
       const empOptions: { [key: string]: string } = {};
@@ -226,13 +333,13 @@ export class ProductionListComponent implements OnInit {
         cancelButtonText: 'Cancelar'
       }).then((resultEmp) => {
         if (resultEmp.isConfirmed && resultEmp.value) {
-          this.executeApproval(prodId, Number(resultEmp.value), almacenId);
+          this.executeApproval(prodId, Number(resultEmp.value), almacenOrigenId, almacenDestinoId);
         }
       });
     }
   }
 
-  private executeApproval(id: number, employeeId: number, almacenId: number): void {
+  private executeApproval(id: number, employeeId: number, almacenOrigenId: number, almacenDestinoId: number): void {
     Swal.fire({
       title: 'Aprobando orden...',
       text: 'Se validará el stock de insumos y se actualizarán las existencias.',
@@ -242,7 +349,7 @@ export class ProductionListComponent implements OnInit {
       }
     });
 
-    this.productionService.aprobarProduccion(id, employeeId, almacenId).subscribe({
+    this.productionService.aprobarProduccion(id, employeeId, almacenOrigenId, almacenDestinoId).subscribe({
       next: (response) => {
         Swal.close();
         this.closeApprovalModal();

@@ -199,7 +199,8 @@ namespace MSVenta.Inventario.Services
                     origen_almacen_id = t.IdAlmacenOrigen,
                     destino_almacen_id = t.IdAlmacenDestino,
                     cantidad = item != null ? item.Cantidad : 0,
-                    lote_origen_id = t.IdTraspaso, // using id as fallback
+                    lote_origen_id = item != null ? item.IdLoteOrigen : null,
+                    lote_destino_id = item != null ? item.IdLoteDestino : null,
                     motivo = t.Observaciones,
                     estado = t.Estado,
                     id_item = item != null ? item.IdItem : 0
@@ -210,66 +211,84 @@ namespace MSVenta.Inventario.Services
 
         public async Task<bool> RegistrarTraspasoAsync(int loteId, int almacenOrigenId, int almacenDestinoId, decimal cantidad, string motivo, int empleadoId)
         {
-            var lote = await _context.LotesInventario.FindAsync(loteId);
-            if (lote == null || lote.CantidadDisponible < cantidad) return false;
-
-            lote.CantidadDisponible -= cantidad;
-            _context.LotesInventario.Update(lote);
-
-            var nuevoLote = new LoteInventario
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                IdAlmacen = almacenDestinoId,
-                IdItem = lote.IdItem,
-                CantidadInicial = cantidad,
-                CantidadDisponible = cantidad,
-                PrecioUnitario = lote.PrecioUnitario,
-                FechaEntrada = DateTime.UtcNow,
-                FechaVencimiento = lote.FechaVencimiento,
-                MetodoValuacion = lote.MetodoValuacion,
-                Estado = "Disponible"
-            };
-            _context.LotesInventario.Add(nuevoLote);
+                var lote = await _context.LotesInventario.FindAsync(loteId);
+                if (lote == null || lote.CantidadDisponible < cantidad) return false;
 
-            var movimientoSalida = new MovimientoInventario
+                lote.CantidadDisponible -= cantidad;
+                _context.LotesInventario.Update(lote);
+
+                var nuevoLote = new LoteInventario
+                {
+                    IdAlmacen = almacenDestinoId,
+                    IdItem = lote.IdItem,
+                    CantidadInicial = cantidad,
+                    CantidadDisponible = cantidad,
+                    PrecioUnitario = lote.PrecioUnitario,
+                    FechaEntrada = DateTime.UtcNow,
+                    FechaVencimiento = lote.FechaVencimiento,
+                    MetodoValuacion = lote.MetodoValuacion,
+                    Estado = "Disponible"
+                };
+                _context.LotesInventario.Add(nuevoLote);
+
+                var movimientoSalida = new MovimientoInventario
+                {
+                    IdLote = lote.IdLote,
+                    IdAlmacen = almacenOrigenId,
+                    IdItem = lote.IdItem,
+                    TipoMovimiento = "Salida Traspaso",
+                    Cantidad = -cantidad,
+                    CostoUnitario = lote.PrecioUnitario,
+                    CostoTotal = -cantidad * lote.PrecioUnitario,
+                    FechaMovimiento = DateTime.UtcNow,
+                    IdEmpleado = empleadoId
+                };
+                _context.MovimientosInventario.Add(movimientoSalida);
+
+                var traspaso = new MSVenta.Inventario.Models.Traspaso
+                {
+                    IdAlmacenOrigen = almacenOrigenId,
+                    IdAlmacenDestino = almacenDestinoId,
+                    IdEmpleado = empleadoId,
+                    FechaSolicitud = DateTime.UtcNow,
+                    Estado = "Completado",
+                    Observaciones = motivo
+                };
+                _context.Traspasos.Add(traspaso);
+                await _context.SaveChangesAsync();
+
+                var traspasoItem = new MSVenta.Inventario.Models.TraspasoAlmacenItem
+                {
+                    IdTraspaso = traspaso.IdTraspaso,
+                    IdItem = lote.IdItem,
+                    Cantidad = cantidad,
+                    IdLoteOrigen = lote.IdLote,
+                    IdLoteDestino = nuevoLote.IdLote
+                };
+                _context.TraspasosAlmacenItem.Add(traspasoItem);
+                
+                await _context.SaveChangesAsync();
+                
+                var syncOrigen = await _ventaProxy.SincronizarStockAgregadoAsync(lote.IdItem, almacenOrigenId, -cantidad);
+                var syncDestino = await _ventaProxy.SincronizarStockAgregadoAsync(lote.IdItem, almacenDestinoId, cantidad);
+
+                if (!syncOrigen || !syncDestino)
+                {
+                    await transaction.RollbackAsync();
+                    return false;
+                }
+
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception)
             {
-                IdLote = lote.IdLote,
-                IdAlmacen = almacenOrigenId,
-                IdItem = lote.IdItem,
-                TipoMovimiento = "Salida Traspaso",
-                Cantidad = -cantidad,
-                CostoUnitario = lote.PrecioUnitario,
-                CostoTotal = -cantidad * lote.PrecioUnitario,
-                FechaMovimiento = DateTime.UtcNow,
-                IdEmpleado = empleadoId
-            };
-            _context.MovimientosInventario.Add(movimientoSalida);
-
-            var traspaso = new MSVenta.Inventario.Models.Traspaso
-            {
-                IdAlmacenOrigen = almacenOrigenId,
-                IdAlmacenDestino = almacenDestinoId,
-                IdEmpleado = empleadoId,
-                FechaSolicitud = DateTime.UtcNow,
-                Estado = "Completado",
-                Observaciones = motivo
-            };
-            _context.Traspasos.Add(traspaso);
-            await _context.SaveChangesAsync();
-
-            var traspasoItem = new MSVenta.Inventario.Models.TraspasoAlmacenItem
-            {
-                IdTraspaso = traspaso.IdTraspaso,
-                IdItem = lote.IdItem,
-                Cantidad = cantidad
-            };
-            _context.TraspasosAlmacenItem.Add(traspasoItem);
-            
-            await _context.SaveChangesAsync();
-            
-            await _ventaProxy.SincronizarStockAgregadoAsync(lote.IdItem, almacenOrigenId, -cantidad);
-            await _ventaProxy.SincronizarStockAgregadoAsync(lote.IdItem, almacenDestinoId, cantidad);
-
-            return true;
+                await transaction.RollbackAsync();
+                return false;
+            }
         }
 
         public async Task<object> GetConfiguracionAsync()

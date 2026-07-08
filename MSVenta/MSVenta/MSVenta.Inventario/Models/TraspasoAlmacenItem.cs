@@ -18,5 +18,11 @@ namespace MSVenta.Inventario.Models
 
         [Column("cantidad", TypeName = "decimal(10, 2)")]
         public decimal Cantidad { get; set; }
+
+        [Column("id_lote_origen")]
+        public int? IdLoteOrigen { get; set; }
+
+        [Column("id_lote_destino")]
+        public int? IdLoteDestino { get; set; }
     }
 }

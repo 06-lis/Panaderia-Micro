@@ -82,6 +82,11 @@
                     title="Ver Detalles">
               <i class="pi pi-eye text-sm"></i>
             </button>
+            <button (click)="startEdit(recipe)"
+                    class="p-2 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-xl transition-all active:scale-95 shadow-sm border border-blue-100/50"
+                    title="Editar Receta">
+              <i class="pi pi-pencil text-sm"></i>
+            </button>
             <button (click)="deleteRecipe(recipe)"
                     class="p-2 bg-red-50 hover:bg-red-100 text-red-650 rounded-xl transition-all active:scale-95 shadow-sm border border-red-100/50"
                     title="Eliminar Receta">
@@ -100,13 +105,20 @@
       <!-- Header -->
       <div class="bg-[#3E261A] text-white p-5 flex justify-between items-center relative">
         <div>
-          <span class="text-xs text-[#C2A378] font-bold uppercase tracking-widest">Receta Completa</span>
+          <span class="text-xs text-[#C2A378] font-bold uppercase tracking-widest">{{ isEditing ? 'Editar Receta' : 'Receta Completa' }}</span>
           <h3 class="text-xl font-extrabold">{{ selectedRecipe.nombre }}</h3>
         </div>
-        <button (click)="closeDetails()" 
-                class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors">
-          <i class="pi pi-times"></i>
-        </button>
+        <div class="flex items-center gap-3">
+          <button *ngIf="!isEditing" (click)="startEdit()" 
+                  class="w-8 h-8 rounded-full bg-blue-500/20 hover:bg-blue-500/40 text-blue-300 flex items-center justify-center transition-colors"
+                  title="Editar">
+            <i class="pi pi-pencil"></i>
+          </button>
+          <button (click)="closeDetails()" 
+                  class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors">
+            <i class="pi pi-times"></i>
+          </button>
+        </div>
       </div>
 
       <!-- Content -->
@@ -123,13 +135,21 @@
           </div>
           <div class="p-3 bg-[#FAF6EE] rounded-2xl border border-amber-100/50">
             <span class="text-[10px] font-bold text-amber-800/60 uppercase tracking-wider">Rendimiento Base</span>
-            <div class="font-extrabold text-amber-950 text-sm mt-0.5">{{ selectedRecipe.cantidadRequerida }} unidades</div>
+            
+            <div *ngIf="!isEditing" class="font-extrabold text-amber-950 text-sm mt-0.5">{{ selectedRecipe.cantidadRequerida }} unidades</div>
+            
+            <div *ngIf="isEditing" [formGroup]="editForm" class="mt-1">
+              <input type="number" formControlName="cantidadRequerida" min="1"
+                     class="w-full px-2 py-1.5 bg-white border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] text-sm font-bold text-amber-950" />
+            </div>
           </div>
         </div>
 
         <div>
           <h4 class="text-xs font-bold text-amber-800/60 uppercase tracking-wider mb-2">Ingredientes Requeridos (Insumos)</h4>
-          <div class="border border-amber-200/30 rounded-2xl overflow-hidden shadow-sm">
+          
+          <!-- View Mode -->
+          <div *ngIf="!isEditing" class="border border-amber-200/30 rounded-2xl overflow-hidden shadow-sm">
             <table class="w-full text-left border-collapse text-sm">
               <thead>
                 <tr class="bg-[#F5EFE4] text-amber-950 font-bold border-b border-amber-200/50">
@@ -147,15 +167,80 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Edit Mode -->
+          <div *ngIf="isEditing" [formGroup]="editForm" class="space-y-3">
+            <div formArrayName="detalles" class="border border-amber-200/50 rounded-2xl overflow-hidden">
+              <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                  <tr class="bg-[#F5EFE4] text-amber-950 font-bold border-b border-amber-200/50">
+                    <th class="py-2 px-3">Insumo</th>
+                    <th class="py-2 px-3 w-32">Cantidad</th>
+                    <th class="py-2 px-3 w-12 text-center">Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let det of detallesFormArray.controls; let i = index" [formGroupName]="i" class="border-b border-amber-100/30 bg-white">
+                    <td class="p-2">
+                      <div class="relative">
+                        <input type="text" formControlName="searchCtrl" 
+                               (input)="filterInsumo(i, $event)" 
+                               (focus)="filterInsumo(i, $event)" 
+                               placeholder="Buscar insumo por ID o nombre..."
+                               class="w-full px-2 py-1.5 bg-amber-50/30 border border-amber-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#8E4E2A]">
+                        
+                        <div *ngIf="det.get('suggestions')?.value?.length > 0" class="absolute z-10 w-full mt-1 bg-white border border-amber-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                          <div *ngFor="let item of det.get('suggestions')?.value" (click)="selectInsumo(i, item)"
+                               class="px-3 py-2 hover:bg-amber-50 cursor-pointer text-sm font-medium text-amber-900 border-b border-amber-50 last:border-0">
+                            <span class="font-bold">#{{item.id || item.itemId}}</span> - {{ item.nombre || item.nombreProducto }}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="p-2">
+                      <input type="number" formControlName="cantidadRequerida" min="1" step="0.01"
+                             class="w-full px-2 py-1.5 bg-amber-50/30 border border-amber-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-[#8E4E2A]" />
+                    </td>
+                    <td class="p-2 text-center">
+                      <button type="button" (click)="removeDetalle(i)" class="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 text-red-500 flex items-center justify-center transition-colors">
+                        <i class="pi pi-trash text-xs"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="detallesFormArray.length === 0" class="p-4 text-center text-sm text-amber-800/60 italic">
+                No hay insumos agregados.
+              </div>
+            </div>
+            
+            <button type="button" (click)="addDetalle()" class="text-xs font-bold text-[#8E4E2A] hover:text-[#523322] flex items-center gap-1 transition-colors">
+              <i class="pi pi-plus-circle"></i> Agregar Insumo
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Footer -->
-      <div class="p-4 bg-amber-50 border-t border-amber-100 flex justify-end">
-        <button (click)="closeDetails()" 
+      <div class="p-4 bg-amber-50 border-t border-amber-100 flex justify-end gap-3">
+        <!-- View Mode Actions -->
+        <button *ngIf="!isEditing" (click)="closeDetails()" 
                 class="px-5 py-2 bg-[#3E261A] hover:bg-[#523322] text-white font-bold rounded-xl text-sm transition-all active:scale-95 shadow">
           Cerrar
         </button>
+        
+        <!-- Edit Mode Actions -->
+        <ng-container *ngIf="isEditing">
+          <button (click)="cancelEdit()" [disabled]="saving"
+                  class="px-5 py-2 bg-white hover:bg-amber-100 border border-amber-200 text-amber-900 font-bold rounded-xl text-sm transition-all active:scale-95 disabled:opacity-50">
+            Cancelar
+          </button>
+          <button (click)="saveEdit()" [disabled]="saving || editForm.invalid"
+                  class="px-5 py-2 bg-[#8E4E2A] hover:bg-[#6b3a1e] text-white font-bold rounded-xl text-sm transition-all active:scale-95 shadow-lg disabled:opacity-50 flex items-center gap-2">
+            <span *ngIf="saving" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+            {{ saving ? 'Guardando...' : 'Guardar Cambios' }}
+          </button>
+        </ng-container>
       </div>
     </div>
   </div>
