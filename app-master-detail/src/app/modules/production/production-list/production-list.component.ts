@@ -34,6 +34,7 @@ export class ProductionListComponent implements OnInit {
   destinoCapacityInfo: { maxCapacity: number, currentStock: number, available: number, valid: boolean } | null = null;
   approvalLotes: any[] = [];
   productionMovimientos: any[] = []; // Para historial de lotes
+  valuacionMetodo: string = 'FIFO';
 
   almacenOrigenSearchCtrl = new FormControl('');
   almacenDestinoSearchCtrl = new FormControl('');
@@ -50,6 +51,15 @@ export class ProductionListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.inventarioService.getConfiguracion().subscribe({
+      next: (config) => {
+        this.valuacionMetodo = config?.metodo_valuacion_por_defecto || 'FIFO';
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.valuacionMetodo = 'FIFO';
+      }
+    });
     this.loadData();
     this.almacenOrigenSearchCtrl.valueChanges.subscribe(val => this.filterAlmacenOrigen(val));
     this.almacenDestinoSearchCtrl.valueChanges.subscribe(val => this.filterAlmacenDestino(val));
@@ -188,7 +198,7 @@ export class ProductionListComponent implements OnInit {
     const q = (query || '').toLowerCase();
     this.almacenOrigenSuggestions = this.almacenes.filter(a => {
       const aType = (a.tipo || '').toLowerCase();
-      return (aType === 'insumo' || aType === 'mixto') && 
+      return (aType === 'insumo' || aType === 'insumos' || aType === 'mixto' || aType === 'mixtos') && 
              (a.nombre.toLowerCase().includes(q) || a.id.toString().includes(q));
     });
     this.cdr.markForCheck();
@@ -204,7 +214,7 @@ export class ProductionListComponent implements OnInit {
     const q = (query || '').toLowerCase();
     this.almacenDestinoSuggestions = this.almacenes.filter(a => {
       const aType = (a.tipo || '').toLowerCase();
-      return (aType === 'producto' || aType === 'mixto') && 
+      return (aType === 'producto' || aType === 'productos' || aType === 'mixto' || aType === 'mixtos') && 
              (a.nombre.toLowerCase().includes(q) || a.id.toString().includes(q));
     });
     this.cdr.markForCheck();
@@ -223,13 +233,41 @@ export class ProductionListComponent implements OnInit {
       this.inventarioService.getLotes().subscribe({
         next: (lotes) => {
           // Filter lotes belonging to the selected warehouse and corresponding to the required items
-          const requiredItemIds = this.selectedProduction?.detalles?.filter(d => d.tipoMovimiento === 'Egreso').map(d => d.itemId) || [];
+          const requiredItems = this.selectedProduction?.detalles?.filter(d => d.tipoMovimiento === 'Egreso') || [];
+          const requiredItemIds = requiredItems.map(d => d.itemId);
           
-          this.approvalLotes = lotes.filter(l => 
+          let filteredLotes = lotes.filter(l => 
             l.id_almacen === this.selectedAlmacenOrigenId && 
             requiredItemIds.includes(l.id_item) &&
             l.cantidad_disponible > 0
           );
+
+          // Order by fecha_entrada based on method
+          filteredLotes.sort((a, b) => {
+            const dateA = a.fecha_entrada ? new Date(a.fecha_entrada).getTime() : 0;
+            const dateB = b.fecha_entrada ? new Date(b.fecha_entrada).getTime() : 0;
+            if (dateA !== dateB) {
+                return this.valuacionMetodo === 'LIFO' ? (dateB - dateA) : (dateA - dateB);
+            }
+            return this.valuacionMetodo === 'LIFO' ? (b.id_lote - a.id_lote) : (a.id_lote - b.id_lote);
+          });
+
+          // Calculate how much will be deducted from each lot
+          requiredItems.forEach(req => {
+            let qtyToDeduct = req.cantidad;
+            const lotesForItem = filteredLotes.filter(l => l.id_item === req.itemId);
+            lotesForItem.forEach(l => {
+              if (qtyToDeduct <= 0) {
+                l.a_descontar = 0;
+                return;
+              }
+              const discount = Math.min(l.cantidad_disponible, qtyToDeduct);
+              l.a_descontar = discount;
+              qtyToDeduct -= discount;
+            });
+          });
+
+          this.approvalLotes = filteredLotes;
           this.cdr.markForCheck();
         }
       });

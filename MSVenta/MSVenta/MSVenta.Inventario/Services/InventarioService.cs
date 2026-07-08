@@ -78,9 +78,13 @@ namespace MSVenta.Inventario.Services
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // Buscar lotes disponibles por PEPS con bloqueo FOR UPDATE
+                var configMetodo = await _context.ConfiguracionesInventario.FirstOrDefaultAsync(c => c.Clave == "metodo_valuacion_por_defecto");
+                string metodo = configMetodo?.Valor ?? "FIFO";
+                string order = metodo == "LIFO" ? "DESC" : "ASC";
+
+                // Buscar lotes disponibles por PEPS/UEPS con bloqueo FOR UPDATE
                 var lotesDisponibles = await _context.LotesInventario
-                    .FromSqlRaw("SELECT * FROM lotes_inventario WHERE id_almacen = {0} AND id_item = {1} AND cantidad_disponible > 0 ORDER BY fecha_entrada ASC FOR UPDATE", almacenId, itemId)
+                    .FromSqlRaw($"SELECT * FROM lotes_inventario WHERE id_almacen = {{0}} AND id_item = {{1}} AND cantidad_disponible > 0 ORDER BY fecha_entrada {order} FOR UPDATE", almacenId, itemId)
                     .ToListAsync();
 
                 decimal cantidadRestante = cantidad;
@@ -150,8 +154,9 @@ namespace MSVenta.Inventario.Services
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // TODO: Obtener config real si existe. Default: PEPS
-                string order = "ASC"; // ASC para PEPS, DESC para UEPS
+                var configMetodo = await _context.ConfiguracionesInventario.FirstOrDefaultAsync(c => c.Clave == "metodo_valuacion_por_defecto");
+                string metodo = configMetodo?.Valor ?? "FIFO";
+                string order = metodo == "LIFO" ? "DESC" : "ASC";
                 
                 var lotesDisponibles = await _context.LotesInventario
                     .FromSqlRaw($"SELECT * FROM lotes_inventario WHERE id_item = {{0}} AND cantidad_disponible > 0 ORDER BY fecha_entrada {order} FOR UPDATE", itemId)
@@ -450,19 +455,38 @@ namespace MSVenta.Inventario.Services
 
         public async Task<object> GetConfiguracionAsync()
         {
-            return await Task.FromResult(new {
-                metodo_valuacion_por_defecto = "FIFO",
-                dias_notificacion_vencimiento = 30,
-                permitir_stock_negativo = false,
-                notificar_stock_bajo = true,
-                nivel_stock_bajo = 10,
-                dias_por_defecto_vencimiento = 365
-            });
+            var configDict = await _context.ConfiguracionesInventario.ToDictionaryAsync(c => c.Clave, c => c.Valor);
+            
+            return new {
+                metodo_valuacion_por_defecto = configDict.ContainsKey("metodo_valuacion_por_defecto") ? configDict["metodo_valuacion_por_defecto"] : "FIFO",
+                dias_notificacion_vencimiento = configDict.ContainsKey("dias_notificacion_vencimiento") ? int.Parse(configDict["dias_notificacion_vencimiento"]) : 30,
+                permitir_stock_negativo = configDict.ContainsKey("permitir_stock_negativo") ? bool.Parse(configDict["permitir_stock_negativo"]) : false,
+                notificar_stock_bajo = configDict.ContainsKey("notificar_stock_bajo") ? bool.Parse(configDict["notificar_stock_bajo"]) : true,
+                nivel_stock_bajo = configDict.ContainsKey("nivel_stock_bajo") ? int.Parse(configDict["nivel_stock_bajo"]) : 10,
+                dias_por_defecto_vencimiento = configDict.ContainsKey("dias_por_defecto_vencimiento") ? int.Parse(configDict["dias_por_defecto_vencimiento"]) : 365
+            };
         }
 
         public async Task<bool> UpdateConfiguracionAsync(object config)
         {
-            return await Task.FromResult(true);
+            var json = System.Text.Json.JsonSerializer.Serialize(config);
+            var dict = System.Text.Json.JsonSerializer.Deserialize<System.Collections.Generic.Dictionary<string, object>>(json);
+
+            foreach (var kvp in dict)
+            {
+                var existing = await _context.ConfiguracionesInventario.FirstOrDefaultAsync(c => c.Clave == kvp.Key);
+                if (existing != null)
+                {
+                    existing.Valor = kvp.Value?.ToString();
+                    _context.ConfiguracionesInventario.Update(existing);
+                }
+                else
+                {
+                    _context.ConfiguracionesInventario.Add(new Models.ConfiguracionInventario { Clave = kvp.Key, Valor = kvp.Value?.ToString() });
+                }
+            }
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

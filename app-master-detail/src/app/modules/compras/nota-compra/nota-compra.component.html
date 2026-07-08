@@ -199,7 +199,7 @@
                     <select [(ngModel)]="d.idAlmacen" class="form-select" style="font-size: 0.85rem; padding: 8px; width: 100%; box-sizing: border-box;">
                       <option [value]="0">Seleccionar almacén...</option>
                       @for (a of almacenesPermitidos; track a.id) {
-                        <option [value]="a.id">{{ a.nombre }}</option>
+                        <option [value]="a.id">{{ a.nombre }} ({{ a.tipo ? (a.tipo | uppercase) : 'S/T' }})</option>
                       }
                     </select>
                   </div>

@@ -235,11 +235,6 @@ export class TraspasosComponent implements OnInit {
     const loteId = this.traspasoForm.value.loteId;
     const lote = this.lotesDisponibles.find(l => l.id_lote == loteId);
     if (lote) {
-      this.traspasoForm.patchValue({
-        almacenOrigenId: lote.id_almacen,
-        almacenDestinoId: null
-      });
-
       // Validations: Filter almacenesDestino
       const itemType = (lote.tipo_item || '').toLowerCase();
       this.almacenesDestino = this.almacenes.filter(a => {
@@ -259,9 +254,22 @@ export class TraspasosComponent implements OnInit {
         
         return true;
       });
+
+      const currentDestinoId = this.traspasoForm.value.almacenDestinoId;
+      const isValidDestino = this.almacenesDestino.some(a => a.id === currentDestinoId);
+
+      this.traspasoForm.patchValue({
+        almacenOrigenId: lote.id_almacen,
+        almacenDestinoId: isValidDestino ? currentDestinoId : null
+      });
+
+      if (!isValidDestino) {
+        this.almacenDestinoSearchCtrl.setValue('', { emitEvent: false });
+      }
     } else {
       this.almacenesDestino = [];
       this.traspasoForm.patchValue({ almacenOrigenId: null, almacenDestinoId: null });
+      this.almacenDestinoSearchCtrl.setValue('', { emitEvent: false });
     }
   }
 

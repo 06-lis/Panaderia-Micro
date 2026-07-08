@@ -326,7 +326,10 @@ export class NotaCompraComponent implements OnInit {
   }
 
   get almacenesPermitidos(): Almacen[] {
-    return this.almacenes();
+    return this.almacenes().filter(a => {
+      const t = a.tipo?.toLowerCase();
+      return t === 'insumo' || t === 'insumos' || t === 'mixto' || t === 'mixtos';
+    });
   }
 
   getEstadosUnicos(): string[] {

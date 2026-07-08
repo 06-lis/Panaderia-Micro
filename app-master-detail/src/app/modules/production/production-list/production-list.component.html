@@ -305,6 +305,7 @@
                   <th class="py-2.5 px-3">Lote ID</th>
                   <th class="py-2.5 px-3">Vencimiento</th>
                   <th class="py-2.5 px-3 text-right">Cant. Disponible</th>
+                  <th class="py-2.5 px-3 text-right">A Descontar</th>
                 </tr>
               </thead>
               <tbody>
@@ -318,6 +319,10 @@
                     <span *ngIf="!lote.fecha_vencimiento" class="text-amber-700/50 italic">Sin fecha</span>
                   </td>
                   <td class="py-2.5 px-3 text-right font-bold text-emerald-700">{{ lote.cantidad_disponible }}</td>
+                  <td class="py-2.5 px-3 text-right font-bold text-red-600">
+                    <span *ngIf="lote.a_descontar > 0">-{{ lote.a_descontar }}</span>
+                    <span *ngIf="!lote.a_descontar || lote.a_descontar === 0" class="text-amber-700/40">0</span>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -372,7 +377,7 @@
                 [disabled]="selectedAlmacenOrigenId === 0 || selectedAlmacenDestinoId === 0 || (destinoCapacityInfo && !destinoCapacityInfo.valid)"
                 [class.opacity-50]="selectedAlmacenOrigenId === 0 || selectedAlmacenDestinoId === 0 || (destinoCapacityInfo && !destinoCapacityInfo.valid)"
                 class="px-5 py-2.5 bg-[#8E4E2A] hover:bg-[#7a4223] text-white font-bold rounded-xl text-sm transition-all active:scale-95 shadow disabled:cursor-not-allowed">
-          Confirmar y Ejecutar PEPS
+          Confirmar y Ejecutar {{ valuacionMetodo === 'LIFO' ? 'UEPS' : 'PEPS' }}
         </button>
         <button (click)="closeApprovalModal()" 
                 class="px-5 py-2.5 bg-transparent hover:bg-amber-100 text-[#3E261A] font-bold rounded-xl text-sm transition-all active:scale-95">

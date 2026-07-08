@@ -23,8 +23,14 @@ namespace MSVenta.Gateway
                     webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
                     {
                         var env = hostingContext.HostingEnvironment;
-                        config.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true)
-                              .AddJsonFile($"ocelot.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                        if (env.IsDevelopment() && System.IO.File.Exists("ocelot.Development.json"))
+                        {
+                            config.AddJsonFile("ocelot.Development.json", optional: false, reloadOnChange: true);
+                        }
+                        else
+                        {
+                            config.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+                        }
                     });
                     webBuilder.UseStartup<Startup>();
                 });
