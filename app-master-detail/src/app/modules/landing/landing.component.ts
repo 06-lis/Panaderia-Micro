@@ -59,6 +59,36 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.router.navigate(['/dashboard']);
   }
 
+  mostrarMisPedidos = false;
+  misPedidos: any[] = [];
+  idClienteSession = 0;
+
+  toggleMisPedidos() {
+    this.mostrarMisPedidos = !this.mostrarMisPedidos;
+    if (this.mostrarMisPedidos) {
+      this.cargarMisPedidos();
+    }
+  }
+
+  cargarMisPedidos() {
+    let url = `${environment.URL_SERVICIOS}/landing/mis-pedidos-por-cliente/${this.idClienteSession}`;
+    if (this.idClienteSession <= 0) {
+      if (!this.cliente.nombre || !this.cliente.apellido) return;
+      url = `${environment.URL_SERVICIOS}/landing/mis-pedidos-por-nombre?nombre=${this.cliente.nombre}&apellido=${this.cliente.apellido}`;
+    }
+
+    this.http.get<any[]>(url)
+      .subscribe({
+        next: (res) => {
+          this.misPedidos = res;
+        },
+        error: (err) => {
+          console.error('Error cargando pedidos', err);
+          Swal.fire('Error', 'No se pudieron cargar tus pedidos.', 'error');
+        }
+      });
+  }
+
   ngOnInit(): void {
     this.cargarProductos();
     const userJson = sessionStorage.getItem('user');
@@ -67,6 +97,7 @@ export class LandingComponent implements OnInit, OnDestroy {
       try {
         const user = JSON.parse(userJson);
         this.isEmployee = user.idEmpleado > 0 || (user.roles && user.roles.some((r: any) => r.nombre_Rol && r.nombre_Rol.toLowerCase() !== 'cliente'));
+        this.idClienteSession = user.idCliente || 0;
         
         if (user.fullname) {
           const parts = user.fullname.trim().split(' ');

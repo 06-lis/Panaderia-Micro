@@ -21,6 +21,9 @@
 
       <!-- Si está logueado -->
       <ng-container *ngIf="isLoggedIn">
+        <button (click)="toggleMisPedidos()" class="font-semibold text-[#f0e6d2] hover:text-white transition-colors flex items-center gap-2">
+          <i class="pi pi-list"></i> {{ mostrarMisPedidos ? 'Ver Tienda' : 'Mis Pedidos' }}
+        </button>
         <span class="text-[#f0e6d2] font-semibold flex items-center gap-2 bg-[#704214]/40 px-3 py-1.5 rounded-lg border border-[#f0e6d2]/20">
            Hola, {{ cliente.nombre }}
         </span>
@@ -41,7 +44,7 @@
   <main class="container mx-auto p-6 max-w-6xl">
     
     <!-- Hero Section -->
-    <div *ngIf="!checkoutProcess" class="text-center py-10 mb-8 bg-[#e8d5c4] rounded-2xl shadow-sm border border-[#d2b48c]">
+    <div *ngIf="!checkoutProcess && !mostrarMisPedidos" class="text-center py-10 mb-8 bg-[#e8d5c4] rounded-2xl shadow-sm border border-[#d2b48c]">
       <h2 class="text-4xl font-serif font-bold text-[#5c3a21] mb-3">Recién salido del horno</h2>
       <p class="text-lg text-[#6d4c41]">Disfruta de nuestros mejores panes y postres artesanales.</p>
     </div>
@@ -52,7 +55,7 @@
     </div>
 
     <!-- Product Grid -->
-    <div *ngIf="!loading && !checkoutProcess" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div *ngIf="!loading && !checkoutProcess && !mostrarMisPedidos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <div *ngFor="let prod of productos" class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow border border-[#f0e6d2] flex flex-col">
         <div class="h-48 bg-[#f5ebe0] flex items-center justify-center overflow-hidden relative">
           <img *ngIf="prod.imagen" [src]="prod.imagen" [alt]="prod.nombre" class="object-cover w-full h-full" onerror="this.src='assets/default-bakery.jpg?v=1'">
@@ -82,13 +85,13 @@
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="!loading && !checkoutProcess && productos.length === 0" class="text-center py-20">
+    <div *ngIf="!loading && !checkoutProcess && !mostrarMisPedidos && productos.length === 0" class="text-center py-20">
       <i class="pi pi-box text-6xl text-[#d2b48c] mb-4"></i>
       <p class="text-xl text-[#8b5a2b]">No hay productos disponibles por el momento.</p>
     </div>
 
     <!-- Checkout Process -->
-    <div *ngIf="checkoutProcess" class="max-w-4xl mx-auto">
+    <div *ngIf="checkoutProcess && !mostrarMisPedidos" class="max-w-4xl mx-auto">
       <button (click)="volverAProductos()" class="mb-6 text-[#8b5a2b] hover:text-[#5c3a21] font-semibold flex items-center gap-2 transition-colors">
         <i class="pi pi-arrow-left"></i> Volver a la tienda
       </button>
@@ -196,8 +199,66 @@
       </div>
     </div>
 
+    <!-- Sección Mis Pedidos -->
+    <div *ngIf="mostrarMisPedidos" class="max-w-5xl mx-auto bg-white p-6 rounded-2xl shadow-md border border-[#f0e6d2]">
+      <div class="flex justify-between items-center mb-6 border-b border-[#e8d5c4] pb-3">
+        <h3 class="text-3xl font-serif font-bold text-[#5c3a21]">Historial de Pedidos</h3>
+        <button (click)="toggleMisPedidos()" class="text-[#8b5a2b] hover:text-[#5c3a21] font-semibold flex items-center gap-2 transition-colors">
+          <i class="pi pi-arrow-left"></i> Volver a la tienda
+        </button>
+      </div>
+
+      <div *ngIf="misPedidos.length === 0" class="text-center py-10 text-[#8b5a2b]">
+        <i class="pi pi-receipt text-5xl mb-3 text-[#d2b48c]"></i>
+        <p class="text-xl">Aún no has realizado pedidos.</p>
+      </div>
+
+      <div *ngIf="misPedidos.length > 0" class="space-y-6">
+        <div *ngFor="let pedido of misPedidos" class="border border-[#e8d5c4] rounded-xl overflow-hidden bg-[#fdf8f5]">
+          <div class="bg-[#f5ebe0] px-4 py-3 flex justify-between items-center border-b border-[#e8d5c4]">
+            <div>
+              <span class="font-bold text-[#5c3a21]">Pedido #{{pedido.id}}</span>
+              <span class="ml-4 text-sm text-[#8b5a2b]">{{pedido.fecha | date:'medium'}}</span>
+            </div>
+            <div class="flex gap-3 items-center">
+              <span class="px-3 py-1 rounded-full text-xs font-bold text-white" 
+                [ngClass]="{
+                  'bg-yellow-500': pedido.estado === 'pendiente',
+                  'bg-blue-500': pedido.estado === 'pagado',
+                  'bg-green-600': pedido.estado === 'completado'
+                }">
+                {{ pedido.estado | uppercase }}
+              </span>
+            </div>
+          </div>
+          <div class="p-4">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="text-sm text-[#8b5a2b] border-b border-[#e8d5c4]">
+                  <th class="pb-2">Producto</th>
+                  <th class="pb-2 text-center">Cantidad</th>
+                  <th class="pb-2 text-right">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let prod of pedido.productos" class="border-b border-[#f0e6d2] last:border-0">
+                  <td class="py-2 text-[#4a3b32] font-semibold">{{prod.nombre}}</td>
+                  <td class="py-2 text-center text-[#6d4c41]">{{prod.cantidad}}</td>
+                  <td class="py-2 text-right font-bold text-[#5c3a21]">Bs. {{prod.subtotal | number:'1.2-2'}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="text-right mt-4 pt-2 border-t border-[#e8d5c4]">
+              <span class="text-[#8b5a2b] mr-4">Total Pagado:</span>
+              <span class="text-xl font-bold text-[#5c3a21]">Bs. {{pedido.total | number:'1.2-2'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Sección Quiénes Somos / Nuestra Tradición -->
-    <div *ngIf="!checkoutProcess" class="mt-20 py-12 px-6 bg-white rounded-3xl border border-amber-100 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+    <div *ngIf="!checkoutProcess && !mostrarMisPedidos" class="mt-20 py-12 px-6 bg-white rounded-3xl border border-amber-100 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
       <!-- Columna Izquierda: Imagen del Pan -->
       <div class="rounded-2xl overflow-hidden shadow-md h-80 bg-amber-50">
         <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=600&auto=format&fit=crop" 

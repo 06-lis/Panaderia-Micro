@@ -152,13 +152,39 @@ export class SaleListComponent implements OnInit{
       if (result.isConfirmed) {
         this.salesService.completarPagoLibelula(saleId, usuarioId).subscribe({
           next: (res) => {
-            Swal.fire('Completado', 'El pago ha sido marcado como completado.', 'success');
+            Swal.fire('Completado', 'El pago ha sido marcado como completado y el stock fue descontado inteligentemente.', 'success');
             // Refresh list
             this.ngOnInit();
           },
           error: (err) => {
             console.error(err);
-            Swal.fire('Error', 'Hubo un problema al completar el pago.', 'error');
+            const errorMsg = err.error?.message || err.message || '';
+            if (errorMsg.includes('stock_insuficiente')) {
+              Swal.fire({
+                title: 'Stock Insuficiente',
+                text: 'No hay stock global suficiente para aprobar este pedido web. ¿Deseas producir más pan o cancelar el pedido?',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Ir a Producción',
+                denyButtonText: 'Cancelar Pedido',
+                cancelButtonText: 'Cerrar'
+              }).then((result2) => {
+                if (result2.isConfirmed) {
+                  this.router.navigate(['/dashboard/produccion']);
+                } else if (result2.isDenied) {
+                  this.salesService.cancelarPedidoLanding(saleId).subscribe({
+                    next: () => {
+                      Swal.fire('Cancelado', 'El pedido fue cancelado correctamente.', 'success');
+                      this.ngOnInit();
+                    },
+                    error: (e) => Swal.fire('Error', 'No se pudo cancelar el pedido.', 'error')
+                  });
+                }
+              });
+            } else {
+              Swal.fire('Error', 'Hubo un problema al completar el pago.', 'error');
+            }
           }
         });
       }

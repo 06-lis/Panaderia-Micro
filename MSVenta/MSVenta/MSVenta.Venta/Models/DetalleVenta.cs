@@ -1,4 +1,6 @@
-﻿namespace MSVenta.Venta.Models
+using System.Text.Json.Serialization;
+
+namespace MSVenta.Venta.Models
 {
     public class DetalleVenta
     {
@@ -6,6 +8,7 @@
         public int ProductoAlmacenId { get; set; }
         public ProductoAlmacen ProductoAlmacen { get; set; }
         public int VentaId { get; set; }
+        [JsonIgnore]
         public Venta Venta { get; set; }
         public int Cantidad { get; set; }
         public double Monto { get; set; }

@@ -182,15 +182,12 @@ namespace MSVenta.Venta.Controllers
                 _context.Ventas.Add(venta);
                 await _context.SaveChangesAsync();
 
-                // Añadir Detalles y reducir stock
+                // Añadir Detalles sin reducir stock (se deducirá inteligentemente al aprobar la venta)
                 foreach (var item in pedido.Items)
                 {
                     var pa = await _context.ProductosAlmacenes.FindAsync(item.ProductoAlmacenId);
-                    if (pa != null && pa.Stock >= item.Cantidad)
+                    if (pa != null)
                     {
-                        pa.Stock -= item.Cantidad;
-                        _context.ProductosAlmacenes.Update(pa);
-
                         var detalle = new DetalleVenta
                         {
                             ProductoAlmacenId = pa.Id,
@@ -199,17 +196,10 @@ namespace MSVenta.Venta.Controllers
                             Monto = item.Precio * item.Cantidad
                         };
                         _context.DetallesVenta.Add(detalle);
-
-                        // Consumir el stock de cada detalle en el microservicio Inventario (manejo de lotes)
-                        bool consumoResult = await _inventarioService.ConsumirStockAsync(pa.ItemId, pa.AlmacenId, item.Cantidad, venta.UsuarioId, venta.Id, "Venta");
-                        if (!consumoResult)
-                        {
-                            throw new Exception($"No se pudo consumir el stock para el Item {item.Nombre} en MSInventario.");
-                        }
                     }
                     else
                     {
-                        throw new Exception($"Stock insuficiente para el producto {item.Nombre}");
+                        throw new Exception($"El producto {item.Nombre} no fue encontrado.");
                     }
                 }
                 await _context.SaveChangesAsync();
@@ -282,6 +272,111 @@ namespace MSVenta.Venta.Controllers
                 return NotFound(new { message = "Transacción no encontrada" });
             }
             return Ok(new { estado = transaccion.Estado });
+        }
+
+        [HttpGet("mis-pedidos/{email}")]
+        public async Task<IActionResult> GetMisPedidos(string email)
+        {
+            if (string.IsNullOrEmpty(email)) return BadRequest("Email inválido.");
+
+            // Buscar cliente asumiendo que el cliente web tiene un registro y un usuario.
+            // Los carritos web envían nombreCliente y apellidoCliente.
+            // Para ser más seguros, podemos buscar el usuario en seguridad por email, o buscar ventas 
+            // de la pasarela libelula relacionadas a ese email de alguna forma.
+            // Como el Checkout crea Clientes pero no guarda el email en Cliente, revisaremos si hay match de nombre o simplemente traemos las ventas que tengan un TransaccionLibelula donde el comprador de alguna manera coincida? 
+            // Espera, Checkout envía: pedido.NombreCliente, pedido.ApellidoCliente, pedido.EmailCliente
+            // Pero Cliente no tiene campo Email. 
+            // Sin embargo, cuando se registran (Register endpoint), se crea Usuario con username=Email y un Cliente asociado.
+            // Vamos a buscar el Cliente buscando el Usuario remoto? Eso puede ser lento.
+            // Mejor busquemos todas las Ventas donde el Cliente esté asociado a ese registro (si existe) o buscar las compras web de ese usuario si sabemos su ClienteId. 
+            // Dado que el sistema tiene un `Register` que devuelve `idCliente`, podríamos pasarlo desde el frontend.
+            // Cambiaremos esto para que reciba clienteId o que busque localmente.
+            return BadRequest("Use mis-pedidos-por-cliente endpoint");
+        }
+
+        [HttpGet("mis-pedidos-por-cliente/{clienteId}")]
+        public async Task<IActionResult> GetMisPedidosPorCliente(int clienteId)
+        {
+            var ventas = await _context.Ventas
+                .Include(v => v.TransaccionLibelula)
+                .Include(v => v.DetallesVenta)
+                .ThenInclude(d => d.ProductoAlmacen)
+                .ThenInclude(pa => pa.Item)
+                .Where(v => v.ClienteId == clienteId)
+                .OrderByDescending(v => v.Fecha)
+                .ToListAsync();
+
+            var resultados = ventas.Select(v => new
+            {
+                Id = v.Id,
+                Fecha = v.Fecha,
+                Estado = v.TransaccionLibelula?.Estado ?? "desconocido",
+                Total = v.DetallesVenta.Sum(d => d.Monto),
+                Productos = v.DetallesVenta.Select(d => new 
+                {
+                    Nombre = d.ProductoAlmacen?.Item?.Nombre ?? "Producto",
+                    Cantidad = d.Cantidad,
+                    Subtotal = d.Monto
+                })
+            });
+
+            return Ok(resultados);
+        }
+
+        [HttpGet("mis-pedidos-por-nombre")]
+        public async Task<IActionResult> GetMisPedidosPorNombre([FromQuery] string nombre, [FromQuery] string apellido)
+        {
+            if (string.IsNullOrEmpty(nombre) && string.IsNullOrEmpty(apellido))
+                return Ok(new List<object>());
+
+            var ventas = await _context.Ventas
+                .Include(v => v.Cliente)
+                .Include(v => v.TransaccionLibelula)
+                .Include(v => v.DetallesVenta)
+                .ThenInclude(d => d.ProductoAlmacen)
+                .ThenInclude(pa => pa.Item)
+                .Where(v => v.Cliente != null && v.Cliente.Nombre == nombre && v.Cliente.Apellidos == apellido)
+                .OrderByDescending(v => v.Fecha)
+                .ToListAsync();
+
+            var resultados = ventas.Select(v => new
+            {
+                Id = v.Id,
+                Fecha = v.Fecha,
+                Estado = v.TransaccionLibelula?.Estado ?? "desconocido",
+                Total = v.DetallesVenta.Sum(d => d.Monto),
+                Productos = v.DetallesVenta.Select(d => new 
+                {
+                    Nombre = d.ProductoAlmacen?.Item?.Nombre ?? "Producto",
+                    Cantidad = d.Cantidad,
+                    Subtotal = d.Monto
+                })
+            });
+
+            return Ok(resultados);
+        }
+
+        [HttpDelete("cancelar-pedido/{ventaId}")]
+        public async Task<IActionResult> CancelarPedido(int ventaId)
+        {
+            var venta = await _context.Ventas
+                .Include(v => v.TransaccionLibelula)
+                .Include(v => v.DetallesVenta)
+                .FirstOrDefaultAsync(v => v.Id == ventaId);
+
+            if (venta == null) return NotFound("Pedido no encontrado.");
+
+            // Solo se puede cancelar si sigue pendiente y NO ha modificado el stock real.
+            if (venta.TransaccionLibelula != null && (venta.TransaccionLibelula.Estado == "pendiente" || venta.TransaccionLibelula.Estado == "pagado"))
+            {
+                _context.DetallesVenta.RemoveRange(venta.DetallesVenta);
+                _context.TransaccionesLibelula.Remove(venta.TransaccionLibelula);
+                _context.Ventas.Remove(venta);
+                await _context.SaveChangesAsync();
+                return Ok(new { success = true, message = "Pedido cancelado correctamente." });
+            }
+
+            return BadRequest("El pedido ya está completado o en un estado que no permite cancelación directa.");
         }
 
         [HttpPost("register")]

@@ -154,7 +154,7 @@ services:
       proxy__urlVenta: "http://ms_venta/api"
       proxy__urlCompra: "http://ms_compras/api"
       proxy__urlProduccion: "http://ms_produccion/api"
-      proxy__urlInventario: "http://ms_inventario/api"
+      proxy__urlInventario: "http://ms_inventario/api/inventario"
       proxy__urlSeguridad: "http://ms_seguridad/api"
     networks:
       - panaderia_net

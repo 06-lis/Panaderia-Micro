@@ -10,5 +10,6 @@ namespace MSVenta.Venta.Models
         public Cliente Cliente { get; set; }
         public int UsuarioId { get; set; }
         public virtual TransaccionLibelula TransaccionLibelula { get; set; }
+        public virtual System.Collections.Generic.ICollection<DetalleVenta> DetallesVenta { get; set; }
     }
 }

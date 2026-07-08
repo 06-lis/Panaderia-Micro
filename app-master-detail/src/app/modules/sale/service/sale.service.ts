@@ -47,12 +47,27 @@ export class SaleService {
     return this.http.post<any>(this.apiUrl, sale, httpOptions(token));
   }
 
+  /**  Crear una venta completa (transaccional) */
+  createVentaCompleta(ventaCompleta: any): Observable<any> {
+    const token = sessionStorage.getItem('token');
+    if (!token) return of({ error: 'No token available' });
+
+    console.log('Enviando venta completa:', ventaCompleta);
+    return this.http.post<any>(`${this.apiUrl}/completar`, ventaCompleta, httpOptions(token));
+  }
+
   /**  Eliminar una venta */
   deleteSale(saleId: number): Observable<any> {
     const token = sessionStorage.getItem('token');
     if (!token) return of({ error: 'No token available' });
+    return this.http.delete<any>(`${this.apiUrl}/${saleId}`, httpOptions(token))
+      .pipe(catchError(this.handleError<any>('deleteSale')));
+  }
 
-    return this.http.delete(`${this.apiUrl}/${saleId}`, httpOptions(token));
+  /** Cancelar un pedido web pendiente */
+  cancelarPedidoLanding(saleId: number): Observable<any> {
+    const token = sessionStorage.getItem('token');
+    return this.http.delete<any>(`${environment.URL_SERVICIOS}/landing/cancelar-pedido/${saleId}`, httpOptions(token));
   }
 
   /**  Completar Pago Libelula */

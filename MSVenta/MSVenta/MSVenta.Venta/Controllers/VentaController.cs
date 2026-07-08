@@ -43,7 +43,27 @@ namespace MSVenta.Venta.Controllers
                 return StatusCode(500, new { message = "Error interno del servidor.", detalle = ex.Message });
             }
         }
-
+        [HttpPost("completar")]
+        public async Task<IActionResult> CompletarVenta([FromBody] MSVenta.Venta.DTOs.VentaCompletaDto dto)
+        {
+            try
+            {
+                // Validar si el Usuario existe y es válido antes de procesar la venta
+                var usuarioValid = await _usuarioService.ValidateUsuario(dto.UsuarioId);
+                if (!usuarioValid)
+                {
+                    return BadRequest(new { Message = "El Usuario no es válido." });
+                }
+                
+                var venta = await _ventaService.CreateVentaCompleta(dto);
+                return CreatedAtAction(nameof(Get), new { id = venta.Id }, venta);
+            }
+            catch (System.Exception ex)
+            {
+                System.Console.WriteLine($"Error en Completar Venta: {ex.Message} \n {ex.StackTrace}");
+                return StatusCode(500, new { message = "Error interno del servidor.", detalle = ex.Message });
+            }
+        }
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, Models.Venta venta)
         {

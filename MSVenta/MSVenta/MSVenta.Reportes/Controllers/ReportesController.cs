@@ -50,7 +50,27 @@ namespace MSVenta.Reportes.Controllers
                 dto.TotalVentas = ventas.Count();
                 dto.TotalCompras = compras.Count();
                 dto.ProduccionesCompletadas = producciones.Count();
-                dto.InsumosBajoStock = lotes.Count();
+                
+                // Agrupar stock para Insumos Bajo Stock y Productos con Poco Stock
+                var stockAgrupado = new Dictionary<int, decimal>();
+                foreach (var l in lotes)
+                {
+                    int idItem = 0;
+                    if (l.TryGetProperty("idItem", out JsonElement itemElem1)) idItem = itemElem1.GetInt32();
+                    else if (l.TryGetProperty("IdItem", out JsonElement itemElem2)) idItem = itemElem2.GetInt32();
+                    else if (l.TryGetProperty("id_item", out JsonElement itemElem3)) idItem = itemElem3.GetInt32();
+
+                    decimal cant = 0;
+                    if (l.TryGetProperty("cantidadDisponible", out JsonElement cantElem1)) cant = cantElem1.GetDecimal();
+                    else if (l.TryGetProperty("CantidadDisponible", out JsonElement cantElem2)) cant = cantElem2.GetDecimal();
+                    else if (l.TryGetProperty("cantidad_disponible", out JsonElement cantElem3)) cant = cantElem3.GetDecimal();
+
+                    if (idItem > 0)
+                    {
+                        if (!stockAgrupado.ContainsKey(idItem)) stockAgrupado[idItem] = 0;
+                        stockAgrupado[idItem] += cant;
+                    }
+                }
 
                 // Lógica de 30 días
                 DateTime fechaLimite = DateTime.Now.AddDays(-30);
@@ -119,15 +139,27 @@ namespace MSVenta.Reportes.Controllers
 
                 foreach (var l in lotes)
                 {
-                    if (l.TryGetProperty("fechaVencimiento", out JsonElement fvElem) && fvElem.ValueKind != JsonValueKind.Null)
+                    bool hasFv = l.TryGetProperty("fechaVencimiento", out JsonElement fvElem) || 
+                                 l.TryGetProperty("FechaVencimiento", out fvElem) || 
+                                 l.TryGetProperty("fecha_vencimiento", out fvElem);
+
+                    if (hasFv && fvElem.ValueKind != JsonValueKind.Null)
                     {
                         if (DateTime.TryParse(fvElem.GetString(), out DateTime fv))
                         {
                             if (fv <= limiteVencimiento)
                             {
-                                int idLote = l.GetProperty("idLote").GetInt32();
-                                int idAlmacen = l.GetProperty("idAlmacen").GetInt32();
-                                decimal cant = l.GetProperty("cantidadDisponible").GetDecimal();
+                                int idLote = 0;
+                                if (l.TryGetProperty("idLote", out JsonElement loteElem) || l.TryGetProperty("IdLote", out loteElem) || l.TryGetProperty("id_lote", out loteElem))
+                                    idLote = loteElem.GetInt32();
+
+                                int idAlmacen = 0;
+                                if (l.TryGetProperty("idAlmacen", out JsonElement almElem) || l.TryGetProperty("IdAlmacen", out almElem) || l.TryGetProperty("id_almacen", out almElem))
+                                    idAlmacen = almElem.GetInt32();
+
+                                decimal cant = 0;
+                                if (l.TryGetProperty("cantidadDisponible", out JsonElement cElem) || l.TryGetProperty("CantidadDisponible", out cElem) || l.TryGetProperty("cantidad_disponible", out cElem))
+                                    cant = cElem.GetDecimal();
                                 
                                 string estado = fv < hoy ? "Vencido" : "Próximo a Vencer";
 
@@ -189,6 +221,24 @@ namespace MSVenta.Reportes.Controllers
                         CantidadVendida = t.Value
                     });
                 }
+
+                // Generar Productos con Poco Stock e InsumosBajoStock
+                int bajoStockContador = 0;
+                foreach (var kvp in stockAgrupado)
+                {
+                    if (kvp.Value < 20)
+                    {
+                        bajoStockContador++;
+                        string nombreItem = dictProductos.ContainsKey(kvp.Key) ? dictProductos[kvp.Key] : $"Item {kvp.Key}";
+                        dto.ProductosConPocoStock.Add(new ProductoPocoStockDto
+                        {
+                            IdItem = kvp.Key,
+                            NombreItem = nombreItem,
+                            StockTotal = kvp.Value
+                        });
+                    }
+                }
+                dto.InsumosBajoStock = bajoStockContador;
             }
             catch(Exception ex)
             {
@@ -242,6 +292,16 @@ namespace MSVenta.Reportes.Controllers
                     html += $"<tr><td>{i.NombreItem}</td><td>{i.CantidadVendida}</td></tr>";
                 }
                 
+                html += @"</table>
+                    <h3>Productos con Poco Stock</h3>
+                    <table border='1' cellpadding='5' cellspacing='0'>
+                        <tr><th>Producto</th><th>Stock Total</th></tr>";
+                
+                foreach (var p in dto.ProductosConPocoStock)
+                {
+                    html += $"<tr><td>{p.NombreItem}</td><td>{p.StockTotal}</td></tr>";
+                }
+
                 html += "</table>";
 
                 try

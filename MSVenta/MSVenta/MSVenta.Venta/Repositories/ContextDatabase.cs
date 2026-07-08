@@ -74,7 +74,7 @@ namespace MSVenta.Venta.Repositories
 
             modelBuilder.Entity<DetalleVenta>()
                 .HasOne(dv => dv.Venta)
-                .WithMany()
+                .WithMany(v => v.DetallesVenta)
                 .HasForeignKey(dv => dv.VentaId);
 
             modelBuilder.Entity<Models.Venta>()

@@ -16,6 +16,7 @@ namespace MSVenta.Reportes.DTOs
         public List<OperacionPorFechaDto> OperacionesPorFecha { get; set; } = new List<OperacionPorFechaDto>();
         public List<ProductoVencimientoDto> ProductosPorVencer { get; set; } = new List<ProductoVencimientoDto>();
         public List<ItemMasUsadoDto> ItemsMasUsados { get; set; } = new List<ItemMasUsadoDto>();
+        public List<ProductoPocoStockDto> ProductosConPocoStock { get; set; } = new List<ProductoPocoStockDto>();
     }
 
     public class OperacionPorFechaDto
@@ -42,5 +43,12 @@ namespace MSVenta.Reportes.DTOs
         public int IdProductoAlmacen { get; set; }
         public string NombreItem { get; set; }
         public int CantidadVendida { get; set; }
+    }
+
+    public class ProductoPocoStockDto
+    {
+        public int IdItem { get; set; }
+        public string NombreItem { get; set; }
+        public decimal StockTotal { get; set; }
     }
 }

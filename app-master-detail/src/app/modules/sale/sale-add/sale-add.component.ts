@@ -89,9 +89,30 @@ export class SaleAddComponent implements OnInit {
         });
 
         // Filtrado: vender únicamente items de tipo 'Producto'
-        this.products = data.filter(x => x.producto?.tipo === 'Producto');
+        const productosRaw = data.filter(x => x.producto?.tipo === 'Producto');
+        
+        // Agrupar por ItemId para mostrar stock global
+        const groupedMap = new Map<number, ProductoAlmacen>();
+        productosRaw.forEach(pa => {
+          const pId = pa.producto?.id || pa.producto?.idProducto || pa.producto?.productoId;
+          if (!pId) return;
+          
+          if (groupedMap.has(pId)) {
+            const existing = groupedMap.get(pId)!;
+            existing.stock += pa.stock;
+          } else {
+            // Clonar para no mutar el original y agrupar
+            groupedMap.set(pId, {
+              ...pa,
+              id: pId, // Usaremos el id de ProductoAlmacen como el ID del producto unificado para la UI
+              almacen: { id: 0, nombre: 'Global', tipoAlmacen: 'Global' } as any
+            });
+          }
+        });
+
+        this.products = Array.from(groupedMap.values());
         this.filteredProductoAlmacen = [...this.products];
-        console.log('Productos de Almacén cargados y filtrados:', this.products);
+        console.log('Productos de Almacén globales:', this.products);
         this.cdr.markForCheck();
       },
       error: (err) => {
@@ -111,13 +132,12 @@ export class SaleAddComponent implements OnInit {
   }
 
   addToCart(productoAlmacen: ProductoAlmacen): void {
-    const productoAlmacenId = productoAlmacen.id!;
+    const itemId = productoAlmacen.producto?.id || productoAlmacen.producto?.idProducto || productoAlmacen.producto?.productoId;
     const precio = productoAlmacen.producto?.precio || 0;
     const producto = productoAlmacen.producto;
-    const almacen = productoAlmacen.almacen;
 
-    if (!producto || !almacen) {
-      console.warn('Producto o almacén no válidos en el productoAlmacen seleccionado.');
+    if (!producto || !itemId) {
+      console.warn('Producto no válido.');
       return;
     }
 
@@ -126,16 +146,21 @@ export class SaleAddComponent implements OnInit {
       return;
     }
 
-    const existingItem = this.cartItems.find(item => item.productoAlmacenId === productoAlmacenId);
+    // Buscamos por itemId, ya no por productoAlmacenId
+    const existingItem = this.cartItems.find(item => {
+        const iId = item.producto?.id || item.producto?.idProducto || item.producto?.productoId;
+        return iId === itemId;
+    });
+
     if (existingItem) {
       existingItem.cantidad = (existingItem.cantidad ?? 0) + 1;
     } else {
       const detalleventa: CartVenta = {
-        productoAlmacenId: productoAlmacenId,
+        productoAlmacenId: productoAlmacen.id!, // Guardamos esto para no romper interface, pero usaremos itemId al mandar backend
         cantidad: 1,
         monto: precio,
         producto: producto,
-        alamacen: almacen
+        alamacen: productoAlmacen.almacen!
       };
       this.cartItems.push(detalleventa);
     }
@@ -147,7 +172,8 @@ export class SaleAddComponent implements OnInit {
 
   incrementCartItem(index: number): void {
     const item = this.cartItems[index];
-    const productInStock = this.products.find(p => p.id === item.productoAlmacenId);
+    const itemId = item.producto?.id || item.producto?.idProducto || item.producto?.productoId;
+    const productInStock = this.products.find(p => (p.producto?.id || p.producto?.idProducto || p.producto?.productoId) === itemId);
     if (productInStock && (productInStock.stock ?? 0) > 0) {
       item.cantidad = (item.cantidad ?? 0) + 1;
       productInStock.stock = (productInStock.stock ?? 0) - 1;
@@ -162,7 +188,8 @@ export class SaleAddComponent implements OnInit {
     const item = this.cartItems[index];
     if (item.cantidad && item.cantidad > 1) {
       item.cantidad -= 1;
-      const productInStock = this.products.find(p => p.id === item.productoAlmacenId);
+      const itemId = item.producto?.id || item.producto?.idProducto || item.producto?.productoId;
+      const productInStock = this.products.find(p => (p.producto?.id || p.producto?.idProducto || p.producto?.productoId) === itemId);
       if (productInStock) {
         productInStock.stock = (productInStock.stock ?? 0) + 1;
       }
@@ -177,7 +204,8 @@ export class SaleAddComponent implements OnInit {
     const item = this.cartItems[index];
     if (!item) return;
 
-    const itemProduct = this.products.find(p => p.id === item.productoAlmacenId);
+    const itemId = item.producto?.id || item.producto?.idProducto || item.producto?.productoId;
+    const itemProduct = this.products.find(p => (p.producto?.id || p.producto?.idProducto || p.producto?.productoId) === itemId);
     if (itemProduct) {
       itemProduct.stock = (itemProduct.stock ?? 0) + (item.cantidad ?? 0);
     }
@@ -206,7 +234,7 @@ export class SaleAddComponent implements OnInit {
     // Mostrar overlay de carga
     Swal.fire({
       title: 'Procesando venta...',
-      text: 'Verificando stock y registrando transacción.',
+      text: 'Verificando stock global y registrando transacción.',
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();
@@ -214,115 +242,42 @@ export class SaleAddComponent implements OnInit {
     });
 
     try {
-      // 1. Pre-validar stock real en inventario para cada item en el carrito
-      for (let item of this.cartItems) {
-        const itemId = item.producto.id || item.producto.idProducto || item.producto.productoId;
-        const almacenId = item.alamacen.id;
-        if (itemId && almacenId) {
-          const actualStockRes = await this.productoAlmacenService.getActualStock(itemId, almacenId).toPromise();
-          const actualStock = actualStockRes?.stock ?? 0;
-          if (actualStock < item.cantidad!) {
-            Swal.close();
-            Swal.fire(
-              'Stock Insuficiente',
-              `El producto "${item.producto.nombre}" no tiene suficiente stock en el inventario real (Disponible: ${actualStock}, Solicitado: ${item.cantidad}).`,
-              'error'
-            );
-            return;
-          }
-        }
-      }
-
-      const ventaData: Venta = {
-        fecha: new Date().toISOString().substring(0, 10),
+      // Como ahora el backend hace el descuento inteligente con PEPS/UEPS,
+      // enviamos la Venta Completa en una sola transacción.
+      
+      const ventaCompleta = {
         clienteId: this.selectedCustome.id!,
         usuarioId: this.user?.userId || 1, // Fallback a usuario ID 1 si no está asignado
+        items: this.cartItems.map(item => ({
+            itemId: item.producto.id || item.producto.idProducto || item.producto.productoId,
+            cantidad: item.cantidad,
+            monto: item.monto! * item.cantidad!
+        }))
       };
 
-      console.log('Enviando datos de venta al backend:', ventaData);
+      console.log('Enviando Venta Completa al backend:', ventaCompleta);
 
-      // 2. Crear registro principal de Venta
-      const response = await this.salesService.createSale(ventaData).toPromise();
-      console.log('Venta creada en backend:', response);
+      // Llamar al nuevo endpoint transaccional
+      const response = await this.salesService.createVentaCompleta(ventaCompleta).toPromise();
+      console.log('Venta completa procesada en backend:', response);
 
-      if (!response || !response.id) {
-        throw new Error('No se pudo crear la cabecera de la venta.');
-      }
-
-      const ventaId = response.id;
-      const processedDetails: any[] = [];
-      const empleadoId = this.user?.idEmpleado || 1;
-
-      try {
-        // 3. Crear detalles
-        for (let detalle of this.cartItems) {
-          const detalleVenta = {
-            productoAlmacenId: detalle.productoAlmacenId,
-            ventaId: ventaId,
-            cantidad: detalle.cantidad!,
-            monto: detalle.monto! * detalle.cantidad!,
-          };
-
-          console.log('Creando detalle venta:', detalleVenta);
-          const detalleResponse = await this.salesService.createDetalleVenta(detalleVenta).toPromise();
-          
-          if (!detalleResponse || Object.keys(detalleResponse).length === 0) {
-            throw new Error(`Error al registrar el detalle del producto "${detalle.producto.nombre}".`);
-          }
-
-          const itemId = detalle.producto.id || detalle.producto.idProducto || detalle.producto.productoId;
-          const almacenId = detalle.alamacen.id;
-          processedDetails.push({
-            itemId,
-            almacenId,
-            cantidad: detalle.cantidad!
-          });
-        }
-
-        // Cierre exitoso
-        Swal.close();
-        Swal.fire({
-          icon: 'success',
-          title: 'Venta Registrada',
-          text: 'La venta ha sido procesada y el stock ha sido actualizado correctamente.',
-          confirmButtonText: 'Entendido'
-        }).then(() => {
-          this.router.navigate(['/dashboard/sale/list']);
-        });
-
-      } catch (loopError: any) {
-        console.error('Error durante el bucle de detalles, iniciando Rollback:', loopError);
-        
-        // 4. Realizar Rollback
-        // 4.1 Eliminar la cabecera de venta
-        await this.salesService.deleteSale(ventaId).toPromise();
-        console.log(`Venta #${ventaId} eliminada debido a fallo.`);
-
-        // 4.2 Revertir el stock en el inventario real para los detalles procesados con éxito
-        for (let proc of processedDetails) {
-          try {
-            await this.productoAlmacenService.revertStock(
-              proc.itemId,
-              proc.almacenId,
-              proc.cantidad,
-              empleadoId,
-              ventaId
-            ).toPromise();
-            console.log(`Stock revertido para ItemId=${proc.itemId}, Cantidad=${proc.cantidad}`);
-          } catch (revertError) {
-            console.error('Error al revertir stock para:', proc, revertError);
-          }
-        }
-
-        throw loopError;
-      }
+      // Cierre exitoso
+      Swal.close();
+      Swal.fire({
+        icon: 'success',
+        title: 'Venta Registrada',
+        text: 'La venta ha sido procesada y el stock ha sido actualizado inteligentemente.',
+        confirmButtonText: 'Entendido'
+      }).then(() => {
+        this.router.navigate(['/dashboard/sale/list']);
+      });
 
     } catch (error: any) {
       console.error('Error al procesar la venta:', error);
       Swal.close();
       Swal.fire(
         'Venta Cancelada',
-        `No se pudo registrar la venta. La transacción ha sido cancelada y los cambios en el inventario han sido revertidos. Detalle: ${error?.message || 'Error de conexión'}`,
+        `No se pudo registrar la venta. ${error?.error?.message || error?.message || 'Error de conexión'}`,
         'error'
       );
     }

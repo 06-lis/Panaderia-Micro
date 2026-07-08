@@ -416,6 +416,24 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/venta/completar",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ms_venta",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/venta/completar",
+      "UpstreamHttpMethod": [
+        "Post"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "SECURITY-TOKEN",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/venta/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

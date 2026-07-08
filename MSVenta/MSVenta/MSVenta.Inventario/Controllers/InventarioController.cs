@@ -39,6 +39,36 @@ namespace MSVenta.Inventario.Controllers
             return BadRequest(new { success = false, message = "No hay stock suficiente para realizar el consumo." });
         }
 
+        [HttpPost("consumo-global")]
+        public async Task<IActionResult> ConsumoStockGlobal([FromBody] ConsumoGlobalRequest request)
+        {
+            try
+            {
+                var result = await _inventarioService.ConsumoStockGlobalAsync(request.ItemId, request.Cantidad, request.EmpleadoId, request.ReferenciaId, request.ReferenciaTipo);
+                if (result != null) return Ok(new { success = true, data = result });
+                return BadRequest(new { success = false, message = "No hay stock suficiente globalmente para realizar el consumo." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("revertir-consumo-global")]
+        public async Task<IActionResult> RevertirConsumoStockGlobal([FromBody] RevertirConsumoGlobalRequest request)
+        {
+            try
+            {
+                var result = await _inventarioService.RevertirConsumoGlobalAsync(request.Consumos, request.EmpleadoId, request.ReferenciaId, request.ReferenciaTipo);
+                if (result) return Ok(new { success = true });
+                return BadRequest(new { success = false, message = "No se pudo revertir el consumo." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
         [HttpGet("lotes")]
         public async Task<IActionResult> GetLotes()
         {
@@ -120,5 +150,22 @@ namespace MSVenta.Inventario.Controllers
         public decimal Cantidad { get; set; }
         public string Motivo { get; set; }
         public int UsuarioSolicitaId { get; set; }
+    }
+
+    public class ConsumoGlobalRequest
+    {
+        public int ItemId { get; set; }
+        public decimal Cantidad { get; set; }
+        public int EmpleadoId { get; set; }
+        public int? ReferenciaId { get; set; }
+        public string ReferenciaTipo { get; set; }
+    }
+
+    public class RevertirConsumoGlobalRequest
+    {
+        public System.Collections.Generic.List<MSVenta.Inventario.Models.ConsumoResultado> Consumos { get; set; }
+        public int EmpleadoId { get; set; }
+        public int? ReferenciaId { get; set; }
+        public string ReferenciaTipo { get; set; }
     }
 }

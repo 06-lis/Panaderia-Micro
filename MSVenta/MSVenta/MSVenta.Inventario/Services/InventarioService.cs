@@ -145,6 +145,163 @@ namespace MSVenta.Inventario.Services
             }
         }
 
+        public async Task<System.Collections.Generic.List<ConsumoResultado>> ConsumoStockGlobalAsync(int itemId, decimal cantidad, int empleadoId, int? referenciaId = null, string referenciaTipo = null)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // TODO: Obtener config real si existe. Default: PEPS
+                string order = "ASC"; // ASC para PEPS, DESC para UEPS
+                
+                var lotesDisponibles = await _context.LotesInventario
+                    .FromSqlRaw($"SELECT * FROM lotes_inventario WHERE id_item = {{0}} AND cantidad_disponible > 0 ORDER BY fecha_entrada {order} FOR UPDATE", itemId)
+                    .ToListAsync();
+
+                decimal cantidadRestante = cantidad;
+                var consumos = new System.Collections.Generic.List<ConsumoResultado>();
+
+                foreach (var lote in lotesDisponibles)
+                {
+                    if (cantidadRestante <= 0) break;
+
+                    decimal cantidadAComsumir = Math.Min(cantidadRestante, lote.CantidadDisponible);
+                    lote.CantidadDisponible -= cantidadAComsumir;
+                    cantidadRestante -= cantidadAComsumir;
+
+                    if (lote.CantidadDisponible == 0)
+                    {
+                        lote.Estado = "Agotado";
+                        lote.FechaSalida = DateTime.UtcNow;
+                    }
+
+                    _context.LotesInventario.Update(lote);
+
+                    var movimiento = new MovimientoInventario
+                    {
+                        IdLote = lote.IdLote,
+                        IdAlmacen = lote.IdAlmacen,
+                        IdItem = itemId,
+                        TipoMovimiento = "Consumo Global (Venta)",
+                        Cantidad = -cantidadAComsumir,
+                        CostoUnitario = lote.PrecioUnitario,
+                        CostoTotal = -cantidadAComsumir * lote.PrecioUnitario,
+                        FechaMovimiento = DateTime.UtcNow,
+                        IdEmpleado = empleadoId,
+                        ReferenciaId = referenciaId,
+                        ReferenciaTipo = referenciaTipo
+                    };
+
+                    _context.MovimientosInventario.Add(movimiento);
+
+                    // Registrar en la lista de consumos por almacén
+                    var consumoExistente = consumos.FirstOrDefault(c => c.AlmacenId == lote.IdAlmacen);
+                    if (consumoExistente != null)
+                    {
+                        consumoExistente.CantidadConsumida += cantidadAComsumir;
+                    }
+                    else
+                    {
+                        consumos.Add(new ConsumoResultado
+                        {
+                            AlmacenId = lote.IdAlmacen,
+                            ItemId = itemId,
+                            CantidadConsumida = cantidadAComsumir
+                        });
+                    }
+                }
+
+                if (cantidadRestante > 0)
+                {
+                    // No hay suficiente stock global
+                    await transaction.RollbackAsync();
+                    return null;
+                }
+
+                await _context.SaveChangesAsync();
+                
+                // Sincronizar cada consumo con el microservicio de Venta
+                foreach (var c in consumos)
+                {
+                    var syncResult = await _ventaProxy.SincronizarStockAgregadoAsync(c.ItemId, c.AlmacenId, -c.CantidadConsumida);
+                    if (!syncResult)
+                    {
+                        await transaction.RollbackAsync();
+                        return null;
+                    }
+                }
+
+                await transaction.CommitAsync();
+                return consumos;
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task<bool> RevertirConsumoGlobalAsync(System.Collections.Generic.List<ConsumoResultado> consumosRevertir, int empleadoId, int? referenciaId = null, string referenciaTipo = null)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                foreach (var consumo in consumosRevertir)
+                {
+                    // Creamos un nuevo lote (o sumamos a un existente)
+                    // Como es un rollback, podemos simplemente hacer un ingreso (devolución) o buscar el último lote
+                    var lote = new LoteInventario
+                    {
+                        IdAlmacen = consumo.AlmacenId,
+                        IdItem = consumo.ItemId,
+                        CantidadInicial = consumo.CantidadConsumida,
+                        CantidadDisponible = consumo.CantidadConsumida,
+                        PrecioUnitario = 0, // o buscar el costo promedio si fuera necesario, para rollback simple puede ser 0
+                        FechaEntrada = DateTime.UtcNow,
+                        MetodoValuacion = "PEPS",
+                        Estado = "Disponible"
+                    };
+
+                    _context.LotesInventario.Add(lote);
+                    await _context.SaveChangesAsync();
+
+                    var movimiento = new MovimientoInventario
+                    {
+                        IdLote = lote.IdLote,
+                        IdAlmacen = consumo.AlmacenId,
+                        IdItem = consumo.ItemId,
+                        TipoMovimiento = "Rollback Venta (Devolución)",
+                        Cantidad = consumo.CantidadConsumida,
+                        CostoUnitario = 0,
+                        CostoTotal = 0,
+                        FechaMovimiento = DateTime.UtcNow,
+                        IdEmpleado = empleadoId,
+                        ReferenciaId = referenciaId,
+                        ReferenciaTipo = referenciaTipo
+                    };
+
+                    _context.MovimientosInventario.Add(movimiento);
+                    await _context.SaveChangesAsync();
+
+                    // Sincronizar de vuelta
+                    var syncResult = await _ventaProxy.SincronizarStockAgregadoAsync(consumo.ItemId, consumo.AlmacenId, consumo.CantidadConsumida);
+                    if (!syncResult)
+                    {
+                        await transaction.RollbackAsync();
+                        return false;
+                    }
+                }
+
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                return false;
+            }
+        }
+
+
         public async Task<System.Collections.Generic.IEnumerable<object>> GetLotesAsync()
         {
             return await _context.LotesInventario

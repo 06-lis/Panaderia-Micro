@@ -10,6 +10,7 @@ namespace MSVenta.Venta.Services
         Task CreateVenta(Models.Venta venta);
         Task UpdateVenta(Models.Venta venta);
         Task DeleteVenta(int id);
+        Task<Models.Venta> CreateVentaCompleta(DTOs.VentaCompletaDto dto);
         Task CompletarPagoLibelula(int ventaId, int? usuarioId = null);
     }
 }

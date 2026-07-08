@@ -242,6 +242,22 @@ export class DashboardComponent implements OnInit {
           topItemsBody.push([{ text: 'No hay registros de ventas.', colSpan: 3, alignment: 'center', margin: [0, 10, 0, 10] }, '', '']);
         }
 
+        // Crear tabla de Poco Stock
+        const pocoStockBody: any[] = [
+          [{ text: 'Ítem / Producto', style: 'tableHeader' }, { text: 'Stock Total', style: 'tableHeader', alignment: 'right' }]
+        ];
+
+        if (this.dashboardData.productosConPocoStock && this.dashboardData.productosConPocoStock.length > 0) {
+          this.dashboardData.productosConPocoStock.forEach((p: any) => {
+            pocoStockBody.push([
+              p.nombreItem,
+              { text: p.stockTotal.toString(), alignment: 'right', color: '#EF4444', bold: true }
+            ]);
+          });
+        } else {
+          pocoStockBody.push([{ text: 'No hay productos con poco stock.', colSpan: 2, alignment: 'center', margin: [0, 10, 0, 10] }, '']);
+        }
+
         const docDefinition: any = {
           pageSize: 'A4',
           pageMargins: [40, 60, 40, 60],
