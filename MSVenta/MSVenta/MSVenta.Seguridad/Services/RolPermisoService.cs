@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MSVenta.Seguridad.Models;
 using MSVenta.Seguridad.Repositories;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSVenta.Seguridad.Services
@@ -63,6 +64,29 @@ namespace MSVenta.Seguridad.Services
         {
             _context.RolPermisos.Add(rolPermiso);
             await _context.SaveChangesAsync();
+
+            // Sincronizar automáticamente con los usuarios que ya tienen este rol asignado
+            var userIds = await _context.RolPermisoUsuarios
+                .Where(rpu => rpu.RolPermiso.ID_Rol == rolPermiso.ID_Rol)
+                .Select(rpu => rpu.UserId)
+                .Distinct()
+                .ToListAsync();
+
+            foreach (var userId in userIds)
+            {
+                var exists = await _context.RolPermisoUsuarios
+                    .AnyAsync(rpu => rpu.UserId == userId && rpu.ID_Rol_Permiso == rolPermiso.ID_Rol_Permiso);
+                if (!exists)
+                {
+                    _context.RolPermisoUsuarios.Add(new RolPermisoUsuario
+                    {
+                        UserId = userId,
+                        ID_Rol_Permiso = rolPermiso.ID_Rol_Permiso
+                    });
+                }
+            }
+            await _context.SaveChangesAsync();
+
             return rolPermiso;
         }
 
@@ -77,6 +101,11 @@ namespace MSVenta.Seguridad.Services
             var rolPermiso = await _context.RolPermisos.FindAsync(id);
             if (rolPermiso != null)
             {
+                var links = await _context.RolPermisoUsuarios
+                    .Where(rpu => rpu.ID_Rol_Permiso == id)
+                    .ToListAsync();
+                _context.RolPermisoUsuarios.RemoveRange(links);
+
                 _context.RolPermisos.Remove(rolPermiso);
                 await _context.SaveChangesAsync();
             }

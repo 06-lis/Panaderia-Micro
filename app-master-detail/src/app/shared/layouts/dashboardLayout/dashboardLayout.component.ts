@@ -34,7 +34,9 @@ export class DashboardLayoutComponent implements OnInit {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      this.isSidebarOpen = false;
+      if (typeof window !== 'undefined' && window.innerWidth < 640) {
+        this.isSidebarOpen = false;
+      }
       this.cdr.markForCheck();
     });
   }

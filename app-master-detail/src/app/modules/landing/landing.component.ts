@@ -55,6 +55,10 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.router.navigate(['/auth/register']);
   }
 
+  goToDashboard() {
+    this.router.navigate(['/dashboard']);
+  }
+
   ngOnInit(): void {
     this.cargarProductos();
     const userJson = sessionStorage.getItem('user');
@@ -62,7 +66,7 @@ export class LandingComponent implements OnInit, OnDestroy {
       this.isLoggedIn = true;
       try {
         const user = JSON.parse(userJson);
-        this.isEmployee = user.idEmpleado > 0;
+        this.isEmployee = user.idEmpleado > 0 || (user.roles && user.roles.some((r: any) => r.nombre_Rol && r.nombre_Rol.toLowerCase() !== 'cliente'));
         
         if (user.fullname) {
           const parts = user.fullname.trim().split(' ');
