@@ -129,7 +129,7 @@ export class RolService {
 
     // Métodos para asignar rol permisos a un Usuario /////////////
     getRolPermisoUsuario(): Observable<RolPermisoUsuario[]> {
-      const urlRolUsuario:string =`${environment.URL_SERVICIOS}/rolpermisousuario`;
+      const urlRolUsuario:string =`${environment.URL_SERVICIOS}/rolpermisousuarios`;
       const token = sessionStorage.getItem('token'); // Obtener el token del localStorage
       console.log('Token usado:', token); // Verificar el token
       if (token) {
@@ -160,7 +160,7 @@ export class RolService {
     }
 
     getRolUsuarioById(id: number): Observable<RolPermisoUsuario> {
-      const urlRolUsuario:string =`${environment.URL_SERVICIOS}/rolpermisousuario/${id}`;
+      const urlRolUsuario:string =`${environment.URL_SERVICIOS}/rolpermisousuarios/${id}`;
       const token = sessionStorage.getItem('token'); // Obtener el token del localStorage
       console.log('Token usado:', token); // Verificar el token
       if (token) {
@@ -174,7 +174,7 @@ export class RolService {
 
     deleteRolUsuario(id_rolusuario?: number): Observable<any> {
 
-      const urlRolUsuario:string =`${environment.URL_SERVICIOS}/rolpermisousuario/${id_rolusuario}`;
+      const urlRolUsuario:string =`${environment.URL_SERVICIOS}/rolpermisousuarios/${id_rolusuario}`;
       const token = sessionStorage.getItem('token');
       if (token) {
         // Verificar que todos los campos sean válidos antes de enviar

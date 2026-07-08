@@ -26,9 +26,9 @@ export class RolesPermisosUsuarioAddComponent implements OnInit {
 
   roles: Rol[] = [];
   permisos: Permiso[] = [];
-  selectedRolId: number | null = null;
   activeRolPermisoIds: number[] = [];
   searchQuery: string = '';
+  expandedRoles: { [key: number]: boolean } = {};
 
   get allRolPermisos(): any[] {
     const list: any[] = [];
@@ -47,15 +47,72 @@ export class RolesPermisosUsuarioAddComponent implements OnInit {
     return list.sort((a, b) => (a.nombrePermiso || '').localeCompare(b.nombrePermiso || ''));
   }
 
-  get filteredRolPermisos(): any[] {
+  getGroupedRoles(): any[] {
     const query = this.searchQuery.toLowerCase().trim();
-    if (!query) {
-      return this.allRolPermisos;
+    return this.roles.map(rol => {
+      const filteredPerms = (rol.rolPermisos || []).filter(rp => {
+        if (!query) return true;
+        return (rp.nombrePermiso || '').toLowerCase().includes(query) ||
+               (rol.nombre_Rol || '').toLowerCase().includes(query);
+      });
+      return {
+        ...rol,
+        filteredPerms
+      };
+    }).filter(rol => rol.filteredPerms.length > 0);
+  }
+
+  onSearchQueryChange(): void {
+    const query = this.searchQuery.toLowerCase().trim();
+    if (query) {
+      this.roles.forEach(rol => {
+        const hasMatch = (rol.rolPermisos || []).some(rp =>
+          (rp.nombrePermiso || '').toLowerCase().includes(query) ||
+          (rol.nombre_Rol || '').toLowerCase().includes(query)
+        );
+        if (hasMatch) {
+          this.expandedRoles[rol.iD_Rol] = true;
+        }
+      });
     }
-    return this.allRolPermisos.filter(rp =>
-      rp.nombrePermiso?.toLowerCase().includes(query) ||
-      rp.nombreRol?.toLowerCase().includes(query)
-    );
+    this.cdr.markForCheck();
+  }
+
+  toggleRoleExpansion(roleId: number): void {
+    this.expandedRoles[roleId] = !this.expandedRoles[roleId];
+    this.cdr.markForCheck();
+  }
+
+  isRoleSelected(rol: any): boolean {
+    if (!rol.rolPermisos || rol.rolPermisos.length === 0) return false;
+    return rol.rolPermisos.every((rp: any) => this.activeRolPermisoIds.includes(rp.iD_Rol_Permiso!));
+  }
+
+  isRoleIndeterminate(rol: any): boolean {
+    if (!rol.rolPermisos || rol.rolPermisos.length === 0) return false;
+    const selectedCount = rol.rolPermisos.filter((rp: any) => this.activeRolPermisoIds.includes(rp.iD_Rol_Permiso!)).length;
+    return selectedCount > 0 && selectedCount < rol.rolPermisos.length;
+  }
+
+  toggleRole(rol: any, event: any): void {
+    const checked = event.target.checked;
+    if (!rol.rolPermisos) return;
+
+    const rpIds = rol.rolPermisos.map((rp: any) => rp.iD_Rol_Permiso!);
+    if (checked) {
+      rpIds.forEach((id: number) => {
+        if (!this.activeRolPermisoIds.includes(id)) {
+          this.activeRolPermisoIds.push(id);
+        }
+      });
+    } else {
+      this.activeRolPermisoIds = this.activeRolPermisoIds.filter(id => !rpIds.includes(id));
+    }
+    this.cdr.markForCheck();
+  }
+
+  isIndividualPermission(rol: any, rp: any): boolean {
+    return this.isPermissionSelected(rp.iD_Rol_Permiso) && !this.isRoleSelected(rol);
   }
 
   selectAll(): void {
@@ -69,12 +126,8 @@ export class RolesPermisosUsuarioAddComponent implements OnInit {
   }
 
   restoreDefault(): void {
-    if (this.selectedRolId) {
-      this.onRoleSelect();
-    } else {
-      this.activeRolPermisoIds = [];
-      this.cdr.markForCheck();
-    }
+    this.activeRolPermisoIds = [];
+    this.cdr.markForCheck();
   }
 
   constructor(
@@ -107,6 +160,15 @@ export class RolesPermisosUsuarioAddComponent implements OnInit {
                 nombrePermiso: this.permisos.find(p => p.iD_Permiso === rp.iD_Permiso)?.nombre_Permiso
               }))
             }));
+            
+            // Expand active roles initially
+            this.roles.forEach(rol => {
+              const hasActivePerms = (rol.rolPermisos || []).some(rp => this.activeRolPermisoIds.includes(rp.iD_Rol_Permiso!));
+              if (hasActivePerms) {
+                this.expandedRoles[rol.iD_Rol] = true;
+              }
+            });
+            
             this.cdr.markForCheck();
           },
           error: (err) => console.error(err)
@@ -127,6 +189,17 @@ export class RolesPermisosUsuarioAddComponent implements OnInit {
             const userLinks = links.filter(x => x.userId === this.userId);
             this.activeRolPermisoIds = userLinks.map(x => x.iD_Rol_Permiso);
             console.log('Permisos activos del usuario:', this.activeRolPermisoIds);
+            
+            // Also expand roles that contain active permissions
+            if (this.roles.length > 0) {
+              this.roles.forEach(rol => {
+                const hasActivePerms = (rol.rolPermisos || []).some(rp => this.activeRolPermisoIds.includes(rp.iD_Rol_Permiso!));
+                if (hasActivePerms) {
+                  this.expandedRoles[rol.iD_Rol] = true;
+                }
+              });
+            }
+            
             this.cdr.markForCheck();
           },
           error: (err) => console.error(err)
@@ -151,17 +224,7 @@ export class RolesPermisosUsuarioAddComponent implements OnInit {
     }
   }
 
-  onRoleSelect(): void {
-    if (this.selectedRolId) {
-      const selectedRole = this.roles.find(r => r.iD_Rol === +this.selectedRolId!);
-      if (selectedRole && selectedRole.rolPermisos) {
-        // Marcamos los del rol seleccionado
-        this.activeRolPermisoIds = selectedRole.rolPermisos.map(rp => rp.iD_Rol_Permiso!);
-        console.log('Cargados permisos por defecto del rol:', selectedRole.nombre_Rol, this.activeRolPermisoIds);
-        this.cdr.markForCheck();
-      }
-    }
-  }
+
 
   save(): void {
     // 1. Eliminar los permisos anteriores del usuario

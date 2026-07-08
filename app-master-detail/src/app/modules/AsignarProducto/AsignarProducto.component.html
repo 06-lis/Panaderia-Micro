@@ -15,7 +15,7 @@
         class="w-full p-3 bg-white border border-amber-200 text-[#3E261A] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] transition shadow-sm font-medium">
         <option [value]="null" disabled selected>Seleccione el almacén de destino...</option>
         <option *ngFor="let almacen of almacenes" [value]="almacen.id">
-           {{ almacen.nombre }} ({{ almacen.tipo }})
+           {{ almacen.nombre }} ({{ almacen.tipo }}) — {{ almacen.locacion }}
         </option>
       </select>
       <div *ngIf="asignarForm.controls['AlmacenId'].invalid && asignarForm.controls['AlmacenId'].touched"

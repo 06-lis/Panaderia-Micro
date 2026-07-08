@@ -102,12 +102,12 @@ export class RolesPermisosAddComponent implements OnInit {
 
     console.log('Permisos seleccionados:', this.selectedPermisos);
 
-    // 🔹 1. Filtrar permisos nuevos (los que no tienen iD_Rol_Permiso aún)
+    //  1. Filtrar permisos nuevos (los que no tienen iD_Rol_Permiso aún)
     const permisosNuevos = this.selectedPermisos.filter(
       (p) => !this.rol.rolPermisos?.some((rp) => rp.iD_Permiso === p.iD_Permiso)
     );
 
-    // 🔹 2. Filtrar permisos eliminados (los que tienen iD_Rol_Permiso y ya no están en la lista seleccionada)
+    //  2. Filtrar permisos eliminados (los que tienen iD_Rol_Permiso y ya no están en la lista seleccionada)
     const permisosEliminados =
       this.rol.rolPermisos?.filter(
         (rp) =>
@@ -122,7 +122,7 @@ export class RolesPermisosAddComponent implements OnInit {
     console.log('Permisos nuevos a insertar:', permisosNuevos);
     console.log('Permisos eliminados a borrar:', permisosEliminados);
 
-    // 🔹 3. Construcción del objeto para la API
+    //  3. Construcción del objeto para la API
     const rolData = {
       iD_Rol: this.rol.iD_Rol,
       nombre_Rol: this.rol.nombre_Rol,
@@ -156,7 +156,7 @@ export class RolesPermisosAddComponent implements OnInit {
 
     Promise.all(observables.map((obs: Observable<any>) => obs.toPromise()))
       .then(() => {
-        alert('✅ Cambios guardados con éxito.');
+        alert(' Cambios guardados con éxito.');
         this.router.navigate(['/dashboard/roles-permisos']); // Redirigir a la vista deseada
       })
       .catch((error) => {

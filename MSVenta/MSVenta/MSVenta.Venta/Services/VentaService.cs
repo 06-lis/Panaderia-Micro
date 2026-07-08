@@ -60,8 +60,15 @@ namespace MSVenta.Venta.Services
         public async Task DeleteVenta(int id)
         {
             var venta = await _context.Ventas.FindAsync(id);
-            _context.Ventas.Remove(venta);
-            await _context.SaveChangesAsync();
+            if (venta != null)
+            {
+                // Eliminar manualmente los detalles asociados para evitar la violación de clave foránea
+                var detalles = await _context.DetallesVenta.Where(d => d.VentaId == id).ToListAsync();
+                _context.DetallesVenta.RemoveRange(detalles);
+
+                _context.Ventas.Remove(venta);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task CompletarPagoLibelula(int ventaId, int? usuarioId = null)

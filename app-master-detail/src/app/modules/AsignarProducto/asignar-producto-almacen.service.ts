@@ -68,7 +68,7 @@ export class AsignarProductoAlmacenService {
   }
 
 
-   /** 🔹 Manejo de errores */
+   /**  Manejo de errores */
     private handleError<T>(operation = 'operation', result?: T) {
       return (error: any): Observable<T> => {
         console.error(`${operation} failed:`, error); // Loguear el error

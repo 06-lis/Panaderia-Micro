@@ -26,6 +26,10 @@ export class SidebarComponent {
     return Array.from(grouped, ([name, routes]) => ({ name, routes }));
   }
 
+  hasVisibleRoutes(section: any): boolean {
+    return (section.routes || []).some((route: any) => this.hasPermission(route.data?.permission));
+  }
+
   isSectionCollapsed(name: string): boolean {
     return this.collapsedSections().has(name);
   }
@@ -43,8 +47,14 @@ export class SidebarComponent {
   }
 
   hasPermission(permissionName: string): boolean {
+    console.log(`[Sidebar] Checking permissionName: "${permissionName}", userPermissions:`, this.userPermissions);
     if (!permissionName) return true;
-    if (!this.userPermissions?.length) return true;
-    return this.userPermissions.some((p: any) => p?.nombre_Permiso === permissionName);
+    if (!this.userPermissions?.length) {
+      console.log(`[Sidebar] No userPermissions loaded or empty list. Returning false for: "${permissionName}"`);
+      return false;
+    }
+    const hasPerm = this.userPermissions.some((p: any) => p?.nombre_Permiso === permissionName);
+    console.log(`[Sidebar] Result for "${permissionName}": ${hasPerm}`);
+    return hasPerm;
   }
 }

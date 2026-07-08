@@ -67,13 +67,22 @@ namespace MSVenta.Venta.Services
             await _context.DetallesVenta.AddAsync(detalle);
             await _context.SaveChangesAsync();
 
-            // Consumir el stock de cada detalle en el microservicio Inventario
-            bool consumoResult = await _inventarioService.ConsumirStockAsync(productoAlmacen.ItemId, productoAlmacen.AlmacenId, detalle.Cantidad, venta.UsuarioId, venta.Id, "Venta");
-            if (!consumoResult)
+            try
             {
-                // Si falla el consumo, se podría lanzar una excepción y revertir la transacción.
-                // Idealmente envuelto en un transaction local si se puede.
-                throw new Exception($"No se pudo consumir el stock para el Item {productoAlmacen.ItemId}.");
+                // Consumir el stock de cada detalle en el microservicio Inventario
+                bool consumoResult = await _inventarioService.ConsumirStockAsync(productoAlmacen.ItemId, productoAlmacen.AlmacenId, detalle.Cantidad, venta.UsuarioId, venta.Id, "Venta");
+                if (!consumoResult)
+                {
+                    throw new Exception($"No se pudo consumir el stock para el Item {productoAlmacen.ItemId}.");
+                }
+            }
+            catch (Exception)
+            {
+                // Rollback manual de la base de datos de ventas (eliminar detalle guardado)
+                // para evitar bloqueos y deadlocks por conexiones cruzadas
+                _context.DetallesVenta.Remove(detalle);
+                await _context.SaveChangesAsync();
+                throw;
             }
         }
 

@@ -92,12 +92,12 @@ export class RolPermisosComponent implements OnInit{
 
     console.log('Permisos seleccionados:', this.selectedPermisos);
 
-    // 🔹 1. Filtrar permisos nuevos (los que no tienen iD_Rol_Permiso aún)
+    //  1. Filtrar permisos nuevos (los que no tienen iD_Rol_Permiso aún)
     const permisosNuevos = this.selectedPermisos.filter(p =>
       !this.rol.rolPermisos?.some(rp => rp.iD_Permiso === p.iD_Permiso)
     );
 
-    // 🔹 2. Filtrar permisos eliminados (los que tienen iD_Rol_Permiso y ya no están en la lista seleccionada)
+    //  2. Filtrar permisos eliminados (los que tienen iD_Rol_Permiso y ya no están en la lista seleccionada)
     const permisosEliminados = this.rol.rolPermisos?.filter(rp =>
       !this.selectedPermisos?.some(p => p.iD_Permiso === rp.iD_Permiso)
     ) || [];
@@ -110,7 +110,7 @@ export class RolPermisosComponent implements OnInit{
     console.log('Permisos nuevos a insertar:', permisosNuevos);
     console.log('Permisos eliminados a borrar:', permisosEliminados);
 
-    // 🔹 3. Construcción del objeto para la API
+    //  3. Construcción del objeto para la API
     const rolData = {
       iD_Rol: this.rol.iD_Rol,
       nombre_Rol: this.rol.nombre_Rol,
@@ -124,7 +124,7 @@ export class RolPermisosComponent implements OnInit{
 
     console.log('Datos a enviar:', rolData);
 
-    // 🔹 4. Insertar nuevos permisos
+    //  4. Insertar nuevos permisos
   if (permisosNuevos.length > 0) {
       rolData.rolPermisos.forEach(permiso => {
         this.rolService.createRolPerimo(permiso).subscribe(
@@ -134,7 +134,7 @@ export class RolPermisosComponent implements OnInit{
       });
   }
 
-  // 🔹 5. Eliminar permisos deseleccionados (usando iD_Rol_Permiso)
+  //  5. Eliminar permisos deseleccionados (usando iD_Rol_Permiso)
   if (permisosEliminados.length > 0) {
     const idsEliminar = permisosEliminados.map(p => p.iD_Rol_Permiso);
     idsEliminar.forEach(id => {

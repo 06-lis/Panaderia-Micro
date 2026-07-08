@@ -13,7 +13,8 @@ CREATE TABLE cliente (
 -- 2. Tabla categoria
 CREATE TABLE categoria (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  Nombre VARCHAR(100) NOT NULL
+  Nombre VARCHAR(100) NOT NULL,
+  tipo VARCHAR(50)
 );
 
 -- 3. Tabla item (TPH: Producto e Insumo)

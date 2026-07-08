@@ -1,6 +1,14 @@
-<main class="flex flex-col sm:flex-row text-amber-950 bg-[#FAF6EE] min-h-screen">
+<main class="flex flex-col sm:flex-row text-amber-950 bg-[#FAF6EE] min-h-screen relative overflow-hidden">
+  <!-- Backdrop for mobile -->
+  @if (isSidebarOpen) {
+    <div (click)="toggleSidebar()" class="fixed inset-0 bg-black/50 z-20 sm:hidden transition-opacity duration-300"></div>
+  }
+
   <!-- Sidebar -->
-  <nav class="hidden sm:flex flex-col w-72 min-h-screen bg-[#3E261A] text-white p-5 shadow-2xl z-10">
+  <nav [class.translate-x-0]="isSidebarOpen" [class.-translate-x-full]="!isSidebarOpen"
+       [class.sm:w-72]="isSidebarOpen" [class.sm:w-0]="!isSidebarOpen"
+       [class.sm:p-5]="isSidebarOpen" [class.sm:p-0]="!isSidebarOpen"
+       class="fixed inset-y-0 left-0 w-72 bg-[#3E261A] text-white p-5 shadow-2xl z-30 transform transition-all duration-300 ease-in-out flex flex-col min-h-screen shrink-0 overflow-hidden sm:relative sm:translate-x-0 sm:flex">
     <!-- Brand Header -->
     <div class="flex items-center justify-center py-4 space-x-2">
       <!-- SVG Slice of Bread / Toast -->
@@ -42,7 +50,7 @@
     <!-- Header -->
     <div class="flex justify-between items-center bg-white border-b border-amber-100/60 p-4 shadow-sm">
       <div class="flex items-center space-x-4 text-amber-950">
-        <button class="text-amber-950 p-2 hover:bg-amber-100/50 rounded-lg">
+        <button (click)="toggleSidebar()" class="text-amber-950 p-2 hover:bg-amber-100/50 rounded-lg">
           <i class="pi pi-bars text-lg"></i>
         </button>
         <a href="#" class="flex items-center space-x-2 text-[#3E261A] hover:text-[#8E4E2A] font-semibold transition-colors">

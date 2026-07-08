@@ -203,23 +203,58 @@ export class SaleAddComponent implements OnInit {
       return;
     }
 
-    const ventaData: Venta = {
-      fecha: new Date().toISOString().substring(0, 10),
-      clienteId: this.selectedCustome.id!,
-      usuarioId: this.user?.userId || 1, // Fallback a usuario ID 1 si no está asignado
-    };
-
-    console.log('Enviando datos de venta al backend:', ventaData);
+    // Mostrar overlay de carga
+    Swal.fire({
+      title: 'Procesando venta...',
+      text: 'Verificando stock y registrando transacción.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
 
     try {
-      // 1. Crear registro principal de Venta
+      // 1. Pre-validar stock real en inventario para cada item en el carrito
+      for (let item of this.cartItems) {
+        const itemId = item.producto.id || item.producto.idProducto || item.producto.productoId;
+        const almacenId = item.alamacen.id;
+        if (itemId && almacenId) {
+          const actualStockRes = await this.productoAlmacenService.getActualStock(itemId, almacenId).toPromise();
+          const actualStock = actualStockRes?.stock ?? 0;
+          if (actualStock < item.cantidad!) {
+            Swal.close();
+            Swal.fire(
+              'Stock Insuficiente',
+              `El producto "${item.producto.nombre}" no tiene suficiente stock en el inventario real (Disponible: ${actualStock}, Solicitado: ${item.cantidad}).`,
+              'error'
+            );
+            return;
+          }
+        }
+      }
+
+      const ventaData: Venta = {
+        fecha: new Date().toISOString().substring(0, 10),
+        clienteId: this.selectedCustome.id!,
+        usuarioId: this.user?.userId || 1, // Fallback a usuario ID 1 si no está asignado
+      };
+
+      console.log('Enviando datos de venta al backend:', ventaData);
+
+      // 2. Crear registro principal de Venta
       const response = await this.salesService.createSale(ventaData).toPromise();
       console.log('Venta creada en backend:', response);
 
-      if (response && response.id) {
-        const ventaId = response.id;
+      if (!response || !response.id) {
+        throw new Error('No se pudo crear la cabecera de la venta.');
+      }
 
-        // 2. Crear detalles y actualizar stock en bucle
+      const ventaId = response.id;
+      const processedDetails: any[] = [];
+      const empleadoId = this.user?.idEmpleado || 1;
+
+      try {
+        // 3. Crear detalles
         for (let detalle of this.cartItems) {
           const detalleVenta = {
             productoAlmacenId: detalle.productoAlmacenId,
@@ -228,28 +263,24 @@ export class SaleAddComponent implements OnInit {
             monto: detalle.monto! * detalle.cantidad!,
           };
 
-          try {
-            // Guardar detalle en BD
-            const detalleResponse = await this.salesService.createDetalleVenta(detalleVenta).toPromise();
-            console.log('Detalle de venta creado:', detalleResponse);
-
-            // Decrementar stock en MySQL db_ventas
-            const itemId = detalle.producto.id || detalle.producto.idProducto || detalle.producto.productoId;
-            const almacenId = detalle.alamacen.id;
-            if (itemId && almacenId) {
-              const stockResponse = await this.productoAlmacenService.updateStock(
-                itemId,
-                almacenId,
-                -detalle.cantidad!
-              ).toPromise();
-              console.log('Stock actualizado:', stockResponse);
-            }
-          } catch (detalleError) {
-            console.error('Error procesando detalle:', detalleVenta, detalleError);
+          console.log('Creando detalle venta:', detalleVenta);
+          const detalleResponse = await this.salesService.createDetalleVenta(detalleVenta).toPromise();
+          
+          if (!detalleResponse || Object.keys(detalleResponse).length === 0) {
+            throw new Error(`Error al registrar el detalle del producto "${detalle.producto.nombre}".`);
           }
+
+          const itemId = detalle.producto.id || detalle.producto.idProducto || detalle.producto.productoId;
+          const almacenId = detalle.alamacen.id;
+          processedDetails.push({
+            itemId,
+            almacenId,
+            cantidad: detalle.cantidad!
+          });
         }
 
-        // Éxito
+        // Cierre exitoso
+        Swal.close();
         Swal.fire({
           icon: 'success',
           title: 'Venta Registrada',
@@ -258,12 +289,42 @@ export class SaleAddComponent implements OnInit {
         }).then(() => {
           this.router.navigate(['/dashboard/sale/list']);
         });
-      } else {
-        throw new Error('No se recibió el ID de la venta creada.');
+
+      } catch (loopError: any) {
+        console.error('Error durante el bucle de detalles, iniciando Rollback:', loopError);
+        
+        // 4. Realizar Rollback
+        // 4.1 Eliminar la cabecera de venta
+        await this.salesService.deleteSale(ventaId).toPromise();
+        console.log(`Venta #${ventaId} eliminada debido a fallo.`);
+
+        // 4.2 Revertir el stock en el inventario real para los detalles procesados con éxito
+        for (let proc of processedDetails) {
+          try {
+            await this.productoAlmacenService.revertStock(
+              proc.itemId,
+              proc.almacenId,
+              proc.cantidad,
+              empleadoId,
+              ventaId
+            ).toPromise();
+            console.log(`Stock revertido para ItemId=${proc.itemId}, Cantidad=${proc.cantidad}`);
+          } catch (revertError) {
+            console.error('Error al revertir stock para:', proc, revertError);
+          }
+        }
+
+        throw loopError;
       }
-    } catch (error) {
+
+    } catch (error: any) {
       console.error('Error al procesar la venta:', error);
-      Swal.fire('Error', 'No se pudo crear la venta. Por favor verifica la conexión con el microservicio.', 'error');
+      Swal.close();
+      Swal.fire(
+        'Venta Cancelada',
+        `No se pudo registrar la venta. La transacción ha sido cancelada y los cambios en el inventario han sido revertidos. Detalle: ${error?.message || 'Error de conexión'}`,
+        'error'
+      );
     }
   }
 

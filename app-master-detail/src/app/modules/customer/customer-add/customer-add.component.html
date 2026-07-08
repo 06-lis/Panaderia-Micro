@@ -8,7 +8,7 @@
 
   <!-- Formulario para agregar un cliente -->
   <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div class="flex flex-col space-y-6 mb-8">
       <div class="form-group">
         <label for="nombre" class="block text-sm font-semibold text-[#3E261A] mb-1">Nombre</label>
         <input id="nombre" formControlName="nombre" type="text"
@@ -31,7 +31,7 @@
     <!-- Botones centrados en la misma fila -->
     <div class="flex justify-center space-x-4 mt-8">
       <button type="submit" [disabled]="customerForm.invalid"
-              class="w-full py-3 bg-[#5C3E21] text-white font-bold rounded-lg shadow-lg hover:from-blue-700 hover:to-cyan-600 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 transition-all duration-300 disabled:bg-gray-500">
+              class="w-full py-3 bg-green-600 text-white font-bold rounded-lg shadow-lg hover:bg-green-700 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition-all duration-300 disabled:bg-gray-500">
         Crear Cliente
       </button>
 
@@ -40,7 +40,7 @@
         type="button"
         (click)="goBack()"
       >
-        ⬅ Volver
+         Volver
       </button>
     </div>
   </form>

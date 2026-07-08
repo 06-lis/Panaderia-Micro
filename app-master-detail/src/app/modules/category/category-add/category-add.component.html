@@ -23,7 +23,7 @@
           *ngIf="categoryForm.get('nombre')?.invalid && categoryForm.get('nombre')?.touched"
           class="text-red-500 text-sm mt-1"
         >
-          ⚠ El nombre es obligatorio y debe tener máximo 40 caracteres.
+           El nombre es obligatorio y debe tener máximo 40 caracteres.
         </div>
       </div>
 
@@ -35,7 +35,7 @@
           type="submit"
           [disabled]="categoryForm.invalid"
         >
-          🚀 Crear Categoría
+           Crear Categoría
         </button>
 
         <!-- Botón Volver -->
@@ -44,7 +44,7 @@
           type="button"
           (click)="goBack()"
         >
-          ⬅ Volver
+           Volver
         </button>
       </div>
     </form>

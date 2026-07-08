@@ -73,9 +73,34 @@ export class ProductoAlmacenService {
      public updateStock(itemId: number, almacenId: number, cantidad: number): Observable<any> {
        const token = sessionStorage.getItem('token');
        if (token) {
-         return this.http.post<any>(`${this.apiUrl}/update-stock`, { itemId, almacenId, cantidad }, httpOptions(token)).pipe(
-           catchError(this.handleError('updateStock', null))
-         );
+         return this.http.post<any>(`${this.apiUrl}/update-stock`, { itemId, almacenId, cantidad }, httpOptions(token));
+       } else {
+         return new Observable(observer => observer.error(new Error('No token available')));
+       }
+     }
+
+     public getActualStock(itemId: number, almacenId: number): Observable<any> {
+       const token = sessionStorage.getItem('token');
+       if (token) {
+         return this.http.get<any>(`${environment.URL_SERVICIOS}/inventario/productoalmacen/stock/${itemId}/${almacenId}`, httpOptions(token));
+       } else {
+         return of({ itemId, almacenId, stock: 0 });
+       }
+     }
+
+     public revertStock(itemId: number, almacenId: number, cantidad: number, empleadoId: number, referenciaId: number): Observable<any> {
+       const token = sessionStorage.getItem('token');
+       if (token) {
+         const body = {
+           almacenId,
+           itemId,
+           cantidad,
+           costoUnitario: 0,
+           empleadoId,
+           referenciaId,
+           referenciaTipo: 'Venta_Rollback'
+         };
+         return this.http.post<any>(`${environment.URL_SERVICIOS}/inventario/ingreso`, body, httpOptions(token));
        } else {
          return of(null);
        }

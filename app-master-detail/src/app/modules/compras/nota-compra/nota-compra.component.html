@@ -181,57 +181,94 @@
               <span style="font-size: 0.8rem;">Agrega al menos un detalle para registrar la compra.</span>
             </div>
           } @else {
-            <!-- Headers de la grilla de detalles -->
-            <div class="detail-row" style="background: transparent; border: none; padding-bottom: 2px; font-weight: 700; font-size: 0.72rem; color: #5C3317; text-transform: uppercase;">
-              <span>Almacén</span>
-              <span>Ítem / Producto</span>
-              <span style="text-align: center;">Cant.</span>
-              <span style="text-align: right;">Precio Unit.</span>
-              <span style="text-align: center;">Vencimiento</span>
-              <span style="text-align: right;">Subtotal</span>
-              <span></span>
-            </div>
-
             @for (d of form.detalles; track $index) {
-              <div class="detail-row">
-                <!-- Almacen dropdown -->
-                <select [(ngModel)]="d.idAlmacen" class="form-select" style="font-size: 0.8rem; padding: 6px;">
-                  <option [value]="0">Almacén...</option>
-                  @for (a of almacenesPermitidos; track a.id) {
-                    <option [value]="a.id">{{ a.nombre }}</option>
-                  }
-                </select>
-
-                <!-- Item dropdown -->
-                <select [(ngModel)]="d.idItem" class="form-select" style="font-size: 0.8rem; padding: 6px;">
-                  <option [value]="0">Ítem...</option>
-                  @for (i of insumos; track i.id) {
-                    <option [value]="i.id">{{ i.nombre }} ({{ i.tipo }})</option>
-                  }
-                </select>
-
-                <!-- Cantidad -->
-                <input type="number" [(ngModel)]="d.cantidad" class="detail-input" style="text-align: center;" min="1" />
-
-                <!-- Precio -->
-                <input type="number" [(ngModel)]="d.precio" class="detail-input" style="text-align: right;" min="0" step="0.1" />
-
-                <!-- Vencimiento -->
-                <input type="date" [(ngModel)]="d.fechaVencimiento" class="detail-input" style="text-align: center; padding: 6px; font-size: 0.8rem;" />
-
-                <!-- Subtotal -->
-                <span class="detail-subtotal">Bs. {{ (d.cantidad * d.precio) | number:'1.2-2' }}</span>
-
-                <!-- Delete button -->
-                @if ($index > 0) {
-                  <button type="button" class="btn-remove-detail" (click)="removeDetail($index)">
-                    <i class="pi pi-trash"></i>
+              <div class="detail-card" style="background: #FDFBF7; border: 1px solid #E8D9C8; border-radius: 12px; padding: 12px; margin-bottom: 12px; position: relative;">
+                
+                <!-- Header of the Card -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px dashed #E8D9C8; padding-bottom: 6px;">
+                  <span style="font-size: 0.75rem; font-weight: 700; color: #8E4E2A; text-transform: uppercase; letter-spacing: 0.05em;">Ítem #{{ $index + 1 }}</span>
+                  <button type="button" class="btn-remove-detail" [disabled]="$index === 0" [style.opacity]="$index === 0 ? 0.4 : 1" [style.cursor]="$index === 0 ? 'not-allowed' : 'pointer'" (click)="removeDetail($index)" style="background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; border-radius: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s;">
+                    <i class="pi pi-trash" style="font-size: 0.8rem;"></i>
                   </button>
-                }
+                </div>
+
+                <!-- First Row: Warehouse and Item Selection -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 0.72rem; font-weight: 600; color: #5C3317;">Almacén Destino *</label>
+                    <select [(ngModel)]="d.idAlmacen" class="form-select" style="font-size: 0.85rem; padding: 8px; width: 100%; box-sizing: border-box;">
+                      <option [value]="0">Seleccionar almacén...</option>
+                      @for (a of almacenesPermitidos; track a.id) {
+                        <option [value]="a.id">{{ a.nombre }}</option>
+                      }
+                    </select>
+                  </div>
+
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 0.72rem; font-weight: 600; color: #5C3317;">Insumo / Producto *</label>
+                    <select [(ngModel)]="d.idItem" (change)="onItemChange(d)" class="form-select" style="font-size: 0.85rem; padding: 8px; width: 100%; box-sizing: border-box;">
+                      <option [value]="0">Seleccionar insumo...</option>
+                      @for (i of insumos; track i.id) {
+                        <option [value]="i.id">{{ i.nombre }} ({{ i.tipo }})</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Second Row: Cantidad, Precio, Vencimiento, Subtotal -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1.2fr 1fr; gap: 12px; align-items: flex-end;">
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 0.72rem; font-weight: 600; color: #5C3317;">Cantidad</label>
+                    <input type="number" [(ngModel)]="d.cantidad" class="detail-input" style="padding: 8px; font-size: 0.85rem; text-align: center;" min="1" />
+                  </div>
+
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 0.72rem; font-weight: 600; color: #5C3317;">Precio Unit. (S/)</label>
+                    <input type="number" [(ngModel)]="d.precio" class="detail-input" style="padding: 8px; font-size: 0.85rem; text-align: right;" min="0" step="0.1" />
+                  </div>
+
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 0.72rem; font-weight: 600; color: #5C3317;">Fecha Vencimiento</label>
+                    <input type="date" [(ngModel)]="d.fechaVencimiento" class="detail-input" style="padding: 6px; font-size: 0.85rem; text-align: center;" />
+                  </div>
+
+                  <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-end; justify-content: center; height: 100%;">
+                    <span style="font-size: 0.72rem; font-weight: 600; color: #9B7B6A; margin-bottom: 2px;">Subtotal</span>
+                    <span class="detail-subtotal" style="font-size: 0.95rem; font-weight: 700; color: #1A6B4A; text-align: right; margin-right: 0;">Bs. {{ (d.cantidad * d.precio) | number:'1.2-2' }}</span>
+                  </div>
+                </div>
               </div>
             }
           }
         </div>
+
+        <!-- Capacidad de Almacenes Afectados -->
+        @if (uniqueSelectedAlmacenes.length > 0) {
+          <div class="warehouse-capacity-summary" style="margin-top: 14px; padding: 10px; background: #FAF5EF; border-radius: 8px; border: 1px solid #E6D5C3;">
+            <h4 style="font-size: 0.8rem; font-weight: 700; color: #5C3317; margin: 0 0 6px 0; text-transform: uppercase; letter-spacing: 0.05em;">Capacidad de Almacenes Destino</h4>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              @for (aId of uniqueSelectedAlmacenes; track aId) {
+                @if (getAlmacenCapacityInfo(aId); as info) {
+                  <div style="display: flex; justify-content: space-between; font-size: 0.78rem; align-items: center;">
+                    <span style="font-weight: 600; color: #3E261A;">{{ info.nombre }}:</span>
+                    @if (info.hasLimit) {
+                      <span [style.color]="info.overCapacity ? '#EF4444' : '#1A6B4A'" style="font-weight: 600;">
+                        {{ info.currentStock + info.incomingStock }} / {{ info.maxCapacity }} uds
+                        @if (info.overCapacity) {
+                          <span style="margin-left: 6px; padding: 1px 6px; background: #FEE2E2; color: #991B1B; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">¡EXCEDIDO!</span>
+                        } @else {
+                          <span style="font-size: 0.72rem; color: #9B7B6A; font-weight: normal;"> (Disponible: {{ info.available - info.incomingStock }})</span>
+                        }
+                      </span>
+                    } @else {
+                      <span style="color: #9B7B6A; font-weight: 500;">Sin límite establecido (Ingresando: {{ info.incomingStock }} uds)</span>
+                    }
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        }
 
         <!-- Total de Compra -->
         <div class="total-summary-row">

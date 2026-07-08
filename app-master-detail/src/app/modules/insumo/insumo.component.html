@@ -1,5 +1,5 @@
 <!-- Tabla de Insumos -->
-<div class="p-6 mt-10 bg-white text-amber-950 rounded-2xl shadow-md border border-amber-100/70 border-t-4 border-t-[#5C3E21]">
+<div class="w-full max-w-7xl mx-auto p-6 mt-6 bg-white text-amber-950 rounded-2xl shadow-md border border-amber-100/70 border-t-4 border-t-[#5C3E21]">
   <h2 class="text-3xl font-extrabold mb-8 text-left text-[#3E261A] flex items-center gap-2">
     Lista de Insumos
   </h2>
@@ -30,17 +30,17 @@
           <td class="px-6 py-4 text-left">{{ insumo.categoria?.nombre || 'General' }}</td>
           <td class="px-6 py-4 text-left flex gap-2">
             <button (click)="openEditModal(insumo)"
-              class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-lg shadow-sm transition-all hover:scale-105 flex items-center gap-1">
-              ✏️ Editar
+              class="px-3.5 py-1.5 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg shadow-sm transition-all hover:scale-105 flex items-center gap-1">
+               Editar
             </button>
             <button (click)="deleteInsumo(insumo.id)"
-              class="px-3.5 py-1.5 bg-red-700 hover:bg-red-800 text-white font-semibold rounded-lg shadow-sm transition-all hover:scale-105 flex items-center gap-1">
-              🗑️ Eliminar
+              class="px-3.5 py-1.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-sm transition-all hover:scale-105 flex items-center gap-1">
+               Eliminar
             </button>
           </td>
         </tr>
         <tr *ngIf="insumos.length === 0">
-          <td colspan="6" class="px-6 py-8 text-amber-800/80 italic">🚫 No hay insumos registrados en el sistema.</td>
+          <td colspan="6" class="px-6 py-8 text-amber-800/80 italic"> No hay insumos registrados en el sistema.</td>
         </tr>
       </tbody>
     </table>
@@ -53,7 +53,7 @@
     <!-- Header Modal -->
     <div class="px-6 py-4 bg-[#FAF6EE] border-b border-amber-100 flex items-center justify-between">
       <h3 class="text-xl font-bold text-[#3E261A] flex items-center gap-2">
-        ✏️ Editar Insumo
+         Editar Insumo
       </h3>
       <button (click)="closeEditModal()" class="text-amber-900 hover:text-red-600 text-2xl font-bold transition-colors">&times;</button>
     </div>
@@ -136,7 +136,7 @@
           class="w-1/2 py-2 bg-[#8E4E2A] hover:bg-[#7D411F] text-white font-bold rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           [disabled]="insumoForm.invalid"
         >
-          💾 Guardar Cambios
+           Guardar Cambios
         </button>
       </div>
     </form>

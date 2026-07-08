@@ -165,10 +165,14 @@ namespace MSVenta.Venta.Controllers
             {
                 return NotFound(new { mensaje = ex.Message });
             }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { mensaje = ex.Message });
+            }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en UpdateStock: {ex.Message} \n {ex.StackTrace}");
-                return StatusCode(500, new { mensaje = "OcurriÃ³ un error inesperado: " + ex.Message });
+                return StatusCode(500, new { mensaje = "Ocurrió un error inesperado: " + ex.Message });
             }
         }
 

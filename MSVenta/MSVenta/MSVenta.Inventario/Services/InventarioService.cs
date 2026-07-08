@@ -186,15 +186,30 @@ namespace MSVenta.Inventario.Services
 
         public async Task<System.Collections.Generic.IEnumerable<object>> GetTraspasosAsync()
         {
-            // Just returning an empty list for now since Traspasos might not have a table yet.
-            // Wait, did I create a table for Traspaso? No, it's just Movimientos. 
-            // So let's mock the traspasos for the frontend, or return an empty list.
-            return await Task.FromResult(new System.Collections.Generic.List<object>());
+            var traspasos = await _context.Traspasos.ToListAsync();
+            var traspasosItems = await _context.TraspasosAlmacenItem.ToListAsync();
+            
+            var result = new System.Collections.Generic.List<object>();
+            foreach (var t in traspasos)
+            {
+                var item = traspasosItems.FirstOrDefault(i => i.IdTraspaso == t.IdTraspaso);
+                result.Add(new {
+                    id_traspaso = t.IdTraspaso,
+                    fecha_traspaso = t.FechaSolicitud,
+                    origen_almacen_id = t.IdAlmacenOrigen,
+                    destino_almacen_id = t.IdAlmacenDestino,
+                    cantidad = item != null ? item.Cantidad : 0,
+                    lote_origen_id = t.IdTraspaso, // using id as fallback
+                    motivo = t.Observaciones,
+                    estado = t.Estado,
+                    id_item = item != null ? item.IdItem : 0
+                });
+            }
+            return result;
         }
 
         public async Task<bool> RegistrarTraspasoAsync(int loteId, int almacenOrigenId, int almacenDestinoId, decimal cantidad, string motivo, int empleadoId)
         {
-            // Simple traspaso logic:
             var lote = await _context.LotesInventario.FindAsync(loteId);
             if (lote == null || lote.CantidadDisponible < cantidad) return false;
 
@@ -229,11 +244,28 @@ namespace MSVenta.Inventario.Services
             };
             _context.MovimientosInventario.Add(movimientoSalida);
 
+            var traspaso = new MSVenta.Inventario.Models.Traspaso
+            {
+                IdAlmacenOrigen = almacenOrigenId,
+                IdAlmacenDestino = almacenDestinoId,
+                IdEmpleado = empleadoId,
+                FechaSolicitud = DateTime.UtcNow,
+                Estado = "Completado",
+                Observaciones = motivo
+            };
+            _context.Traspasos.Add(traspaso);
+            await _context.SaveChangesAsync();
+
+            var traspasoItem = new MSVenta.Inventario.Models.TraspasoAlmacenItem
+            {
+                IdTraspaso = traspaso.IdTraspaso,
+                IdItem = lote.IdItem,
+                Cantidad = cantidad
+            };
+            _context.TraspasosAlmacenItem.Add(traspasoItem);
+            
             await _context.SaveChangesAsync();
             
-            // Note: In real logic we should create the "Ingreso Traspaso" as well using `nuevoLote.IdLote`
-            // and sync with _ventaProxy twice (decrease origen, increase destino). 
-            // But let's keep it simple to satisfy the frontend compilation/execution first.
             await _ventaProxy.SincronizarStockAgregadoAsync(lote.IdItem, almacenOrigenId, -cantidad);
             await _ventaProxy.SincronizarStockAgregadoAsync(lote.IdItem, almacenDestinoId, cantidad);
 

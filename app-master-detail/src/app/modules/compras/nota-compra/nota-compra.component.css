@@ -238,14 +238,14 @@
 }
 
 .details-list {
-  max-height: 240px;
+  max-height: 350px;
   overflow-y: auto;
   padding-right: 4px;
 }
 
 .detail-row {
   display: grid;
-  grid-template-columns: 2.2fr 2.2fr 1fr 1fr 1fr auto;
+  grid-template-columns: 1.6fr 1.8fr 1.1fr 1.1fr 1.3fr 1.1fr auto;
   gap: 8px;
   align-items: center;
   margin-bottom: 8px;

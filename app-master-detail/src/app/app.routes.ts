@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import LoginComponent from './modules/auth/login/login.component';
 import { DashboardLayoutComponent } from './shared/layouts/dashboardLayout/dashboardLayout.component';
+import { permissionGuard } from './shared/guard/permission.guard';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardLayoutComponent,
+    canActivateChild: [permissionGuard],
     children: [
       // ==========================================
       // 🔐 CONTROL DE USUARIOS
@@ -91,7 +93,7 @@ export const routes: Routes = [
           icon: 'pi pi-box',
           title: 'Gestión de Items',
           description: 'Gestión de Productos, Insumos y Categorías',
-          permission: 'Producto', // Required permission, assuming Producto is appropriate
+          permission: 'Items',
           section: 'Almacén e Inventario'
         },
       },
@@ -130,7 +132,7 @@ export const routes: Routes = [
           icon: 'pi pi-plus-circle',
           title: 'Crear Item',
           description: 'Creación de Producto o Insumo',
-          permission: 'Producto',
+          permission: 'Items',
           section: 'Almacén e Inventario'
         },
       },
@@ -223,7 +225,7 @@ export const routes: Routes = [
           icon: 'pi pi-box',
           title: 'Lotes Inventario',
           description: 'Gestión de Lotes y Trazabilidad',
-          permission: 'Almacen',
+          permission: 'Lotes Inventario',
           section: 'Almacén e Inventario'
         },
       },
@@ -235,7 +237,7 @@ export const routes: Routes = [
           icon: 'pi pi-sort-alt',
           title: 'Movimientos',
           description: 'Historial de Movimientos de Inventario',
-          permission: 'Almacen',
+          permission: 'Movimientos',
           section: 'Almacén e Inventario'
         },
       },
@@ -247,7 +249,7 @@ export const routes: Routes = [
           icon: 'pi pi-arrow-right-arrow-left',
           title: 'Traspasos',
           description: 'Traspasos entre Almacenes',
-          permission: 'Almacen',
+          permission: 'Traspasos',
           section: 'Almacén e Inventario'
         },
       },
@@ -259,7 +261,7 @@ export const routes: Routes = [
           icon: 'pi pi-cog',
           title: 'Configuracion Inventario',
           description: 'Configuración de Parámetros de Inventario',
-          permission: 'Almacen',
+          permission: 'Configuracion Inventario',
           section: 'Almacén e Inventario'
         },
       },
@@ -271,6 +273,7 @@ export const routes: Routes = [
           icon: 'pi pi-chart-bar',
           title: 'Dashboard',
           description: 'Dashboard de Reportes y Métricas',
+          permission: 'Reportes',
           section: 'Reportes'
         },
       },

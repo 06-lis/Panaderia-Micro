@@ -96,12 +96,12 @@ export class RolPermisoUsuarioComponent implements OnInit {
   }
 
   save(): void {
-    // 🔹 3. Construcción del objeto para la API
+    //  3. Construcción del objeto para la API
     const rolData = this.transformarDatos(this.userId, this.asignaciones);
 
     console.log('Datos a enviar:', rolData.rolpermiso);
 
-    // 🔹 4. Insertar nuevos permisos
+    //  4. Insertar nuevos permisos
     if (rolData.rolpermiso.length > 0) {
       rolData.rolpermiso.forEach((permiso: any) => {
         var rolpermisoUsuario: RolPermisoUsuario = {

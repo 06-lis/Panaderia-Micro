@@ -163,18 +163,77 @@ export class NotaCompraComponent implements OnInit {
 
   addDetail(): void {
     const defaultAlmacenId = this.almacenes().length > 0 ? (this.almacenes()[0].id || 0) : 0;
-    const defaultItemId = this.items().length > 0 ? (this.items()[0].id || 0) : 0;
+    const insumosList = this.insumos;
+    const defaultItemId = insumosList.length > 0 ? (insumosList[0].id || 0) : 0;
+    
+    let defaultPrecio = 0;
+    if (defaultItemId > 0) {
+      const selectedItem = this.items().find(i => Number(i.id) === Number(defaultItemId));
+      if (selectedItem && selectedItem.precio !== undefined) {
+        defaultPrecio = selectedItem.precio;
+      }
+    }
     
     this.form.detalles.push({
       idAlmacen: defaultAlmacenId,
       idItem: defaultItemId,
       cantidad: 1,
-      precio: 0
+      precio: defaultPrecio
     });
   }
 
+  onItemChange(detail: any): void {
+    const selectedItemId = Number(detail.idItem);
+    if (selectedItemId > 0) {
+      const selectedItem = this.items().find(i => Number(i.id) === selectedItemId);
+      if (selectedItem && selectedItem.precio !== undefined) {
+        detail.precio = selectedItem.precio;
+      }
+    }
+  }
+
   removeDetail(index: number): void {
+    if (index === 0) {
+      Swal.fire('Acción no permitida', 'No se puede eliminar el primer registro de ítems a comprar.', 'warning');
+      return;
+    }
     this.form.detalles.splice(index, 1);
+  }
+
+  get uniqueSelectedAlmacenes(): number[] {
+    const ids = this.form.detalles
+      .map(d => Number(d.idAlmacen))
+      .filter(id => id > 0);
+    return [...new Set(ids)];
+  }
+
+  getAlmacenCapacityInfo(idAlmacen: number) {
+    const almacen = this.almacenes().find(a => a.id == idAlmacen);
+    if (!almacen) return null;
+
+    // Calcular el stock ocupado actual (suma del stock de los productos/lotes del almacén)
+    const currentStock = (almacen.productos || []).reduce((acc: number, p: any) => acc + (p.stock || 0), 0);
+    const maxCapacity = almacen.capacidadMaxima ?? 0;
+    const hasLimit = typeof maxCapacity === 'number' && maxCapacity > 0;
+
+    // Calcular cuánto va a ingresar a este almacén en la compra actual
+    const incomingStock = this.form.detalles
+      .filter(d => Number(d.idAlmacen) === Number(idAlmacen))
+      .reduce((acc, d) => acc + (Number(d.cantidad) || 0), 0);
+
+    const available = hasLimit ? (maxCapacity - currentStock) : 0;
+    const remains = hasLimit ? (maxCapacity - currentStock - incomingStock) : 0;
+
+    return {
+      nombre: almacen.nombre,
+      currentStock,
+      maxCapacity,
+      hasLimit,
+      incomingStock,
+      available,
+      remains,
+      overCapacity: hasLimit && (remains < 0)
+    };
   }
 
   get calculatedTotal(): number {
@@ -201,6 +260,19 @@ export class NotaCompraComponent implements OnInit {
       }
       if (d.cantidad <= 0 || d.precio < 0) {
         Swal.fire('Error', 'La cantidad debe ser mayor a 0 y el precio no puede ser negativo.', 'error');
+        return;
+      }
+    }
+
+    // Validar capacidad de los almacenes antes de registrar
+    for (let aId of this.uniqueSelectedAlmacenes) {
+      const info = this.getAlmacenCapacityInfo(aId);
+      if (info && info.hasLimit && info.overCapacity) {
+        Swal.fire(
+          'Capacidad Excedida',
+          `El almacén "${info.nombre}" no tiene suficiente espacio disponible para recibir esta compra. Capacidad máxima: ${info.maxCapacity} uds. Stock ocupado actual + nueva compra: ${info.currentStock + info.incomingStock} uds.`,
+          'error'
+        );
         return;
       }
     }

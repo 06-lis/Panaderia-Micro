@@ -1,10 +1,16 @@
 <div class="max-w-lg mx-auto mt-10 p-8 bg-white text-amber-950 rounded-2xl shadow-xl border border-amber-100/70 border-t-4 border-t-[#5C3E21]">
-  <h2 class="text-3xl font-extrabold text-left mb-8 text-[#3E261A] tracking-tight">
+  <h2 class="text-3xl font-extrabold text-left mb-8 text-[#3E261A] tracking-tight flex items-center gap-2">
     Crear Almacén
   </h2>
 
   <form [formGroup]="almacenForm" (ngSubmit)="createAlmacen()" class="space-y-6">
-    
+
+    <!-- Instrucciones -->
+    <div class="p-3.5 bg-[#FAF6EE] border-l-4 border-[#8E4E2A] rounded-r-lg text-xs text-[#5C3E21] space-y-1">
+      <p class="font-bold flex items-center gap-1"> Instrucciones:</p>
+      <p>Crea un nuevo almacén para organizar tu inventario de insumos o productos terminados.</p>
+    </div>
+
     <!-- Nombre del almacén -->
     <div>
       <label for="nombre" class="text-amber-950 font-semibold mb-1.5 block text-sm">Nombre del Almacén <span class="text-red-500">*</span></label>
@@ -17,7 +23,7 @@
       />
       <p class="text-[11px] text-amber-800/60 mt-1">Nombre único para identificar el almacén.</p>
       <div *ngIf="almacenForm.get('nombre')?.invalid && almacenForm.get('nombre')?.touched"
-        class="mt-1.5 text-red-600 text-xs font-semibold">
+        class="mt-1.5 text-red-600 text-xs font-semibold flex items-center gap-1">
         El nombre es requerido (máx. 50 caracteres).
       </div>
     </div>
@@ -62,7 +68,7 @@
       />
       <p class="text-[11px] text-amber-800/60 mt-1">Capacidad total en unidades (opcional).</p>
       <div *ngIf="almacenForm.get('capacidadMaxima')?.invalid && almacenForm.get('capacidadMaxima')?.touched"
-        class="mt-1.5 text-red-600 text-xs font-semibold">
+        class="mt-1.5 text-red-600 text-xs font-semibold flex items-center gap-1">
         La capacidad máxima debe ser mayor o igual a 0.
       </div>
     </div>
