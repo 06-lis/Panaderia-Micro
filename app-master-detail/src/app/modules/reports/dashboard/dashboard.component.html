@@ -1,7 +1,19 @@
 <div class="p-6">
   <div class="flex justify-between items-center mb-6">
     <h2 class="text-2xl font-bold text-gray-800">Dashboard de Reportes</h2>
-    <div class="flex space-x-4">
+    <div class="flex space-x-4 items-center">
+      
+      <!-- Filtro de Fechas -->
+      <div class="flex items-center space-x-2">
+        <p-dropdown [options]="dateFilterOptions" [(ngModel)]="selectedDateFilter" (onChange)="onDateFilterChange()" optionLabel="label" optionValue="value" class="w-48"></p-dropdown>
+        
+        <ng-container *ngIf="selectedDateFilter === 'custom'">
+          <p-calendar [(ngModel)]="startDate" placeholder="Fecha Inicio" dateFormat="dd/mm/yy"></p-calendar>
+          <p-calendar [(ngModel)]="endDate" placeholder="Fecha Fin" dateFormat="dd/mm/yy"></p-calendar>
+          <button (click)="applyCustomFilter()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-semibold">Aplicar</button>
+        </ng-container>
+      </div>
+
       <button 
         (click)="exportPdf()" 
         [disabled]="exporting"
@@ -112,7 +124,7 @@
   <div *ngIf="!loading && dashboardData" class="mt-6 w-full max-w-full overflow-hidden">
     <!-- Fila superior: Gráfico Lineal (Flujo) -->
     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6 w-full max-w-full overflow-x-auto">
-      <h3 class="text-lg font-semibold text-gray-700 mb-4">Flujo de Operaciones (Últimos 30 días)</h3>
+      <h3 class="text-lg font-semibold text-gray-700 mb-4">Flujo de Operaciones ({{getFilterLabel()}})</h3>
       <div style="position: relative; height:300px; width:100%">
         <p-chart type="line" [data]="lineData" [options]="lineOptions" [responsive]="true"></p-chart>
       </div>

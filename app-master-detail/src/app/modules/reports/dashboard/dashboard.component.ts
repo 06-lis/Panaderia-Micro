@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 // pdfMake and pdfFonts will be loaded dynamically or via require to avoid esbuild strict import errors
 declare var require: any;
 
@@ -20,6 +21,17 @@ export class DashboardComponent implements OnInit {
   showEmailModal: boolean = false;
   sendingEmail: boolean = false;
   emailDestinatarios: string = '';
+
+  dateFilterOptions = [
+    { label: 'Últimos 30 días', value: '30days' },
+    { label: `Año Actual (${new Date().getFullYear()})`, value: new Date().getFullYear().toString() },
+    { label: `Año Pasado (${new Date().getFullYear() - 1})`, value: (new Date().getFullYear() - 1).toString() },
+    { label: 'Histórico Completo', value: 'all' },
+    { label: 'Rango Personalizado', value: 'custom' }
+  ];
+  selectedDateFilter: string = '30days';
+  startDate: Date | null = null;
+  endDate: Date | null = null;
 
   // Quick select emails
   quickEmails = [
@@ -141,9 +153,45 @@ export class DashboardComponent implements OnInit {
     };
   }
 
+  onDateFilterChange() {
+    if (this.selectedDateFilter !== 'custom') {
+      this.loadDashboard();
+    }
+  }
+
+  applyCustomFilter() {
+    if (this.startDate && this.endDate) {
+      this.loadDashboard();
+    } else {
+      alert('Por favor selecciona Fecha Inicio y Fecha Fin');
+    }
+  }
+
   loadDashboard(): void {
     this.loading = true;
-    this.http.get('http://localhost:5000/api/reportes/dashboard').subscribe({
+    let url = `${environment.URL_SERVICIOS}/reportes/dashboard`;
+    
+    let queryParams = [];
+    if (this.selectedDateFilter === '30days') {
+       const end = new Date();
+       const start = new Date();
+       start.setDate(end.getDate() - 30);
+       queryParams.push(`startDate=${start.toISOString()}`, `endDate=${end.toISOString()}`);
+    } else if (this.selectedDateFilter === new Date().getFullYear().toString()) {
+       queryParams.push(`startDate=${new Date().getFullYear()}-01-01T00:00:00Z`, `endDate=${new Date().getFullYear()}-12-31T23:59:59Z`);
+    } else if (this.selectedDateFilter === (new Date().getFullYear() - 1).toString()) {
+       queryParams.push(`startDate=${new Date().getFullYear() - 1}-01-01T00:00:00Z`, `endDate=${new Date().getFullYear() - 1}-12-31T23:59:59Z`);
+    } else if (this.selectedDateFilter === 'all') {
+       queryParams.push(`startDate=2000-01-01T00:00:00Z`, `endDate=2100-12-31T23:59:59Z`);
+    } else if (this.selectedDateFilter === 'custom' && this.startDate && this.endDate) {
+       queryParams.push(`startDate=${this.startDate.toISOString()}`, `endDate=${this.endDate.toISOString()}`);
+    }
+
+    if (queryParams.length > 0) {
+       url += '?' + queryParams.join('&');
+    }
+
+    this.http.get(url).subscribe({
       next: (data: any) => {
         this.dashboardData = data;
         this.initCharts();
@@ -200,7 +248,7 @@ export class DashboardComponent implements OnInit {
               ]);
             });
           } else {
-            operacionesBody.push([{ text: 'No hay operaciones en los últimos 30 días.', colSpan: 3, alignment: 'center' }, '', '']);
+            operacionesBody.push([{ text: `No hay operaciones en este rango (${this.getFilterLabel()}).`, colSpan: 3, alignment: 'center' }, '', '']);
           }
         } else {
           operacionesBody.push([{ text: 'No hay registros.', colSpan: 3, alignment: 'center' }, '', '']);
@@ -268,7 +316,7 @@ export class DashboardComponent implements OnInit {
             { text: '\n' },
             
             // Metricas clave
-            { text: '1. Resumen Ejecutivo (30 Días)', style: 'sectionHeader' },
+            { text: `1. Resumen Ejecutivo (${this.getFilterLabel()})`, style: 'sectionHeader' },
             {
               columns: [
                 { text: `Total Ventas:\n${this.dashboardData.totalVentas}`, style: 'metricCard' },
@@ -420,10 +468,12 @@ export class DashboardComponent implements OnInit {
 
     // Generar el PDF antes de enviar
     this.generatePdfBase64().then(base64 => {
-      this.http.post('http://localhost:5000/api/reportes/enviar-dashboard', {
+      this.http.post(`${environment.URL_SERVICIOS}/reportes/enviar-dashboard`, {
         destinatarios: allEmails,
         asunto: 'Reporte del Sistema - Panadería Otto',
-        base64Pdf: base64
+        base64Pdf: base64,
+        startDate: this.getStartDateForEmail(),
+        endDate: this.getEndDateForEmail()
       }).subscribe({
         next: (res: any) => {
           this.sendingEmail = false;
@@ -444,5 +494,31 @@ export class DashboardComponent implements OnInit {
       alert('Hubo un error generando el PDF para el correo.');
       this.cdr.detectChanges();
     });
+  }
+
+  getFilterLabel(): string {
+    const opt = this.dateFilterOptions.find(o => o.value === this.selectedDateFilter);
+    if (this.selectedDateFilter === 'custom' && this.startDate && this.endDate) {
+      return `Del ${this.startDate.toLocaleDateString()} al ${this.endDate.toLocaleDateString()}`;
+    }
+    return opt ? opt.label : '';
+  }
+
+  getStartDateForEmail(): string | null {
+    if (this.selectedDateFilter === '30days') { const d = new Date(); d.setDate(d.getDate() - 30); return d.toISOString(); }
+    if (this.selectedDateFilter === new Date().getFullYear().toString()) return `${new Date().getFullYear()}-01-01T00:00:00Z`;
+    if (this.selectedDateFilter === (new Date().getFullYear() - 1).toString()) return `${new Date().getFullYear() - 1}-01-01T00:00:00Z`;
+    if (this.selectedDateFilter === 'all') return '2000-01-01T00:00:00Z';
+    if (this.selectedDateFilter === 'custom' && this.startDate) return this.startDate.toISOString();
+    return null;
+  }
+  
+  getEndDateForEmail(): string | null {
+    if (this.selectedDateFilter === '30days') return new Date().toISOString();
+    if (this.selectedDateFilter === new Date().getFullYear().toString()) return `${new Date().getFullYear()}-12-31T23:59:59Z`;
+    if (this.selectedDateFilter === (new Date().getFullYear() - 1).toString()) return `${new Date().getFullYear() - 1}-12-31T23:59:59Z`;
+    if (this.selectedDateFilter === 'all') return '2100-12-31T23:59:59Z';
+    if (this.selectedDateFilter === 'custom' && this.endDate) return this.endDate.toISOString();
+    return null;
   }
 }

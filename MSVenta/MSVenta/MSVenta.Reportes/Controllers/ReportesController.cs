@@ -34,7 +34,7 @@ namespace MSVenta.Reportes.Controllers
         }
 
         [HttpGet("dashboard")]
-        public async Task<IActionResult> GetDashboard()
+        public async Task<IActionResult> GetDashboard([FromQuery] DateTime? startDate = null, [FromQuery] DateTime? endDate = null)
         {
             var dto = new DashboardDto();
             
@@ -47,8 +47,7 @@ namespace MSVenta.Reportes.Controllers
                 var detallesVenta = await _ventaProxy.GetDetalleVentasAsync();
                 var productoAlmacenes = await _ventaProxy.GetProductoAlmacenesAsync();
 
-                dto.TotalVentas = ventas.Count();
-                dto.TotalCompras = compras.Count();
+                // Las cuentas totales se calcularán después de filtrar por fechas
                 dto.ProduccionesCompletadas = producciones.Count();
                 
                 // Agrupar stock para Insumos Bajo Stock y Productos con Poco Stock
@@ -72,19 +71,37 @@ namespace MSVenta.Reportes.Controllers
                     }
                 }
 
-                // Lógica de 30 días
-                DateTime fechaLimite = DateTime.Now.AddDays(-30);
+                // Lógica Dinámica de Fechas
+                DateTime realEndDate = endDate ?? DateTime.Now.Date.AddDays(1).AddTicks(-1);
+                DateTime realStartDate = startDate ?? realEndDate.AddDays(-30);
+                
+                // Determinar el agrupamiento
+                bool agruparPorMes = (realEndDate - realStartDate).TotalDays > 60;
                 
                 // --- 1. Operaciones Por Fecha ---
                 var dictFechas = new Dictionary<string, OperacionPorFechaDto>();
 
-                // Rellenar 30 días vacíos para que el gráfico no se rompa
-                for (int i = 30; i >= 0; i--)
+                // Rellenar vacíos para que el gráfico no se rompa
+                if (agruparPorMes)
                 {
-                    string fStr = DateTime.Now.AddDays(-i).ToString("MM/dd");
-                    if (!dictFechas.ContainsKey(fStr))
+                    // Rellenar meses
+                    DateTime tempDate = new DateTime(realStartDate.Year, realStartDate.Month, 1);
+                    while (tempDate <= realEndDate)
                     {
+                        string fStr = tempDate.ToString("MM/yyyy");
                         dictFechas[fStr] = new OperacionPorFechaDto { Fecha = fStr };
+                        tempDate = tempDate.AddMonths(1);
+                    }
+                }
+                else
+                {
+                    // Rellenar días
+                    DateTime tempDate = realStartDate.Date;
+                    while (tempDate <= realEndDate)
+                    {
+                        string fStr = tempDate.ToString("MM/dd");
+                        dictFechas[fStr] = new OperacionPorFechaDto { Fecha = fStr };
+                        tempDate = tempDate.AddDays(1);
                     }
                 }
 
@@ -95,9 +112,9 @@ namespace MSVenta.Reportes.Controllers
                     {
                         if (DateTime.TryParse(fechaElem.GetString(), out DateTime fechaReal))
                         {
-                            if (fechaReal >= fechaLimite)
+                            if (fechaReal >= realStartDate && fechaReal <= realEndDate)
                             {
-                                string key = fechaReal.ToString("MM/dd");
+                                string key = agruparPorMes ? fechaReal.ToString("MM/yyyy") : fechaReal.ToString("MM/dd");
                                 if (dictFechas.ContainsKey(key))
                                 {
                                     dictFechas[key].CantidadVentas++;
@@ -114,9 +131,9 @@ namespace MSVenta.Reportes.Controllers
                     {
                         if (DateTime.TryParse(fechaElem.GetString(), out DateTime fechaReal))
                         {
-                            if (fechaReal >= fechaLimite)
+                            if (fechaReal >= realStartDate && fechaReal <= realEndDate)
                             {
-                                string key = fechaReal.ToString("MM/dd");
+                                string key = agruparPorMes ? fechaReal.ToString("MM/yyyy") : fechaReal.ToString("MM/dd");
                                 if (dictFechas.ContainsKey(key))
                                 {
                                     dictFechas[key].CantidadCompras++;
@@ -132,6 +149,8 @@ namespace MSVenta.Reportes.Controllers
                 }
 
                 dto.OperacionesPorFecha = dictFechas.Values.ToList();
+                dto.TotalVentas = dictFechas.Values.Sum(x => x.CantidadVentas);
+                dto.TotalCompras = dictFechas.Values.Sum(x => x.CantidadCompras);
 
                 // --- 2. Productos por Vencer ---
                 var hoy = DateTime.Now;
@@ -262,14 +281,14 @@ namespace MSVenta.Reportes.Controllers
                 return BadRequest("Ningún correo válido provisto. Deben terminar en @panaderia-otto.shop");
 
             // Re-utilizar la lógica de Dashboard
-            var result = await GetDashboard();
+            var result = await GetDashboard(request.StartDate, request.EndDate);
             if (result is OkObjectResult okResult && okResult.Value is DashboardDto dto)
             {
                 // Generar HTML
                 string html = $@"
                     <h2>Reporte del Sistema Panadería Otto</h2>
-                    <p><strong>Total Ventas (30 días):</strong> {dto.TotalVentas}</p>
-                    <p><strong>Total Compras (30 días):</strong> {dto.TotalCompras}</p>
+                    <p><strong>Total Ventas (En rango de fechas seleccionado):</strong> {dto.TotalVentas}</p>
+                    <p><strong>Total Compras (En rango de fechas seleccionado):</strong> {dto.TotalCompras}</p>
                     <p><strong>Producciones Completadas:</strong> {dto.ProduccionesCompletadas}</p>
                     <p><strong>Insumos Bajo Stock / En Lotes:</strong> {dto.InsumosBajoStock}</p>
 
