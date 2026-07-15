@@ -22,6 +22,7 @@
           <th class="px-4 py-2 text-left">Nombre Usuario</th>
           <th class="px-4 py-2 text-left">Relación</th>
           <th class="px-4 py-2 text-left">Roles</th>
+          <th>Fecha Actualización</th>
           <th class="px-4 py-2 text-center">Acciones</th>
         </tr>
       </thead>
@@ -51,6 +52,7 @@
               </ng-template>
             </div>
           </td>
+          <td>{{ user.fecha_actualizacion }}</td>
           <td class="px-6 py-4 flex justify-evenly items-center">
             <button
               (click)="editUser(user.userId!)"

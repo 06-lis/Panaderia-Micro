@@ -68,6 +68,15 @@
                  class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-sm shadow-sm" />
         </div>
       </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div>
+          <label class="block text-xs font-bold text-amber-950 mb-1.5 uppercase tracking-wide">Fecha de Aprobación</label>
+          <input type="date"
+                 formControlName="fecha_aprobacion"
+                 class="w-full px-3 py-2 bg-white border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8E4E2A] focus:border-[#8E4E2A] transition-all text-sm shadow-sm" />
+        </div>
+      </div>
     </div>
 
     <!-- Ingredients / Insumos Card -->
@@ -116,6 +125,7 @@
               Debe ser >= 1.
             </div>
           </div>
+
 
           <!-- Trash action -->
           <button type="button"

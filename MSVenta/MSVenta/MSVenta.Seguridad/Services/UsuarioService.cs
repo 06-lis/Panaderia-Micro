@@ -36,6 +36,7 @@ namespace MSVenta.Seguridad.Services
                 Username = u.Username,
                 IdEmpleado = u.IdEmpleado,
                 IdCliente = u.IdCliente,
+                FechaActualizacion = u.FechaActualizacion,
                 Roles = u.RolPermisoUsuarios
                     .GroupBy(rpu => new { rpu.RolPermiso.Rol.ID_Rol, rpu.RolPermiso.Rol.Nombre_Rol })
                     .Select(group => new RolDTO
@@ -92,6 +93,7 @@ namespace MSVenta.Seguridad.Services
                 Username = usuario.Username,
                 IdEmpleado = usuario.IdEmpleado,
                 IdCliente = usuario.IdCliente,
+                FechaActualizacion = usuario.FechaActualizacion,
                 Roles = roles
             };
 

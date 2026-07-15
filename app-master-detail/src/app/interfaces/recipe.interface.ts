@@ -14,4 +14,5 @@ export interface Receta {
   cantidadRequerida: number;
   detalles: DetalleReceta[];
   nombreProducto?: string; // Campo auxiliar para UI
+  fechaAprobacion?: Date; // Campo para la fecha de aprobación
 }

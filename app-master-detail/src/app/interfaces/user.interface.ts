@@ -15,4 +15,5 @@ export interface User {
   token?: string;
   idEmpleado?: number;
   idCliente?: number;
+  fecha_actualizacion?: string;
 }

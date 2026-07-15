@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace MSVenta.Seguridad.Models
 {
@@ -18,6 +20,10 @@ namespace MSVenta.Seguridad.Models
         [Column("id_cliente")]
         public int? IdCliente { get; set; }
 
+        [Column("fecha_actualizacion")]
+        [JsonPropertyName("fecha_actualizacion")]
+        public DateTime? FechaActualizacion { get; set; }
+        
         // Navigation property for Empleado
         [ForeignKey("IdEmpleado")]
         public Empleado Empleado { get; set; }

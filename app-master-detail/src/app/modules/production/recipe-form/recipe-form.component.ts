@@ -35,6 +35,7 @@ export class RecipeFormComponent implements OnInit {
       descripcion: ['', [Validators.maxLength(250)]],
       productoId: [null, Validators.required],
       cantidadRequerida: [1, [Validators.required, Validators.min(1)]],
+      fecha_aprobacion: [null] as any,
       detalles: this.fb.array([])
     });
 
@@ -116,6 +117,7 @@ export class RecipeFormComponent implements OnInit {
       descripcion: val.descripcion,
       productoId: Number(val.productoId),
       cantidadRequerida: Number(val.cantidadRequerida),
+      fecha_aprobacion: val.fecha_aprobacion ? new Date(val.fecha_aprobacion).toISOString() : undefined,
       detalles: val.detalles.map((d: any) => ({
         insumoId: Number(d.insumoId),
         cantidadRequerida: Number(d.cantidadRequerida)

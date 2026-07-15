@@ -38,7 +38,8 @@ namespace MSVenta.Produccion.Controllers
                 Nombre = dto.Nombre,
                 Descripcion = dto.Descripcion,
                 ProductoId = dto.ProductoId,
-                CantidadRequerida = dto.CantidadRequerida
+                CantidadRequerida = dto.CantidadRequerida,
+                FechaAprobacion = dto.FechaAprobacion
             };
 
             foreach (var detailDto in dto.Detalles)

@@ -52,6 +52,7 @@ export class UsuarioAddComponent implements OnInit {
         tipoRelacion: ['Ninguno'], // 'Ninguno', 'Empleado', 'Cliente'
         idEmpleado: [null],
         idCliente: [null],
+        fecha_actualizacion: [null]
        });
 
        this.empleadoForm = this.fb.group({

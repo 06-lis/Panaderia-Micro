@@ -1,0 +1,23 @@
+Hola! Denis ha creado estos respaldos (dumps) de las bases de datos de los microservicios para que tus entornos estén perfectamente sincronizados.
+
+IMPORTANTE: Al restaurar estas bases de datos en tu máquina (Windows), los datos de prueba que hayas creado localmente se perderán y serán reemplazados por los de Denis. Esto asegurará que los IDs de productos, ventas y usuarios coincidan perfectamente entre ambos.
+
+Asegúrate de tener los contenedores de Docker encendidos (`docker compose up -d`) antes de ejecutar estos comandos.
+Puedes ejecutar los siguientes comandos desde tu CMD o PowerShell estando en esta misma carpeta (`backups`):
+
+1. RESTAURAR MYSQL (Microservicio de Ventas)
+docker exec -i panaderia_mysql mysql -u root -p"Aforo255#2019" db_ventas < db_ventas.sql
+
+2. RESTAURAR POSTGRES (Microservicio de Inventario)
+docker exec -i panaderia_postgres psql -U postgres < db_postgres_all.sql
+
+3. RESTAURAR MONGODB (Microservicio de Compras)
+docker exec -i panaderia_mongo mongorestore -u admin -p "Aforo255#2019" --authenticationDatabase admin --archive < mongo_all.archive
+
+4. RESTAURAR SQL SERVER (Microservicio de Producción)
+Primero, copia el archivo .bak dentro del contenedor:
+docker cp db_produccion.bak panaderia_sqlserver:/var/opt/mssql/db_produccion_restore.bak
+Luego, ejecuta la restauración:
+docker exec -it panaderia_sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "Aforo255#2019" -No -Q "RESTORE DATABASE db_produccion FROM DISK = '/var/opt/mssql/db_produccion_restore.bak' WITH REPLACE"
+
+¡Listo! Con esto tu sistema debería tener toda la data compartida y funcionando sin errores de integridad.
