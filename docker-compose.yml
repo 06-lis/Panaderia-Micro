@@ -29,8 +29,6 @@ services:
       - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      # Si el script db_security.sql contiene creación de base de datos se ejecutará al iniciar
-      - ./db_security.sql:/docker-entrypoint-initdb.d/1-db_security.sql
     networks:
       - panaderia_net
 

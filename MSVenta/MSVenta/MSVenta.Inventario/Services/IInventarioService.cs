@@ -18,5 +18,7 @@ namespace MSVenta.Inventario.Services
         Task<bool> RegistrarTraspasoAsync(int loteId, int almacenOrigenId, int almacenDestinoId, decimal cantidad, string motivo, int empleadoId);
         Task<object> GetConfiguracionAsync();
         Task<bool> UpdateConfiguracionAsync(object config);
+        Task<bool> RegistrarMermaAsync(int loteId, decimal cantidad, string motivo, int? empleadoId = null);
+        Task<IEnumerable<object>> GetMermasAsync();
     }
 }

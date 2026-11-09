@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -487,6 +488,100 @@ namespace MSVenta.Inventario.Services
             }
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<bool> RegistrarMermaAsync(int loteId, decimal cantidad, string motivo, int? empleadoId = null)
+        {
+            if (cantidad <= 0)
+            {
+                throw new InvalidOperationException("La cantidad a mermar debe ser mayor a 0.");
+            }
+
+            var lote = await _context.LotesInventario.FirstOrDefaultAsync(l => l.IdLote == loteId);
+            if (lote == null)
+            {
+                throw new KeyNotFoundException($"El lote con ID {loteId} no existe.");
+            }
+
+            if (lote.CantidadDisponible < cantidad)
+            {
+                throw new InvalidOperationException($"La cantidad solicitada ({cantidad}) excede la disponible en el lote ({lote.CantidadDisponible}).");
+            }
+
+            // 1. Descontar stock del lote
+            lote.CantidadDisponible -= cantidad;
+            if (lote.CantidadDisponible == 0)
+            {
+                lote.Estado = "Agotado";
+                lote.FechaSalida = DateTime.UtcNow;
+            }
+            _context.LotesInventario.Update(lote);
+
+            // 2. Registrar en la tabla Mermas
+            var merma = new Models.Merma
+            {
+                IdLote = lote.IdLote,
+                IdItem = lote.IdItem,
+                IdAlmacen = lote.IdAlmacen,
+                Cantidad = cantidad,
+                CostoUnitario = lote.PrecioUnitario,
+                CostoTotal = cantidad * lote.PrecioUnitario,
+                FechaMerma = DateTime.UtcNow,
+                Motivo = string.IsNullOrWhiteSpace(motivo) ? "Ajuste por Merma" : motivo,
+                IdEmpleado = empleadoId
+            };
+            _context.Mermas.Add(merma);
+            await _context.SaveChangesAsync();
+
+            // 3. Registrar el Movimiento de Inventario de tipo 'Merma' con valor negativo
+            var movimiento = new Models.MovimientoInventario
+            {
+                IdLote = lote.IdLote,
+                IdAlmacen = lote.IdAlmacen,
+                IdItem = lote.IdItem,
+                TipoMovimiento = "Merma",
+                Cantidad = -cantidad, // Egreso negativo para consistencia con traspasos y salidas
+                CostoUnitario = lote.PrecioUnitario,
+                CostoTotal = -(cantidad * lote.PrecioUnitario),
+                FechaMovimiento = DateTime.UtcNow,
+                IdEmpleado = empleadoId,
+                ReferenciaId = merma.IdMerma,
+                ReferenciaTipo = "Merma"
+            };
+            _context.MovimientosInventario.Add(movimiento);
+            await _context.SaveChangesAsync();
+
+            // 4. Sincronizar stock con ProductoAlmacen en MS Venta (restando cantidad)
+            try
+            {
+                await _ventaProxy.SincronizarStockAgregadoAsync(lote.IdItem, lote.IdAlmacen, -cantidad);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al sincronizar merma con ProductoAlmacen: {ex.Message}");
+            }
+
+            return true;
+        }
+
+        public async Task<IEnumerable<object>> GetMermasAsync()
+        {
+            var mermas = await _context.Mermas
+                .OrderByDescending(m => m.FechaMerma)
+                .ToListAsync();
+
+            return mermas.Select(m => new {
+                id_merma = m.IdMerma,
+                id_lote = m.IdLote,
+                id_item = m.IdItem,
+                id_almacen = m.IdAlmacen,
+                cantidad = m.Cantidad,
+                costo_unitario = m.CostoUnitario,
+                costo_total = m.CostoTotal,
+                fecha_merma = m.FechaMerma,
+                motivo = m.Motivo,
+                id_empleado = m.IdEmpleado
+            });
         }
     }
 }

@@ -79,6 +79,26 @@ export class InventarioService {
     return throwError('No token available');
   }
 
+  public registrarMerma(dto: { loteId: number, cantidad: number, motivo: string, empleadoId?: number }): Observable<any> {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      return this.http.post<any>(`${this.apiUrl}/merma`, dto, httpOptions(token)).pipe(
+        catchError(err => throwError(() => err.error?.message || err.error?.mensaje || 'Error al registrar merma'))
+      );
+    }
+    return throwError(() => 'No token available');
+  }
+
+  public getMermas(): Observable<any[]> {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      return this.http.get<any[]>(`${this.apiUrl}/mermas`, httpOptions(token)).pipe(
+        catchError(this.handleError('getMermas', []))
+      );
+    }
+    return of([]);
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(`${operation} failed:`, error);

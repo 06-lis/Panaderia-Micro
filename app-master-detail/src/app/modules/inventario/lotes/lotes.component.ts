@@ -124,4 +124,84 @@ export class LotesComponent implements OnInit {
     this.filteredLotes = temp;
     this.cdr.markForCheck();
   }
+
+  // Merma Modal Properties
+  mermaModalVisible = false;
+  selectedLoteParaMerma: any = null;
+  mermaCantidad: number = 0;
+  mermaMotivo: string = '';
+  guardandoMerma = false;
+  mermaError = '';
+  mermaSuccess = '';
+
+  abrirModalMerma(lote: any, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.selectedLoteParaMerma = lote;
+    this.mermaCantidad = Number(lote.cantidad_disponible);
+    this.mermaMotivo = this.getVencimientoStatus(lote.fecha_vencimiento) === 'danger'
+      ? `Producto caducado (venció ${lote.fecha_vencimiento})`
+      : 'Ajuste de inventario por merma / deterioro';
+    this.mermaError = '';
+    this.mermaSuccess = '';
+    this.mermaModalVisible = true;
+    this.cdr.markForCheck();
+  }
+
+  cerrarModalMerma() {
+    this.mermaModalVisible = false;
+    this.selectedLoteParaMerma = null;
+    this.mermaError = '';
+    this.mermaSuccess = '';
+    this.cdr.markForCheck();
+  }
+
+  establecerCantidadMermaTotal() {
+    if (this.selectedLoteParaMerma) {
+      this.mermaCantidad = Number(this.selectedLoteParaMerma.cantidad_disponible);
+      this.cdr.markForCheck();
+    }
+  }
+
+  confirmarMerma() {
+    if (!this.selectedLoteParaMerma) return;
+    if (this.mermaCantidad <= 0) {
+      this.mermaError = 'La cantidad a mermar debe ser mayor a 0.';
+      this.cdr.markForCheck();
+      return;
+    }
+    if (this.mermaCantidad > this.selectedLoteParaMerma.cantidad_disponible) {
+      this.mermaError = `La cantidad (${this.mermaCantidad}) no puede superar la disponible (${this.selectedLoteParaMerma.cantidad_disponible}).`;
+      this.cdr.markForCheck();
+      return;
+    }
+
+    this.guardandoMerma = true;
+    this.mermaError = '';
+    this.cdr.markForCheck();
+
+    const dto = {
+      loteId: this.selectedLoteParaMerma.id_lote,
+      cantidad: this.mermaCantidad,
+      motivo: this.mermaMotivo || 'Ajuste por merma'
+    };
+
+    this.inventarioService.registrarMerma(dto).subscribe({
+      next: (res) => {
+        this.guardandoMerma = false;
+        this.mermaSuccess = '¡Merma registrada exitosamente! Stock y movimientos actualizados.';
+        this.cdr.markForCheck();
+        setTimeout(() => {
+          this.cerrarModalMerma();
+          this.loadLotes();
+        }, 1200);
+      },
+      error: (err) => {
+        this.guardandoMerma = false;
+        this.mermaError = typeof err === 'string' ? err : 'Error al registrar la merma';
+        this.cdr.markForCheck();
+      }
+    });
+  }
 }

@@ -119,6 +119,35 @@ namespace MSVenta.Inventario.Controllers
             if (res) return Ok(new { success = true });
             return BadRequest(new { success = false });
         }
+
+        [HttpPost("merma")]
+        public async Task<IActionResult> RegistrarMerma([FromBody] RegistrarMermaRequest req)
+        {
+            try
+            {
+                var res = await _inventarioService.RegistrarMermaAsync(req.LoteId, req.Cantidad, req.Motivo, req.EmpleadoId);
+                if (res) return Ok(new { success = true, message = "Merma registrada exitosamente." });
+                return BadRequest(new { success = false, message = "No se pudo registrar la merma." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpGet("mermas")]
+        public async Task<IActionResult> GetMermas()
+        {
+            return Ok(await _inventarioService.GetMermasAsync());
+        }
+    }
+
+    public class RegistrarMermaRequest
+    {
+        public int LoteId { get; set; }
+        public decimal Cantidad { get; set; }
+        public string Motivo { get; set; }
+        public int? EmpleadoId { get; set; }
     }
 
     public class IngresoRequest

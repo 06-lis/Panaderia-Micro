@@ -1,5 +1,5 @@
 export const environment = {
-  URL_BACKEND: 'https://micro.panaderia-otto.shop/',
-  URL_SERVICIOS: 'https://micro.panaderia-otto.shop/api',
-  URL_FRONTEND: 'https://micro.panaderia-otto.shop/',
+  URL_BACKEND: 'http://localhost:5000/',
+  URL_SERVICIOS: 'http://localhost:5000/api',
+  URL_FRONTEND: 'http://localhost:8081/',
 };

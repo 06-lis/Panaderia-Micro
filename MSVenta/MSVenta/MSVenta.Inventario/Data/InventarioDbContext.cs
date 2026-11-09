@@ -14,6 +14,7 @@ namespace MSVenta.Inventario.Data
         public DbSet<Traspaso> Traspasos { get; set; }
         public DbSet<TraspasoAlmacenItem> TraspasosAlmacenItem { get; set; }
         public DbSet<ConfiguracionInventario> ConfiguracionesInventario { get; set; }
+        public DbSet<Merma> Mermas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
